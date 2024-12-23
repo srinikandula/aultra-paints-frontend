@@ -1,0 +1,139 @@
+/* Overall form container */
+.form-container {
+  max-width: 100%;
+  margin: 0 auto;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+}
+
+/* Heading Styling */
+h2 {
+  font-size: 1.5rem;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Form group (all fields in one row) */
+.form-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  justify-content: flex-start;
+}
+
+/* Field styling */
+.field {
+  flex: 1;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+/* Add Product button styling */
+.add-product-button {
+  background-color: #FF9800;
+  padding: 0.6rem 1rem;
+  font-size: 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.add-product-button:hover {
+  background-color: #FF5722;
+}
+
+/* Delete Product button */
+.delete-product-button {
+  background-color: #f44336;
+  color: white;
+  border: none;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 4px;
+  font-size: 14px;
+}
+
+.delete-product-button:hover {
+  background-color: #d32f2f;
+}
+
+/* Button styling */
+button {
+  padding: 0.6rem 1rem;
+  font-size: 0.9rem;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  width: 150px;
+  cursor: pointer;
+  margin-top: 1rem;
+}
+
+
+
+button[type="submit"] {
+  background-color: #4CAF50;
+}
+
+/* Calendar Icon Button Inside Input */
+.input-group {
+  position: relative;
+  display: flex;
+  align-items: center; /* Align vertically */
+  width: 200px;
+}
+
+.form-control {
+  width: 70px; /* Reduced width of the input box */
+  padding: 0.4rem 2.3rem 0.4rem 0.75rem; /* Further reduce padding for smaller input */
+  font-size: 14px; /* Adjust font size */
+  border-radius: 4px;
+}
+
+.calendar-btn {
+  position: absolute;
+  right: 20px; /* Position the button closer to the right side */
+  top: 20%;
+  transform: translateY(-50%);
+  border: none;
+  padding: 0;
+  cursor: pointer;
+}
+
+.calendar-btn i {
+  font-size: 20px; /* Adjust icon size */
+  color: #6c757d;
+}
+
+
+
+
+/* Media Query for mobile responsiveness */
+@media (max-width: 480px) {
+  .form-container {
+    padding: 1.5rem;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  input {
+    padding: 0.6rem;
+    font-size: 0.9rem;
+  }
+}
+
+/* Ensure there's proper alignment for the delete button */
+.delete-product-button-container {
+  margin-top: 10px; /* Adds some margin at the top of the delete button */
+}

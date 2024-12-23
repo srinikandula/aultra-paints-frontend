@@ -1,0 +1,36 @@
+<!-- Navbar (below the sidebar) -->
+<nav class="navbar navbar-expand-lg  shadow-sm fixed-top" style="height: 65px;">
+</nav>
+
+<div class="dashboard-container">
+  <!-- Sidebar (above the navbar) -->
+  <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
+    <div class="sidebar-header">
+      <!-- Toggle Button to Collapse/Expand Sidebar -->
+      <button class="sidebar-toggle-btn" (click)="toggleSidebar()">
+        <i class="bx" [ngClass]="isSidebarCollapsed ? 'bx-menu' : 'bx-x'"></i>
+      </button>
+    </div>
+    <ul class="nav flex-column">
+      <li class="nav-item">
+        <i class="bx bx-list-ul" (click)="navigateTo('/dashboard/list')" style="font-size: 30px;"></i>
+         <span *ngIf="!isSidebarCollapsed">List</span>
+      </li>
+      <li class="nav-item">
+        <i class="bx bx-cart-alt" (click)="navigateTo('/dashboard/order')" style="font-size: 30px;"></i>
+         <span *ngIf="!isSidebarCollapsed">Order</span>
+      </li>
+      
+    </ul>
+    <a (click)="logout()" class="logout-link">
+      <i class="bx bx-log-out"></i><span *ngIf="!isSidebarCollapsed">Logout</span>
+    </a>
+  </div>
+
+  <!-- Main Content Area (includes navbar and router outlet) -->
+  <main class="content" [ngClass]="{ 'collapsed': isSidebarCollapsed }">
+
+    <!-- Dynamic Content Loaded via Router -->
+    <router-outlet></router-outlet>
+  </main>
+</div>

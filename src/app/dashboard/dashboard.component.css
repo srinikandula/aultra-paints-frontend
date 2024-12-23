@@ -1,0 +1,67 @@
+/* Sidebar styles */
+.sidebar {
+  width: 250px;
+  position: fixed; /* Position sidebar fixed at the left */
+  top: 0;
+  left: 0;
+  bottom: 0;
+  background-color:#2C3E50;
+  color: white;
+  transition: width 0.3s ease-in-out;
+  z-index: 100; /* Initially lower z-index */
+}
+
+.sidebar.collapsed {
+  width: 70px; /* Collapsed sidebar width */
+  position: fixed; /* Keep fixed when collapsed */
+  z-index: 100; /* Keep it behind the navbar */
+}
+
+.sidebar.expanded {
+  position: absolute; /* Use absolute positioning when expanded */
+  z-index: 105; /* Make sure the sidebar appears above the navbar */
+}
+
+.sidebar .sidebar-header {
+  padding: 20px;
+}
+
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+}
+
+.sidebar .nav-item {
+  padding: 15px;
+}
+
+.sidebar .logout-link {
+  position: absolute;
+  bottom: 20px;
+  left: 20px;
+  color: white;
+}
+
+/* Content area */
+.content {
+  margin-left: 250px; /* Space for the sidebar */
+  margin-top: 10px;   /* Space for the fixed navbar */
+  transition: margin-left 0.3s ease-in-out, margin-top 0.3s ease-in-out;
+}
+
+.content.collapsed {
+  margin-left: 60px; /* Adjusted content margin when sidebar is collapsed */
+}
+
+/* Navbar styles */
+.navbar {
+  margin-left: 60px; /* Ensure the navbar starts below the sidebar */
+  z-index: 50; /* Lower z-index compared to the sidebar */
+  margin-top: 0; /* Reset top margin */
+  position: relative; /* Position navbar relative to sidebar */
+  background-color:#FFFFFF;
+}
+
+.navbar-brand {
+  font-weight: bold;
+}

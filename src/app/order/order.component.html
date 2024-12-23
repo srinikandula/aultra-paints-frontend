@@ -1,0 +1,104 @@
+<div class="form-container">
+  <form (ngSubmit)="submitForm()" #orderForm="ngForm">
+
+    <!-- Branch Details Section -->
+    <div class="section">
+      <h2>Branch Details</h2>
+
+      <div class="form-group">
+        <div class="field">
+          <label for="branchName">Branch Name</label>
+          <select id="branchName" [(ngModel)]="branchName" name="branchName" required placeholder="Select Branch">
+            <option value="" disabled selected>Select a branch</option>
+            <option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</option>
+          </select>
+        </div>
+
+        <!-- Creation Date with ngbDatepicker -->
+        <div class="field">
+          <label for="creationDate">Creation Date</label>
+          <div class="input-group">
+            <input 
+              class="form-control" 
+              placeholder="yyyy-mm-dd" 
+              name="creationDate" 
+              [(ngModel)]="creationDate" 
+              ngbDatepicker 
+              #d="ngbDatepicker" 
+              required 
+            />
+            <button class="btn calendar-btn" (click)="d.toggle()" type="button" style="width: 20px;">
+              <i class="bx bx-calendar"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Expiry Date with ngbDatepicker -->
+        <div class="field">
+          <label for="expiryDate">Expiry Date</label>
+          <div class="input-group">
+            <input 
+              class="form-control" 
+              placeholder="yyyy-mm-dd" 
+              name="expiryDate" 
+              [(ngModel)]="expiryDate" 
+              ngbDatepicker 
+              #e="ngbDatepicker" 
+              required 
+            />
+            <button class="btn calendar-btn" (click)="e.toggle()" type="button" style="width: 20px;">
+              <i class="bx bx-calendar"></i> 
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Product Details Section -->
+    <div class="section" style="margin-top: 60px;">
+      <h2>Batch Number Details</h2>
+      <div class="product-fields">
+        <div *ngFor="let BatchNumber of BatchNumbers; let i = index" class="form-group product-section">
+
+          <div class="field">
+            <label for="batchNumber{{i}}">Batch Number</label>
+            <input type="text" id="batchNumber{{i}}" [(ngModel)]="BatchNumber.BatchNumber" name="BatchNumber{{i}}" required placeholder="Batch Number" />
+          </div>
+
+          <div class="field">
+            <label for="brand{{i}}">Brand</label>
+            <input type="text" id="brand{{i}}" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required placeholder="Brand" />
+          </div>
+
+          <div class="field">
+            <label for="productName{{i}}">Product Name</label>
+            <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName" name="ProductName{{i}}" required placeholder="Product Name" />
+          </div>
+
+          <div class="field">
+            <label for="volume{{i}}">Volume</label>
+            <input type="number" id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="Volume{{i}}" required placeholder="Volume" />
+          </div>
+
+          <div class="field">
+            <label for="quantity{{i}}">Quantity</label>
+            <input type="text" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}" required placeholder="Quantity" />
+          </div>
+
+          <!-- Delete button beside the + Add Product button -->
+          <div class="delete-product-button-container">
+            <button type="button" class="delete-product-button" (click)="deleteProduct(i)">Delete</button>
+          </div>
+        </div>
+
+        <!-- Add Product button on the same row as the last product field -->
+        <div class="add-product-button-container" style="margin-right: 1200px;">
+          <button type="button" class="add-product-button" (click)="addProduct()">+ Add Product</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Submit Button -->
+    <button type="submit" [disabled]="!orderForm.valid">Submit</button>
+  </form>
+</div>
