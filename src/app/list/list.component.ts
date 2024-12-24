@@ -3,6 +3,8 @@ import { OrderService } from '../order.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
+import {ApiUrlsService} from "../services/api-urls.service";
+import {ApiRequestService} from "../services/api-request.service";
 
 @Component({
   selector: 'app-list',
@@ -21,14 +23,17 @@ export class ListComponent {
   showUpdateModal = false; // Flag to show modal
   selectedBranch: any = {}; // Store the selected branch for update
 
-  constructor(private orderService: OrderService, private router: Router) { }
+  constructor(private orderService: OrderService,
+              private router: Router,
+              private ApiUrls: ApiUrlsService,
+              private apiRequest: ApiRequestService) { }
 
   ngOnInit(): void {
     this.loadBranches();
   }
 
   loadBranches(page: number = this.currentPage): void {
-    this.orderService.getBranches(page, this.limit).subscribe(
+    this.apiRequest.get(this.ApiUrls.getBatches, {page: page, limit: this.limit}).subscribe(
       (response) => {
         this.branches = response.branches;
         this.totalBranches = response.total;
@@ -45,7 +50,7 @@ export class ListComponent {
   onSearch(): void {
     if (this.searchQuery.trim() !== '') {
       // Call search API if there is a search query
-      this.orderService.searchBranch(this.searchQuery).subscribe(
+      this.apiRequest.searchBranch(this.ApiUrls.searchBranch, this.searchQuery).subscribe(
         (response) => {
           this.branches = [response];  // If only one branch is found, it will return a single branch
           this.totalBranches = 1;  // Only one branch will be found

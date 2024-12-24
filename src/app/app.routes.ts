@@ -4,6 +4,7 @@ import { DashboardComponent } from './dashboard/dashboard.component';
 import { RegisterComponent } from './register/register.component';
 import { OrderComponent } from './order/order.component';
 import { ListComponent } from './list/list.component';
+import {TransactionsComponent} from "./transactions/transactions.component";
 
 export const routes: Routes = [
    { path: '', redirectTo: '/login', pathMatch: 'full' },
@@ -14,6 +15,7 @@ export const routes: Routes = [
     children: [
       {path:'list', component:ListComponent},
       {path:'order', component:OrderComponent},
+      {path:'transactions', component:TransactionsComponent},
     ]
   },
   

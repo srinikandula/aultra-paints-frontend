@@ -3,6 +3,8 @@ import { OrderService } from '../order.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstrap/ng-bootstrap';
+import {ApiUrlsService} from "../services/api-urls.service";
+import {ApiRequestService} from "../services/api-request.service";
 
 @Component({
   selector: 'app-order',
@@ -13,8 +15,8 @@ import { NgbAlertModule, NgbDatepickerModule, NgbDateStruct } from '@ng-bootstra
 })
 export class OrderComponent {
   branchName: string = '';
-  creationDate: NgbDateStruct | null = null;
-  expiryDate: NgbDateStruct | null = null;
+  creationDate = new Date();
+  expiryDate = new Date()
   BatchNumbers: any[] = [
     { BatchNumber: '', Brand: '', ProductName: '', Volume: 0, Quantity: 0 }
   ];
@@ -22,7 +24,7 @@ export class OrderComponent {
   // Array for the Branch Names dropdown
   branchNames: string[] = ['Central Hub', 'Main Street', 'Pine Valley', 'Lakeview', 'Sunset Boulevard', 'Riverside', 'Hillside'];
   
-  constructor(private orderService: OrderService) {}
+  constructor(private orderService: OrderService, private ApiUrls: ApiUrlsService, private ApiRequest: ApiRequestService) {}
 
   ngOnInit(): void {}
 
@@ -41,15 +43,13 @@ export class OrderComponent {
   }
 
   
-  convertToISODate(date: NgbDateStruct | null): string {
+  convertToISODate(date: any) {
     if (!date) return '';
     return `${date.year}-${String(date.month).padStart(2, '0')}-${String(date.day).padStart(2, '0')}`;
   }
 
 submitForm() {
-
   const confirmation = window.confirm('Are you sure you want to submit the form?');
-
   if (confirmation) {
     const newBranch = {
       Branch: this.branchName,
@@ -58,7 +58,7 @@ submitForm() {
       BatchNumbers: this.BatchNumbers
     };
 
-    this.orderService.createBranch(newBranch).subscribe(
+    this.ApiRequest.create(this.ApiUrls.createBatch, newBranch).subscribe(
       (response: any) => {
          console.log('Branch created successfully:', response.message);
 
@@ -77,8 +77,8 @@ submitForm() {
   // Reset the form after submission
   resetForm() {
     this.branchName = '';
-    this.creationDate = null;
-    this.expiryDate = null;
+    this.creationDate = new Date();
+    this.expiryDate = new  Date();
     this.BatchNumbers = [{ BatchNumber: '', Brand: '', ProductName: '', Volume: 0, Quantity: 0 }];
   }
 }

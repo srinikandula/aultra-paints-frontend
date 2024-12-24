@@ -27,25 +27,7 @@ export class OrderService {
 
   constructor(private http: HttpClient) { }
 
-  // Create a new branch with products
-  createBranch(branchData: Branch): Observable<Branch> {
-    return this.http.post<Branch>(this.apiUrl, branchData);
-  }
 
-  // Method to get all branches with pagination
-  getBranches(page: number = 1, limit: number = 10): Observable<any> {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
-
-    return this.http.get<any>(this.apiUrl, { params });
-  }
-
-  // Search a branch by BatchNumber
-  searchBranch(batchNumber: string): Observable<Branch> {
-    return this.http.get<Branch>(`${this.apiUrl}/${batchNumber}`);
-  }
-  
     // Update branch by BatchNumber
   updateBranch(updatedBranch: any, batchNumber: string): Observable<any> {
     return this.http.put<any>(`${this.apiUrl}/${batchNumber}`, updatedBranch);

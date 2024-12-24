@@ -1,8 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../auth.service';
+import { AuthService } from '../services/auth.service';
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import {ApiRequestService} from "../services/api-request.service";
+import {ApiUrlsService} from "../services/api-urls.service";
 
 @Component({
   selector: 'app-register',
@@ -18,10 +20,10 @@ export class RegisterComponent {
   successMessage: string = '';
   errorMessage: string = '';
 
-  constructor(private router: Router, private authService: AuthService) {}
+  constructor(private router: Router, private authService: AuthService, private apiService: ApiRequestService, private ApiUrls: ApiUrlsService) {}
 
   register() {
-    this.authService.register(this.name, this.email, this.password).subscribe({
+    this.apiService.create(this.ApiUrls.register, {name: this.name, email:this.email, password: this.password} ).subscribe({
       next: (response) => {
         console.log('Registration successful:', response.message);
         this.successMessage = 'Registration successful! You can now log in.';

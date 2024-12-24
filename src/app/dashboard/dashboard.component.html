@@ -16,6 +16,10 @@
         <i class="bx bx-list-ul" (click)="navigateTo('/dashboard/list')" style="font-size: 30px;"></i>
          <span *ngIf="!isSidebarCollapsed">List</span>
       </li>
+        <li class="nav-item">
+            <i class="bx bx-list-ul" (click)="navigateTo('/dashboard/transactions')" style="font-size: 30px;"></i>
+            <span *ngIf="!isSidebarCollapsed">Transactions</span>
+        </li>
       <li class="nav-item">
         <i class="bx bx-cart-alt" (click)="navigateTo('/dashboard/order')" style="font-size: 30px;"></i>
          <span *ngIf="!isSidebarCollapsed">Order</span>
