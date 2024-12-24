@@ -22,7 +22,7 @@ export interface Branch {
 })
 export class OrderService {
 
-  private apiUrl = 'http://localhost:3000/api/branches';  // Adjust if your API is hosted on a different URL
+  private apiUrl = 'http://localhost:4300/api/branches';  // Adjust if your API is hosted on a different URL
   searchBranches: any;
 
   constructor(private http: HttpClient) { }
