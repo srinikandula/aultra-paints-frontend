@@ -4,6 +4,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { filter } from 'rxjs';
+import {AuthService} from "../services/auth.service";
 
 @Component({
   selector: 'app-dashboard',
@@ -15,7 +16,7 @@ import { filter } from 'rxjs';
 export class DashboardComponent  {
   isSidebarCollapsed: boolean = true;  // Sidebar starts collapsed by default
 
-  constructor(private router: Router) {}
+  constructor(private router: Router, private AuthService: AuthService) {}
 
   // Toggle the sidebar between collapsed and expanded states
   toggleSidebar() {
@@ -29,7 +30,6 @@ export class DashboardComponent  {
 
   // Logout functionality
   logout(): void {
-    localStorage.removeItem('authToken');
-    this.router.navigate(['/login']);
+   this.AuthService.logOut();
   }
 }

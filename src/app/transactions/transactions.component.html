@@ -1,20 +1,22 @@
 <!-- Main content -->
 <div class="container-fluid" style="padding: 20px">
     <div style="margin-top: -20px;">
-        <h4>Branches List</h4>
+        <h4>Transactions</h4>
 
         <!-- Table Wrapper -->
         <div class="table-wrapper">
             <table class="table table-bordered">
                 <thead>
                 <tr>
-                    <th>S.NO</th>
-                    <td>Transaction Id</td>
-                    <td>Batch Id</td>
-                    <td>Is Processed</td>
-                    <td>QR Code</td>
-                    <td>Created At</td>
-                    <td>Updated At</td>
+                    <th scope="col">S.NO</th>
+                    <th>Transaction Id</th>
+                    <th>Batch Id</th>
+                    <th>Is Processed</th>
+                    <th>QR Code</th>
+                    <th>Created At</th>
+                    <th>Updated At</th>
+                    <th>Created By</th>
+                    <th>Updated By</th>
                 </tr>
                 </thead>
                 <tbody>
@@ -28,6 +30,8 @@
                     </td>
                     <td>{{ item.createdAt | date }}</td>
                     <td>{{ item.updatedAt | date }}</td>
+                    <td *ngIf="item.createdBy">{{item.createdBy.name}}</td>
+                    <td *ngIf="item.updatedBy">{{item.updatedBy.name}}</td>
                 </tr>
                 </tbody>
             </table>

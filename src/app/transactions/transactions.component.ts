@@ -67,7 +67,7 @@ export class TransactionsComponent {
         this.qrUrl = qr_code;
     }
 
-    closeUpdateModal() {
-
+    closeUpdateModal(): void {
+        this.showUpdateModal = false; // Hide the modal
     }
 }

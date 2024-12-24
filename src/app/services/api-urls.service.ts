@@ -6,7 +6,8 @@ import { Injectable } from '@angular/core';
 export class ApiUrlsService {
 
   constructor() { }
-  mainUrl = "http://localhost:4300/api/";
+  // mainUrl = "http://localhost:4300/api/";
+  mainUrl = "https://paintsapi.whizzard.in/api/";
 
   // API Urls
   register = 'auth/register';

@@ -1,24 +1,26 @@
-<div class="form-container">
+<div class="container" style="background: #f5f5f5;
+    padding: 30px;
+    border-radius: 10px;">
     <form (ngSubmit)="submitForm()" #orderForm="ngForm">
 
         <!-- Branch Details Section -->
-        <div class="section">
-            <h2>Branch Details</h2>
+        <div class="row">
+            <h4>Branch Details</h4>
 
-            <div class="form-group">
-                <div class="field">
+            <div class="row">
+                <div class="field col-sm-4">
                     <label for="branchName">Branch Name</label>
                     <select id="branchName" [(ngModel)]="branchName" name="branchName" required
-                            placeholder="Select Branch">
+                            placeholder="Select Branch" class="form-control">
                         <option value="" disabled selected>Select a branch</option>
                         <option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</option>
                     </select>
                 </div>
 
                 <!-- Creation Date with ngbDatepicker -->
-                <div class="field">
+                <div class="col-sm-4">
                     <label for="creationDate">Creation Date</label>
-                    <div class="input-group">
+                    <div class="input-group mb-3">
                         <input
                                 id="creationDate"
                                 class="form-control"
@@ -29,17 +31,18 @@
                                 ngbDatepicker
                                 #cd="ngbDatepicker"
                         />
-                        <button class="btn calendar-btn" (click)="cd.toggle()" type="button" style="width: 20px;">
-                            <i class="bx bx-calendar"></i>
-                        </button>
-
+                        <div class="input-group-append">
+                            <button class="btn calendar-btn" (click)="cd.toggle()" type="button">
+                                <i class="bx bx-calendar"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
 
                 <!-- Expiry Date with ngbDatepicker -->
-                <div class="field">
+                <div class="field col-sm-4">
                     <label for="expiryDate">Expiry Date</label>
-                    <div class="input-group">
+                    <div class="input-group mb-3">
                         <input
                                 id="expiryDate"
                                 class="form-control"
@@ -50,64 +53,73 @@
                                 #e="ngbDatepicker"
                                 required
                         />
-                        <button class="btn calendar-btn" (click)="e.toggle()" type="button" style="width: 20px;">
-                            <i class="bx bx-calendar"></i>
-                        </button>
+                        <div class="input-group-append">
+                            <button class="btn calendar-btn" (click)="e.toggle()" type="button" style="width: 20px;">
+                                <i class="bx bx-calendar"></i>
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <!-- Product Details Section -->
-        <div class="section" style="margin-top: 60px;">
-            <h2>Batch Number Details</h2>
-            <div class="product-fields">
-                <div *ngFor="let BatchNumber of BatchNumbers; let i = index" class="form-group product-section">
+        <div class="row" style="margin-top: 40px;">
+            <h4>Batch Number Details</h4>
+            <div *ngFor="let BatchNumber of BatchNumbers; let i = index, let l = last" class="row mb-3">
 
-                    <div class="field">
-                        <label for="batchNumber{{i}}">Batch Number</label>
-                        <input type="text" id="batchNumber{{i}}" [(ngModel)]="BatchNumber.BatchNumber"
-                               name="BatchNumber{{i}}" required placeholder="Batch Number"/>
-                    </div>
-
-                    <div class="field">
-                        <label for="brand{{i}}">Brand</label>
-                        <input type="text" id="brand{{i}}" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required
-                               placeholder="Brand"/>
-                    </div>
-
-                    <div class="field">
-                        <label for="productName{{i}}">Product Name</label>
-                        <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName"
-                               name="ProductName{{i}}" required placeholder="Product Name"/>
-                    </div>
-
-                    <div class="field">
-                        <label for="volume{{i}}">Volume</label>
-                        <input type="number" id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="Volume{{i}}"
-                               required placeholder="Volume"/>
-                    </div>
-
-                    <div class="field">
-                        <label for="quantity{{i}}">Quantity</label>
-                        <input type="text" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}"
-                               required placeholder="Quantity"/>
-                    </div>
-
-                    <!-- Delete button beside the + Add Product button -->
-                    <div class="delete-product-button-container">
-                        <button type="button" class="delete-product-button" (click)="deleteProduct(i)">Delete</button>
-                    </div>
+                <div class="field col-sm-3">
+                    <label for="batchNumber{{i}}">Batch Number</label>
+                    <input type="text" id="batchNumber{{i}}" [(ngModel)]="BatchNumber.BatchNumber"
+                           name="BatchNumber{{i}}" required placeholder="Batch Number" class="form-control"/>
                 </div>
 
-                <!-- Add Product button on the same row as the last product field -->
-                <div class="add-product-button-container" style="margin-right: 1200px;">
-                    <button type="button" class="add-product-button" (click)="addProduct()">+ Add Product</button>
+                <div class="field col-sm-3">
+                    <label for="brand{{i}}">Brand</label>
+                    <input type="text" id="brand{{i}}" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required
+                           placeholder="Brand" class="form-control"/>
+                </div>
+
+                <div class="field col-sm-2">
+                    <label for="productName{{i}}">Product Name</label>
+                    <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName"
+                           name="ProductName{{i}}" required placeholder="Product Name" class="form-control"/>
+                </div>
+
+                <div class="field col-sm-1">
+                    <label for="volume{{i}}">Volume</label>
+                    <select id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="Volume{{i}}" required class="form-control">
+                        <option value="" selected>Select Volume</option>
+                        <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
+                    </select>
+                </div>
+
+                <div class="field col-sm-1">
+                    <label for="quantity{{i}}">Quantity</label>
+                    <input type="text" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}"
+                           required placeholder="Quantity" class="form-control"/>
+                </div>
+
+                <div class="col-sm-2 mt-auto">
+                    <button type="button" class="btn btn-danger" style="margin-right: 3px" (click)="deleteProduct(i)">
+                        <i class="bx bx-trash"></i>
+                    </button>
+                    <button type="button" class="btn btn-success" (click)="addProduct()" *ngIf="l">
+                        <i class="bx bx-plus"></i>
+                    </button>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="text-center mt-5" style="text-align: -webkit-center !important;">
+                <div class="col-sm-6">
+                <button type="submit" class="btn btn-primary w-50" style="margin-right: 3px; width: 50% !important;" [disabled]="!orderForm.valid">Submit</button>
+                    <button type="submit" class="btn btn-danger" style="width: 40% !important;">Reset</button>
+
+                </div>
                 </div>
             </div>
         </div>
 
-        <!-- Submit Button -->
-        <button type="submit" [disabled]="!orderForm.valid">Submit</button>
     </form>
 </div>

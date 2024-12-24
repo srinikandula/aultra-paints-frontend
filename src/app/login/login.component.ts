@@ -4,6 +4,7 @@ import { AuthService } from '../services/auth.service';
 import { Component } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import {first} from "rxjs";
 
 
 @Component({
@@ -21,21 +22,14 @@ export class LoginComponent {
   constructor(private router: Router, private authService: AuthService) {}
 
   login() {
-    this.authService.login(this.email, this.password).subscribe({
-      next: (response) => {
-        // On successful login, save the token
-        console.log('Login successful, token:', response.token);
-        localStorage.setItem('authToken', response.token);
-        this.router.navigate(['/dashboard']); // Redirect to dashboard
-      },
-      error: (error) => {
-        console.error('Login error:', error);
-        if (error.status === 401) {
-          this.errorMessage = 'Invalid email or password'; // Show error message to the user
-        } else {
-          this.errorMessage = 'An error occurred, please try again';
-        }
-      }
+    this.authService.logIn(this.email, this.password).pipe(first()).subscribe((data: any) => {
+      console.log("Loggedin Successfully..!")
+          // this.router.navigate(['/dashboard']); // Redirect to dashboard
+        },
+        (error: any) => {
+      this.errorMessage = error.error.message;
+      console.log(error.error.message);
+
     });
   }
 }

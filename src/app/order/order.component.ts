@@ -20,6 +20,7 @@ export class OrderComponent {
   BatchNumbers: any[] = [
     { BatchNumber: '', Brand: '', ProductName: '', Volume: 0, Quantity: 0 }
   ];
+  volumes: string[] = ["10","20", "30", "50", "100"];
 
   // Array for the Branch Names dropdown
   branchNames: string[] = ['Central Hub', 'Main Street', 'Pine Valley', 'Lakeview', 'Sunset Boulevard', 'Riverside', 'Hillside'];
@@ -30,7 +31,7 @@ export class OrderComponent {
 
 
   addProduct() {
-    this.BatchNumbers.push({ BatchNumber: '', Brand: '', ProductName: '', Volume: 0, Quantity: 0 });
+    this.BatchNumbers.push({ BatchNumber: '', Brand: '', ProductName: '', Volume: '', Quantity: 0 });
   }
 
   // Delete a product from the products array
