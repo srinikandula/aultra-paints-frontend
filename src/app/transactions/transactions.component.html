@@ -10,7 +10,7 @@
                 <tr>
                     <th>S.NO</th>
                     <td>Transaction Id</td>
-                    >td
+                    <td>Batch Id</td>
                     <td>Is Processed</td>
                     <td>QR Code</td>
                     <td>Created At</td>
@@ -21,6 +21,7 @@
                 <tr *ngFor="let item of transactions; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ item.transactionId }}</td>
+                    <td>{{ item.batchId }}</td>
                     <td>{{ item.isProcessed }}</td>
                     <td>
                         <button (click)="setQrUrl(item.qr_code)">QR</button>
