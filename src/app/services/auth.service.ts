@@ -1,8 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import {BehaviorSubject, map, Observable} from 'rxjs';
-import {ApiUrlsService} from "./api-urls.service";
-import {ActivatedRoute, Router} from "@angular/router";
+import { BehaviorSubject, map, Observable } from 'rxjs';
+import { ApiUrlsService } from "./api-urls.service";
+import { ActivatedRoute, Router } from "@angular/router";
 
 @Injectable({
   providedIn: 'root'
@@ -13,33 +13,46 @@ export class AuthService {
   public currentUser: Observable<any>;
   returnUrl: string = '';
 
-
-  constructor(private http: HttpClient,
-              private apiUrls: ApiUrlsService,
-              private router: Router,
-              private route: ActivatedRoute,
+  constructor(
+      private http: HttpClient,
+      private apiUrls: ApiUrlsService,
+      private router: Router,
+      private route: ActivatedRoute
   ) {
-    // @ts-ignore
-    this.currentUserSubject = new BehaviorSubject<any>(JSON.parse(localStorage.getItem('authToken')));
+    // Check if `localStorage` is available before accessing it
+    const storedToken = this.isLocalStorageAvailable()
+        ? JSON.parse(localStorage.getItem('authToken') || 'null')
+        : null;
+
+    this.currentUserSubject = new BehaviorSubject<any>(storedToken);
     this.currentUser = this.currentUserSubject.asObservable();
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+  }
+
+  // Helper to check if `localStorage` is available
+  private isLocalStorageAvailable(): boolean {
+    return typeof window !== 'undefined' && typeof localStorage !== 'undefined';
   }
 
   public get currentUserValue(): any {
     return this.currentUserSubject.value;
   }
 
-  public isAuthenticated(): string {
-    // @ts-ignore
-    return localStorage.getItem('authToken');
+  public isAuthenticated(): string | null {
+    if (this.isLocalStorageAvailable()) {
+      return localStorage.getItem('authToken');
+    }
+    return null;
   }
 
-  logIn(email: string, password: string): any {
-    return this.http.post<any>(this.apiUrls.mainUrl + '/auth/login', {email, password})
+  logIn(email: string, password: string): Observable<any> {
+    return this.http.post<any>(this.apiUrls.mainUrl + '/auth/login', { email, password })
         .pipe(map(response => {
           if (response) {
-            console.log(response)
-            localStorage.setItem('authToken', JSON.stringify(response));
+            console.log(response);
+            if (this.isLocalStorageAvailable()) {
+              localStorage.setItem('authToken', JSON.stringify(response));
+            }
             this.router.navigate([this.returnUrl]);
             this.currentUserSubject.next(response);
           }
@@ -47,9 +60,10 @@ export class AuthService {
         }));
   }
 
-  logOut(): any {
-    // @ts-ignore
-    localStorage.clear('authToken');
+  logOut(): void {
+    if (this.isLocalStorageAvailable()) {
+      localStorage.removeItem('authToken');
+    }
     this.router.navigate(['/login']);
     this.currentUserSubject.next(null);
   }
