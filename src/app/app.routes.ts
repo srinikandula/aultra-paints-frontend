@@ -10,7 +10,7 @@ import {NoAuthGuard} from "./guards/no-auth.guard";
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
-    {path: 'register', component: RegisterComponent, canActivate: [AuthGuard]},
+    {path: 'register', component: RegisterComponent},
     {
         path: '', component: DashboardComponent, canActivate: [AuthGuard],
         children: [
