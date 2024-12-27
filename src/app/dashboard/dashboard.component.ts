@@ -14,7 +14,7 @@ import {AuthService} from "../services/auth.service";
   styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent  {
-  isSidebarCollapsed: boolean = true;  // Sidebar starts collapsed by default
+  isSidebarCollapsed: boolean = false;  // Sidebar starts collapsed by default
 
   constructor(private router: Router, private AuthService: AuthService) {}
 

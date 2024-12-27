@@ -1,124 +1,155 @@
-<!-- Update Branch Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block; margin-top: 120px;" *ngIf="showUpdateModal">
-  <div class="modal-dialog" style="width:600px;">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Update Branch</h5>
-        <button type="button" class="close" (click)="closeUpdateModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <form (ngSubmit)="onUpdateSubmit()">
-        <div class="modal-body">
-          <div class="form-group">
-            <label for="branchName">Branch</label>
-            <input type="text" id="branchName" [(ngModel)]="selectedBranch.Branch" name="Branch" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="creationDate">Creation Date</label>
-            <input type="date" id="creationDate" [(ngModel)]="selectedBranch.CreationDate" name="CreationDate" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="expiryDate">Expiry Date</label>
-            <input type="date" id="expiryDate" [(ngModel)]="selectedBranch.ExpiryDate" name="ExpiryDate" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="batchNumber">Batch Number</label>
-            <input type="text" id="batchNumber" [(ngModel)]="selectedBranch.BatchNumber" name="BatchNumber" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="brand">Brand</label>
-            <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="productName">Product Name</label>
-            <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="volume">Volume</label>
-            <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume" class="form-control" required>
-          </div>
-          <div class="form-group">
-            <label for="quantity">Quantity</label>
-            <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity" class="form-control" required>
-          </div>
+<!-- Main content -->
+<div class="container-fluid container-mt shadow-sm">
+    <div class="row mb-4">
+        <div class="col-sm-8"><h4>Batches</h4></div>
+        <div class="col-sm-2">
+            <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search..."
+                   class="form-control "/>
         </div>
-        <div class="modal-footer">
-          <button type="submit" class="btn btn-primary">Save Changes</button>
-          <button type="button" class="btn btn-secondary" (click)="closeUpdateModal()">Cancel</button>
+        <div class="col-sm-2">
+            <button (click)="onCreateBatch()" class="btn btn-primary">Create Batch Numbers</button>
         </div>
-      </form>
     </div>
-  </div>
+    <div class="row">
+        <!-- Table Wrapper -->
+        <div class="col-12 table-wrapper">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>S.NO</th>
+                    <th>Branch</th>
+                    <td>Redeemable Points</td>
+                    <td>CouponSeries</td>
+                    <th>Creation Date</th>
+                    <th>Expiry Date</th>
+                    <th>Batch Number</th>
+                    <th>Brand</th>
+                    <th>Product Name</th>
+                    <th>Volume</th>
+                    <th>Quantity</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let branch of branches; let i = index">
+                    <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
+                    <td>{{ branch.Branch }}</td>
+                    <td>{{ branch.RedeemablePoints }}</td>
+                    <td>{{ branch.CouponSeries }}</td>
+                    <td>{{ branch.CreationDate | date:'shortDate' }}</td>
+                    <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
+                    <td>{{ branch.BatchNumber }}</td>
+                    <td>{{ branch.Brand }}</td>
+                    <td>{{ branch.ProductName }}</td>
+                    <td>{{ branch.Volume }}</td>
+                    <td>{{ branch.Quantity }}</td>
+                    <td>
+                        <button (click)="onUpdate(branch)" class="btn btn-warning" title="Update">
+                            <i class="bx bx-edit"></i>  <!-- Edit icon -->
+                        </button>
+                        <button (click)="onDelete(branch.BatchNumber)" class="btn btn-danger" title="Delete">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
+            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"
+                    style="background-color:#dc3545">Previous
+            </button>
+            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"
+                    style="background-color:#1179ef;">Next
+            </button>
+        </div>
+
+    </div>
 </div>
 
-<!-- Main content -->
-<div class="container-fluid" style="padding: 20px">
-    <div class="header">
-        <input 
-            type="text" 
-            [(ngModel)]="searchQuery" 
-            (input)="onSearch()" 
-            placeholder="Search..." 
-            class="search-box"
-        />
-        
-        <button 
-            (click)="onCreateBatch()" 
-            class="btn btn-primary create-btn">
-            Create Batch Numbers
-        </button>
+<!-- Update Branch Modal -->
+<div class="modal fade" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block;"
+     *ngIf="showUpdateModal">
+    <!--<div class="modal fade" id="staticBackdrop" [ngClass]="{ 'show': showUpdateModal }" style="display: block;" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1" aria-labelledby="staticBackdropLabel" aria-hidden="true" *ngIf="showUpdateModal">-->
+    <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Update Branch</h5>
+                <!--                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>-->
+            </div>
+            <!--            <form (ngSubmit)="onUpdateSubmit()">-->
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-sm-9 form-group mb-4">
+                        <label for="branchName">Branch</label>
+                        <input type="text" id="branchName" [(ngModel)]="selectedBranch.Branch" name="Branch"
+                               class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="redeemablePoints">Redeemable Points</label>
+                        <input type="number" id="redeemablePoints" [(ngModel)]="selectedBranch.redeemablePoints"
+                               name="redeemablePoints" placeholder="Enter Points" required class="form-control"/>
+                    </div>
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="couponSeries">Coupon Series</label>
+                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.couponSeries"
+                               name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="creationDate">Creation Date</label>
+                        <input type="date" id="creationDate" [(ngModel)]="selectedBranch.CreationDate"
+                               name="CreationDate" class="form-control" required>
+                    </div>
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="expiryDate">Expiry Date</label>
+                        <input type="date" id="expiryDate" [(ngModel)]="selectedBranch.ExpiryDate" name="ExpiryDate"
+                               class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-9 form-group mb-4">
+                        <label for="batchNumber">Batch Number</label>
+                        <input type="text" id="batchNumber" [(ngModel)]="selectedBranch.BatchNumber"
+                               name="BatchNumber" class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="brand">Brand</label>
+                        <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand"
+                               class="form-control" required>
+                    </div>
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"
+                               class="form-control" required>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="volume">Volume</label>
+                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume"
+                               class="form-control" required>
+                    </div>
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="quantity">Quantity</label>
+                        <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity"
+                               class="form-control" required>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary" (click)="onUpdateSubmit()">Save Changes</button>
+                <button type="button" class="btn btn-secondary" (click)="closeUpdateModal()">Cancel</button>
+            </div>
+            <!--            </form>-->
+        </div>
     </div>
-    <div style="margin-top: -20px;">
-      <h4>Batches</h4>
-    
-      <!-- Table Wrapper -->
-      <div class="table-wrapper">
-        <table class="table table-bordered">
-          <thead>
-            <tr>
-              <th>S.NO</th>
-              <th>Branch</th>
-              <th>Creation Date</th>
-              <th>Expiry Date</th>
-              <th>Batch Number</th>
-              <th>Brand</th>
-              <th>Product Name</th>
-              <th>Volume</th>
-              <th>Quantity</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let branch of branches; let i = index">
-              <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
-              <td>{{ branch.Branch }}</td>
-              <td>{{ branch.CreationDate | date:'shortDate' }}</td>
-              <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
-              <td>{{ branch.BatchNumber }}</td>
-              <td>{{ branch.Brand }}</td>
-              <td>{{ branch.ProductName }}</td>
-              <td>{{ branch.Volume }}</td>
-              <td>{{ branch.Quantity }}</td>
-              <td>
-                <button (click)="onUpdate(branch)" class="btn btn-warning" title="Update">
-                  <i class="bx bx-edit"></i>  <!-- Edit icon -->
-                </button>
-                <button (click)="onDelete(branch.BatchNumber)" class="btn btn-danger" title="Delete">
-                  <i class="bx bx-trash"></i>
-                </button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    
-      <!-- Pagination Controls -->
-      <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
-          <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary" style="background-color:#dc3545">Previous</button>
-          <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary" style="background-color:#1179ef;">Next</button>
-      </div>
-    
-  </div>
 </div>

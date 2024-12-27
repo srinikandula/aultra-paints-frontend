@@ -2,7 +2,7 @@
 .sidebar {
   width: 250px;
   position: fixed; /* Position sidebar fixed at the left */
-  top: 0;
+  top: 65px;
   left: 0;
   bottom: 0;
   background-color:#2C3E50;
@@ -18,7 +18,7 @@
 }
 
 .sidebar.expanded {
-  position: absolute; /* Use absolute positioning when expanded */
+  position: fixed; /* Use absolute positioning when expanded */
   z-index: 105; /* Make sure the sidebar appears above the navbar */
 }
 
@@ -32,7 +32,15 @@
 }
 
 .sidebar .nav-item {
-  padding: 15px;
+  padding: 15px 8px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  border-bottom: 2px solid #19232c;
+}
+
+.sidebar .nav-item:hover {
+  background-color: #19232c;
 }
 
 .sidebar .logout-link {
@@ -44,24 +52,40 @@
 
 /* Content area */
 .content {
-  margin-left: 250px; /* Space for the sidebar */
-  margin-top: 10px;   /* Space for the fixed navbar */
+  margin-left: 270px; /* Space for the sidebar */
+  margin-top: 85px;   /* Space for the fixed navbar */
+  margin-right: 20px;
+  margin-bottom: auto;
   transition: margin-left 0.3s ease-in-out, margin-top 0.3s ease-in-out;
 }
 
 .content.collapsed {
-  margin-left: 60px; /* Adjusted content margin when sidebar is collapsed */
+  margin-left: 75px; /* Adjusted content margin when sidebar is collapsed */
 }
 
 /* Navbar styles */
 .navbar {
-  margin-left: 60px; /* Ensure the navbar starts below the sidebar */
+  /*margin-left: 60px; !* Ensure the navbar starts below the sidebar *!*/
   z-index: 50; /* Lower z-index compared to the sidebar */
   margin-top: 0; /* Reset top margin */
-  position: relative; /* Position navbar relative to sidebar */
-  background-color:#FFFFFF;
+  position: fixed; /* Position navbar relative to sidebar */
+  /*background-color:#FFFFFF;*/
+  background-color: #2C3E50;
+  border: 2px solid #19232c;
 }
 
 .navbar-brand {
-  font-weight: bold;
+  /*font-weight: bold;*/
+  padding: 0 30px !important;
+  border-right: 2px solid #19232c
+}
+
+.sidebar-footer {
+  position: absolute;
+  bottom: 0;
+  padding: 15px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  width: inherit;
 }
