@@ -40,7 +40,7 @@ export class TransactionsComponent {
     getAllTransactions(page: number = this.currentPage) {
         this.apiRequest.create(this.ApiUrls.getTransactions, {page: page, limit: this.limit}).subscribe(
             (response) => {
-                this.transactions = response;
+                this.transactions = response.transactionsData;
                 this.totalPages = response.pages;
                 // this.currentPage = response.currentPage;
             },
@@ -52,13 +52,15 @@ export class TransactionsComponent {
 
     prevPage(): void {
         if (this.currentPage > 1) {
+            this.currentPage = this.currentPage - 1
             this.getAllTransactions(this.currentPage - 1);
         }
     }
 
     nextPage(): void {
         if (this.currentPage < this.totalPages) {
-            this.getAllTransactions(this.currentPage + 1);
+            this.currentPage = this.currentPage + 1
+            this.getAllTransactions(this.currentPage);
         }
     }
 

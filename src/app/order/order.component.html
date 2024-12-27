@@ -1,36 +1,30 @@
-<div class="container" style="background: #f5f5f5;
-    padding: 30px;
-    border-radius: 10px;">
+<div class="container container-mt shadow-sm">
     <form (ngSubmit)="submitForm()" #orderForm="ngForm">
-
         <!-- Branch Details Section -->
         <div class="row">
             <h4>Branch Details</h4>
-
             <div class="row">
                 <div class="field col-sm-4">
                     <label for="branchName">Branch Name</label>
-                    <select id="branchName" [(ngModel)]="branchName" name="branchName" required
-                            placeholder="Select Branch" class="form-control">
+                    <select id="branchName" [(ngModel)]="branchName" name="branchName" required class="form-control">
                         <option value="" disabled selected>Select a branch</option>
                         <option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</option>
                     </select>
                 </div>
-
-                <!-- Creation Date with ngbDatepicker -->
+                <div class="field col-sm-4">
+                    <label for="redeemablePoints">Redeemable Points</label>
+                    <input type="number" id="redeemablePoints" [(ngModel)]="redeemablePoints" name="redeemablePoints" placeholder="Enter Points" required class="form-control"/>
+                </div>
+            </div>
+<!--                <div class="field col-sm-4">-->
+<!--                    <label for="couponSeries">Coupon Series</label>-->
+<!--                    <input type="text" id="couponSeries" [(ngModel)]="couponSeries" name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>-->
+<!--                </div>-->
+            <div class="row">
                 <div class="col-sm-4">
                     <label for="creationDate">Creation Date</label>
                     <div class="input-group mb-3">
-                        <input
-                                id="creationDate"
-                                class="form-control"
-                                placeholder="yyyy-mm-dd"
-                                name="creationDate"
-                                [(ngModel)]="creationDate"
-                                required
-                                ngbDatepicker
-                                #cd="ngbDatepicker"
-                        />
+                        <input id="creationDate" class="form-control" placeholder="yyyy-mm-dd" name="creationDate" [(ngModel)]="creationDate" required ngbDatepicker #cd="ngbDatepicker"/>
                         <div class="input-group-append">
                             <button class="btn calendar-btn" (click)="cd.toggle()" type="button">
                                 <i class="bx bx-calendar"></i>
@@ -38,23 +32,12 @@
                         </div>
                     </div>
                 </div>
-
-                <!-- Expiry Date with ngbDatepicker -->
-                <div class="field col-sm-4">
+                <div class="col-sm-4">
                     <label for="expiryDate">Expiry Date</label>
                     <div class="input-group mb-3">
-                        <input
-                                id="expiryDate"
-                                class="form-control"
-                                placeholder="yyyy-mm-dd"
-                                name="expiryDate"
-                                [(ngModel)]="expiryDate"
-                                ngbDatepicker
-                                #e="ngbDatepicker"
-                                required
-                        />
+                        <input id="expiryDate" class="form-control" placeholder="yyyy-mm-dd" name="expiryDate" [(ngModel)]="expiryDate" ngbDatepicker #e="ngbDatepicker" required/>
                         <div class="input-group-append">
-                            <button class="btn calendar-btn" (click)="e.toggle()" type="button" style="width: 20px;">
+                            <button class="btn calendar-btn" (click)="e.toggle()" type="button">
                                 <i class="bx bx-calendar"></i>
                             </button>
                         </div>
@@ -67,25 +50,18 @@
         <div class="row" style="margin-top: 40px;">
             <h4>Batch Number Details</h4>
             <div *ngFor="let BatchNumber of BatchNumbers; let i = index, let l = last" class="row mb-3">
-
                 <div class="field col-sm-3">
                     <label for="batchNumber{{i}}">Batch Number</label>
-                    <input type="text" id="batchNumber{{i}}" [(ngModel)]="BatchNumber.BatchNumber"
-                           name="BatchNumber{{i}}" required placeholder="Batch Number" class="form-control"/>
+                    <input type="text" id="batchNumber{{i}}" [(ngModel)]="BatchNumber.BatchNumber" name="BatchNumber{{i}}" required class="form-control"/>
                 </div>
-
                 <div class="field col-sm-3">
-                    <label for="brand{{i}}">Brand</label>
-                    <input type="text" id="brand{{i}}" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required
-                           placeholder="Brand" class="form-control"/>
-                </div>
-
-                <div class="field col-sm-2">
                     <label for="productName{{i}}">Product Name</label>
-                    <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName"
-                           name="ProductName{{i}}" required placeholder="Product Name" class="form-control"/>
+                    <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName" name="ProductName{{i}}" required class="form-control"/>
                 </div>
-
+                <div class="field col-sm-2">
+                    <label for="brand{{i}}">Brand</label>
+                    <input type="text" id="brand{{i}}" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required class="form-control"/>
+                </div>
                 <div class="field col-sm-1">
                     <label for="volume{{i}}">Volume</label>
                     <select id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="Volume{{i}}" required class="form-control">
@@ -93,33 +69,25 @@
                         <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
                     </select>
                 </div>
-
                 <div class="field col-sm-1">
                     <label for="quantity{{i}}">Quantity</label>
-                    <input type="text" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}"
-                           required placeholder="Quantity" class="form-control"/>
+                    <input type="text" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}" required class="form-control"/>
                 </div>
-
                 <div class="col-sm-2 mt-auto">
-                    <button type="button" class="btn btn-danger" style="margin-right: 3px" (click)="deleteProduct(i)">
+                    <button type="button" class="btn btn-danger mx-2" (click)="deleteProduct(i)">
                         <i class="bx bx-trash"></i>
                     </button>
-                    <button type="button" class="btn btn-success" (click)="addProduct()" *ngIf="l">
+                    <button type="button" class="btn btn-success mx-2" (click)="addProduct()" *ngIf="l">
                         <i class="bx bx-plus"></i>
                     </button>
                 </div>
             </div>
-
-            <div class="row">
-                <div class="text-center mt-5" style="text-align: -webkit-center !important;">
-                <div class="col-sm-6">
-                <button type="submit" class="btn btn-primary w-50" style="margin-right: 3px; width: 50% !important;" [disabled]="!orderForm.valid">Submit</button>
-                    <button type="submit" class="btn btn-danger" style="width: 40% !important;">Reset</button>
-
-                </div>
-                </div>
-            </div>
         </div>
 
+        <div class="d-flex flex-row-reverse mt-4">
+            <button class="bd-highlight btn btn-light mx-2" (click)="cancel()">Cancel</button>
+            <button type="reset" class="bd-highlight btn btn-danger mx-2" (click)="resetForm()">Reset</button>
+            <button type="submit" class="bd-highlight btn btn-primary mx-2" [disabled]="!orderForm.valid">Submit</button>
+        </div>
     </form>
 </div>

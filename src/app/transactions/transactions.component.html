@@ -1,11 +1,11 @@
 <!-- Main content -->
-<div class="container-fluid" style="padding: 20px">
-    <div style="margin-top: -20px;">
+<div class="container-fluid container-mt shadow-sm">
+    <div style="">
         <h4>Transactions</h4>
 
         <!-- Table Wrapper -->
         <div class="table-wrapper">
-            <table class="table table-bordered">
+            <table class="table table-hover">
                 <thead>
                 <tr>
                     <th scope="col">S.NO</th>
@@ -23,31 +23,28 @@
                 <tr *ngFor="let item of transactions; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ item.transactionId }}</td>
-                    <td>{{ item.batchId }}</td>
+                    <td>{{ item.batchName }}</td>
                     <td>{{ item.isProcessed }}</td>
                     <td>
                         <button (click)="setQrUrl(item.qr_code)">QR</button>
                     </td>
                     <td>{{ item.createdAt | date }}</td>
                     <td>{{ item.updatedAt | date }}</td>
-                    <td *ngIf="item.createdBy">{{item.createdBy.name}}</td>
-                    <td *ngIf="item.updatedBy">{{item.updatedBy.name}}</td>
+                    <td>{{ item.createdBy }}</td>
+                    <td>{{ item.updatedBy }}</td>
                 </tr>
                 </tbody>
             </table>
         </div>
 
         <!-- Pagination Controls -->
-        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
-            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"
-                    style="background-color:#dc3545">Previous
-            </button>
-            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"
-                    style="background-color:#1179ef;">Next
-            </button>
+        <div class="d-flex justify-content-end">
+            <div class="pagination-controls">
+                <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+                <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+            </div>
         </div>
-
     </div>
 </div>
 

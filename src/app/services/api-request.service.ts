@@ -27,7 +27,13 @@ export class ApiRequestService {
   }
 
   searchBranch(subUrl: any, batchNumber: any) {
-    return this.http.get<Branch>(this.ApiUrls.mainUrl+ subUrl + '/' +batchNumber).pipe(map((res: any) => {
+    return this.http.get<any>(this.ApiUrls.mainUrl+ subUrl + '/' +batchNumber).pipe(map((res: any) => {
+      return res;
+    }));
+  }
+
+  getCouponSeries(subUrl: any) {
+    return this.http.get<any>(this.ApiUrls.mainUrl + subUrl).pipe(map((res: any) => {
       return res;
     }));
   }
