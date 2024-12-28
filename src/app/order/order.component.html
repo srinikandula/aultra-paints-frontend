@@ -12,8 +12,19 @@
                     </select>
                 </div>
                 <div class="col-sm-3 mb-3">
-                    <label class="form-label" for="productName">Product Name</label>
-                    <input type="text" id="productName" placeholder="Enter Product Name" [(ngModel)]="ProductName" name="ProductName" required class="form-control"/>
+                    <label class="form-label" for="ProductName">Product Name</label>
+<!--                    <input type="text" id="productName" placeholder="Enter Product Name" [(ngModel)]="ProductName" name="ProductName" required class="form-control"/>-->
+                    <ng-select
+                            name="ProductName"
+                            [items]="products"
+                            [(ngModel)]="ProductName"
+                            [multiple]="false"
+                            bindLabel="name"
+                            bindValue="_id"
+                            placeholder="Select options"
+                            (ngModelChange)="getBrandes()"
+                            [searchable]="true">
+                    </ng-select>
                 </div>
 <!--                <div class="field col-sm-4">-->
 <!--                    <label for="couponSeries">Coupon Series</label>-->
@@ -58,7 +69,17 @@
 <!--                </div>-->
                 <div class="col-sm-2">
                     <label class="form-label" for="brand{{i}}">Brand</label>
-                    <input type="text" id="brand{{i}}" placeholder="Enter Brand" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required class="form-control"/>
+<!--                    <input type="text" id="brand{{i}}" placeholder="Enter Brand" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required class="form-control"/>-->
+                    <ng-select
+                            name="Brand{{i}}"
+                            [items]="brandData"
+                            [(ngModel)]="BatchNumber.Brand"
+                            [multiple]="false"
+                            bindLabel="brands"
+                            bindValue="_id"
+                            placeholder="Select options"
+                            [searchable]="true">
+                    </ng-select>
                 </div>
                 <div class="col-sm-2">
                     <label class="form-label" for="redeemablePoints{{i}}">Redeemable Points</label>

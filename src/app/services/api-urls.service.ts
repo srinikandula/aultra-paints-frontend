@@ -1,16 +1,15 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class ApiUrlsService {
 
-  constructor() { }
-  mainUrl = "http://localhost:4300/api/";
-  // mainUrl = "https://paintsapi.whizzard.in/api/";
+    constructor() {
+    }
 
-  // API Urls
-  register = 'auth/register';
+    mainUrl = "http://localhost:4300/api/";
+    // mainUrl = "https://paintsapi.whizzard.in/api/";
 
   // Users API URLs
   getUsers = 'users/all';
@@ -18,27 +17,33 @@ export class ApiUrlsService {
   updateUser = 'users';
   deleteUser = 'users';
 
-  // batchApiUrls
-  createBatch = 'batchNumbers/add'
-  getBatches = 'batchNumbers';
-  searchBranch = 'batchNumbers/';
-  couponSeries = 'batchNumbers/couponSeries'
+    // API Urls
+    register = 'auth/register';
+
+    // batchApiUrls
+    createBatch = 'batchNumbers/add'
+    getBatches = 'batchNumbers';
+    searchBranch = 'batchNumbers/';
+    couponSeries = 'batchNumbers/couponSeries'
+    updateBatch = 'batchNumbers/update/'
 
 //   transactions
-  getTransactions = 'transaction';
+    getTransactions = 'transaction';
 
 
     // Product URLs
-    createProduct = 'products'; 
-    getProducts = 'products';   
-    getProductById = 'products'; 
-    updateProduct = 'products';  
-    deleteProduct = 'products';  
+    createProduct = 'products';
+    getProducts = 'products';
+    getAllProducts = 'products/getAllProducts';
+    getProductById = 'products';
+    updateProduct = 'products';
+    deleteProduct = 'products';
 
     // API Urls for Brands
-  createBrand = 'brands'; 
-  getBrands = 'brands';   
-  getBrandsByProductId = 'brands'; 
-  updateBrand = 'brands'; 
-  deleteBrand = 'brands'; 
+    createBrand = 'brands';
+    getBrands = 'brands';
+    getBrandsByProductId = 'brands';
+    updateBrand = 'brands';
+    deleteBrand = 'brands';
+    getAllBrandsForSelect = 'brands/getAllBrandsForSelect/'
 }

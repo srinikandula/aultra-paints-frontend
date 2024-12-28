@@ -30,6 +30,7 @@ export class OrderService {
 
     // Update branch by BatchNumber
   updateBranch(updatedBranch: any, batchNumber: string): Observable<any> {
+    console.log(updatedBranch, batchNumber)
     return this.http.put<any>(`${this.apiUrl}/${batchNumber}`, updatedBranch);
   }
   
