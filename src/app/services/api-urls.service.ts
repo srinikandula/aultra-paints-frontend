@@ -20,4 +20,19 @@ export class ApiUrlsService {
 
 //   transactions
   getTransactions = 'transaction';
+
+
+    // Product URLs
+    createProduct = 'products'; 
+    getProducts = 'products';   
+    getProductById = 'products'; 
+    updateProduct = 'products';  
+    deleteProduct = 'products';  
+
+    // API Urls for Brands
+  createBrand = 'brands'; 
+  getBrands = 'brands';   
+  getBrandsByProductId = 'brands'; 
+  updateBrand = 'brands'; 
+  deleteBrand = 'brands'; 
 }

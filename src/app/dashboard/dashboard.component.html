@@ -17,22 +17,34 @@
     <!-- Sidebar (above the navbar) -->
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
         <ul class="nav flex-column">
+            <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('/dashboard/list')">
                 <i class="bx bx-list-ul px-2" style="font-size: 30px;"></i>
                 <span *ngIf="!isSidebarCollapsed">List</span>
             </li>
+
+            <!-- Transactions -->
             <li class="nav-item" (click)="navigateTo('/dashboard/transactions')">
                 <i class="bx bx-transfer px-2" style="font-size: 30px;"></i>
                 <span *ngIf="!isSidebarCollapsed">Transactions</span>
             </li>
+
+            <!-- Product List (new item) -->
+            <li class="nav-item" (click)="navigateTo('/dashboard/product-list')">
+                <i class="bx bx-label" style="font-size: 30px;"></i> <!-- Product icon -->
+                <span *ngIf="!isSidebarCollapsed">Product</span>
+            </li>
         </ul>
-<!--        <div (click)="logout()" class="logout-link">-->
-<!--            <i class="bx bx-log-out pe-4"></i><span *ngIf="!isSidebarCollapsed">Logout</span>-->
-<!--        </div>-->
+
+         <!-- Brand List (New Item) -->
+         <li class="nav-item" (click)="navigateTo('/dashboard/brand-list')">
+            <i class="bx bx-tag" style="font-size: 30px;"></i> <!-- Tag icon for Brand -->
+            <span *ngIf="!isSidebarCollapsed">Brand</span>
+        </li>
+
+        <!-- Sidebar Footer -->
         <div class="sidebar-footer" (click)="logout()">
             <div class="sidebar-link">
-<!--                <i class="lni lni-exit"></i>-->
-<!--                <span>Setting</span>-->
                 <i class="bx bx-log-out px-2"></i><span *ngIf="!isSidebarCollapsed">Logout</span>
             </div>
         </div>
