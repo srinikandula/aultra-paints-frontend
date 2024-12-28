@@ -18,8 +18,8 @@
                 <tr>
                     <th>S.NO</th>
                     <th>Branch</th>
-                    <td>Redeemable Points</td>
-                    <td>CouponSeries</td>
+                    <th>Redeemable Points</th>
+                    <th>CouponSeries</th>
                     <th>Creation Date</th>
                     <th>Expiry Date</th>
                     <th>Batch Number</th>
@@ -83,21 +83,21 @@
             <!--            <form (ngSubmit)="onUpdateSubmit()">-->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-9 form-group mb-4">
+                    <div class="col-sm-6 form-group mb-4">
                         <label for="branchName">Branch</label>
                         <input type="text" id="branchName" [(ngModel)]="selectedBranch.Branch" name="Branch"
                                class="form-control" required>
                     </div>
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"
+                               class="form-control" required>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 form-group mb-4">
-                        <label for="redeemablePoints">Redeemable Points</label>
-                        <input type="number" id="redeemablePoints" [(ngModel)]="selectedBranch.redeemablePoints"
-                               name="redeemablePoints" placeholder="Enter Points" required class="form-control"/>
-                    </div>
-                    <div class="col-sm-6 form-group mb-4">
+                    <div class="col-sm-9 form-group mb-4">
                         <label for="couponSeries">Coupon Series</label>
-                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.couponSeries"
+                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.CouponSeries"
                                name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>
                     </div>
                 </div>
@@ -114,34 +114,38 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-9 form-group mb-4">
+                    <div class="col-sm-6 form-group mb-4">
                         <label for="batchNumber">Batch Number</label>
                         <input type="text" id="batchNumber" [(ngModel)]="selectedBranch.BatchNumber"
                                name="BatchNumber" class="form-control" required>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-sm-6 form-group mb-4">
                         <label for="brand">Brand</label>
                         <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand"
                                class="form-control" required>
                     </div>
-                    <div class="col-sm-6 form-group mb-4">
-                        <label for="productName">Product Name</label>
-                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"
-                               class="form-control" required>
-                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 form-group mb-4">
-                        <label for="volume">Volume</label>
-                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume"
-                               class="form-control" required>
+<!--                    <div class="col-sm-6 form-group mb-4">-->
+<!--                        <label for="productName">Product Name</label>-->
+<!--                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"-->
+<!--                               class="form-control" required>-->
+<!--                    </div>-->
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="redeemablePoints">Points</label>
+                        <input type="number" id="redeemablePoints" [(ngModel)]="selectedBranch.RedeemablePoints" name="redeemablePoints" required class="form-control"/>
                     </div>
-                    <div class="col-sm-6 form-group mb-4">
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="value">Value</label>
+                        <input type="number" id="value" [(ngModel)]="selectedBranch.value" name="value" required class="form-control"/>
+                    </div>
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="volume">Volume</label>
+                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume" class="form-control" required>
+                    </div>
+                    <div class="col-sm-2 form-group mb-4">
                         <label for="quantity">Quantity</label>
-                        <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity"
-                               class="form-control" required>
+                        <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity" class="form-control" required>
                     </div>
                 </div>
             </div>

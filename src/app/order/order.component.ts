@@ -15,21 +15,19 @@ import {Router} from "@angular/router";
     styleUrls: ['./order.component.css']
 })
 export class OrderComponent implements OnInit {
-    branchName: string = 'Central Hub';
-    redeemablePoints: number = 100;
-    couponSeries: string = '123';
+    branchName: string = '';
+    ProductName: string = '';
     couponSeriesList: string[] = ['Series A', 'Series B', 'Series C']; // Example data
-
     creationDate = new Date();
     expiryDate = new Date();
 
     BatchNumbers: any[] = [
         // { BatchNumber: '', Brand: '', ProductName: '', Volume: 0, Quantity: 0 }
-        {BatchNumber: '1', Brand: 'LG', ProductName: 'TV', Volume: 10, Quantity: 5},
-        {BatchNumber: '2', Brand: 'SONY', ProductName: 'TV', Volume: 10, Quantity: 5}
+        {BatchNumber: 0, Brand: '', redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
+        // {BatchNumber: '2', Brand: 'SONY', ProductName: 'TV', Volume: 0, Quantity: 0}
     ];
 
-    volumes: string[] = ["10", "20", "30", "50", "100"];
+    volumes: number[] = [10, 20, 30, 50, 100];
     branchNames: string[] = ['Central Hub', 'Main Street', 'Pine Valley', 'Lakeview'];
 
     constructor(private ApiUrls: ApiUrlsService, private ApiRequest: ApiRequestService, private router: Router,) {
@@ -47,8 +45,7 @@ export class OrderComponent implements OnInit {
     submitForm() {
         const newBranch = {
             Branch: this.branchName,
-            RedeemablePoints: this.redeemablePoints,
-            CouponSeries: this.couponSeries,
+            ProductName: this.ProductName,
             CreationDate: this.convertToISODate(this.creationDate),
             ExpiryDate: this.convertToISODate(this.expiryDate),
             BatchNumbers: this.BatchNumbers,
@@ -66,11 +63,10 @@ export class OrderComponent implements OnInit {
 
     resetForm() {
         this.branchName = '';
-        this.redeemablePoints = 0;
-        this.couponSeries = '';
+        this.ProductName = '';
         this.creationDate = new Date();
         this.expiryDate = new Date();
-        this.BatchNumbers = [{BatchNumber: '1', Brand: 'LG', ProductName: 'TV', Volume: 10, Quantity: 5}];
+        this.BatchNumbers = [{BatchNumber: 0, Brand: '', redeemablePoints: 0, value: 0, Volume: '', Quantity: 0}];
     }
 
     convertToISODate(date: any) {
@@ -79,7 +75,7 @@ export class OrderComponent implements OnInit {
     }
 
     addProduct() {
-        this.BatchNumbers.push({BatchNumber: '', Brand: '', ProductName: '', Volume: '', Quantity: 0});
+        this.BatchNumbers.push({BatchNumber: 0, Brand: '', redeemablePoints: 0, value: 0, Volume: '', Quantity: 0});
     }
 
     // Delete a product from the products array
