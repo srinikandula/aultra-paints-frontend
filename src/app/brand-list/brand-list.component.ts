@@ -78,49 +78,48 @@ export class BrandListComponent {
     return this.brands.some(brand => brand.proId === productId && brand.brands.toLowerCase() === brandName.toLowerCase());
   }
 
-  // Save brand (add or update)
   saveBrand(brandModal: any): void {
-    if (this.brandExists(this.currentBrand.proId, this.currentBrand.brands)) {
-      this.showError('Brand already exists for this product!');
-      return;  
-    }
-
-    const successMessage = this.currentBrand._id ? 'Brand updated successfully!' : 'Brand added successfully!';
-    const errorMessage = this.currentBrand._id ? 'Error updating brand!' : 'Error creating brand!';
-
-    if (this.currentBrand._id) {
-      // Update brand
-      this.apiRequestService.updateBrand(this.currentBrand._id, this.currentBrand).subscribe({
-        next: () => {
-          this.loadBrands();
-          this.showSuccess(successMessage).then(() => {
-            this.modalService.dismissAll();  
-          });
-        },
-        error: () => {
-          this.showError(errorMessage).then(() => {
-            this.modalService.dismissAll();  
-          });
+    // Show SweetAlert for confirmation before saving
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to save this brand?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, save it!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.modalService.dismissAll();
+  
+        // Check if the brand already exists
+        if (this.brandExists(this.currentBrand.proId, this.currentBrand.brands)) {
+          this.showError('Brand already exists for this product!');
+          return;  
         }
-      });
-    } else {
-      // Create brand
-      this.apiRequestService.createBrand(this.currentBrand).subscribe({
-        next: () => {
-          this.loadBrands();
-          this.showSuccess(successMessage).then(() => {
-            this.modalService.dismissAll();  
-          });
-        },
-        error: () => {
-          this.showError(errorMessage).then(() => {
-            this.modalService.dismissAll();  
-          });
-        }
-      });
-    }
-    this.currentBrand = { proId: '', brands: '' }; 
+  
+        const successMessage = this.currentBrand._id ? 'Brand updated successfully!' : 'Brand added successfully!';
+        const errorMessage = this.currentBrand._id ? 'Error updating brand!' : 'Error creating brand!';
+  
+        const saveRequest = this.currentBrand._id
+          ? this.apiRequestService.updateBrand(this.currentBrand._id, this.currentBrand)
+          : this.apiRequestService.createBrand(this.currentBrand);
+  
+        // Call the API to create or update the brand
+        saveRequest.subscribe({
+          next: () => {
+            this.loadBrands();  
+            this.showSuccess(successMessage);
+          },
+          error: () => {
+            this.showError(errorMessage);
+          }
+        });
+  
+        this.currentBrand = { proId: '', brands: '' };  
+      }
+    });
   }
+  
 
   // Delete brand
   deleteBrand(id: string): void {

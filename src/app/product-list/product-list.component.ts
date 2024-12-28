@@ -48,35 +48,52 @@ export class ProductListComponent implements OnInit {
   }
 
   saveProduct(): void {
-    const productExists = this.products.some(product => product.name.toLowerCase() === this.currentProduct.name.toLowerCase());
-    
-    if (productExists) {
-      this.showError('Product with this name already exists!');
-      return; 
-    }
+    // Show SweetAlert for confirmation before saving
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to save this product?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, save it!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Close the modal immediately after the user confirms the save action
+        this.modalService.dismissAll();
+
+        const productExists = this.products.some(product => product.name.toLowerCase() === this.currentProduct.name.toLowerCase());
   
-    if (this.currentProduct._id) {
-      this.apiService.updateProduct(this.currentProduct._id, this.currentProduct).subscribe(
-        (data) => {
-          this.loadProducts();
-          this.showSuccess('Product updated successfully!');
-        },
-        (error) => {
-          this.showError('Error updating product!');
+        if (productExists) {
+          this.showError('Product with this name already exists!');
+          return;  
         }
-      );
-    } else {
-      this.apiService.createProduct(this.currentProduct).subscribe(
-        (data) => {
-          this.loadProducts();
-          this.showSuccess('Product added successfully!');
-        },
-        (error) => {
-          this.showError('Error creating product!');
-        }
-      );
-    }
-  }  
+  
+        // Determine success and error messages based on whether it's an update or a new product
+        const successMessage = this.currentProduct._id ? 'Product updated successfully!' : 'Product added successfully!';
+        const errorMessage = this.currentProduct._id ? 'Error updating product!' : 'Error creating product!';
+  
+        // If the product has an ID, it's an update, otherwise it's a new product
+        const saveRequest = this.currentProduct._id
+          ? this.apiService.updateProduct(this.currentProduct._id, this.currentProduct)
+          : this.apiService.createProduct(this.currentProduct);
+  
+        // Call the API to create or update the product
+        saveRequest.subscribe({
+          next: () => {
+            this.loadProducts();  
+            this.showSuccess(successMessage);
+          },
+          error: () => {
+            this.showError(errorMessage);
+          }
+        });
+        this.currentProduct = { name: '' };
+      }
+    });
+  }
+  
+  
+  
 
   editProduct(product: any, content: any): void {
     this.currentProduct = { ...product };  
