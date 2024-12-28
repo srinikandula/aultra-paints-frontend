@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import {CommonModule, DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
-import {FormsModule} from "@angular/forms";
-import {OrderService} from "../order.service";
-import {Router} from "@angular/router";
-import {ApiUrlsService} from "../services/api-urls.service";
-import {ApiRequestService} from "../services/api-request.service";
+import { CommonModule, DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { OrderService } from "../order.service";
+import { Router } from "@angular/router";
+import { ApiUrlsService } from "../services/api-urls.service";
+import { ApiRequestService } from "../services/api-request.service";
 
 @Component({
-  selector: 'app-transactions',
-  standalone: true,
+    selector: 'app-transactions',
+    standalone: true,
     imports: [
         DatePipe,
         FormsModule,
@@ -19,8 +19,8 @@ import {ApiRequestService} from "../services/api-request.service";
         CommonModule,
         FormsModule
     ],
-  templateUrl: './transactions.component.html',
-  styleUrl: './transactions.component.css'
+    templateUrl: './transactions.component.html',
+    styleUrls: ['./transactions.component.css']
 })
 export class TransactionsComponent {
     currentPage = 1;
@@ -28,7 +28,7 @@ export class TransactionsComponent {
     limit = 10;
     transactions: any = [];
     qrUrl: any;
-    showUpdateModal: any = false;
+    showUpdateModal: boolean = false;
 
     constructor(private orderService: OrderService,
                 private router: Router,
@@ -41,12 +41,12 @@ export class TransactionsComponent {
 
     getAllTransactions(page: number = this.currentPage) {
         this.apiRequest.create(this.ApiUrls.getTransactions, {page: page, limit: this.limit}).subscribe(
-            (response) => {
+            (response: any) => {
                 this.transactions = response.transactionsData;
                 this.totalPages = response.pages;
                 // this.currentPage = response.currentPage;
             },
-            (error) => {
+            (error: any) => {
                 console.error('Error loading branches:', error);
             }
         );

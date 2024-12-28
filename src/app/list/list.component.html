@@ -3,7 +3,7 @@
     <div class="row mb-4">
         <div class="col-sm-8"><h4>Batches</h4></div>
         <div class="col-sm-2">
-            <input type="text" [(ngModel)]="searchQuery" (input)="onSearch()" placeholder="Search..."
+            <input type="text" [(ngModel)]="searchQuery" (input)="loadBranches()" placeholder="Search..."
                    class="form-control "/>
         </div>
         <div class="col-sm-2">
@@ -35,8 +35,8 @@
                 <tr *ngFor="let branch of branches; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ branch.Branch }}</td>
-                    <td>{{ branch.ProductName }}</td>
-                    <td>{{ branch.Brand }}</td>
+                    <td>{{ branch.ProductNameStr || 'NA' }}</td>
+                    <td>{{ branch.BrandName || 'NA' }}</td>
                     <td>{{ branch.CouponSeries }}</td>
                     <td>{{ branch.BatchNumber }}</td>
                     <td>{{ branch.RedeemablePoints }}</td>
@@ -100,8 +100,19 @@
                     </div>
                     <div class="col-sm-6 form-group mb-4">
                         <label for="productName">Product Name</label>
-                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"
-                               class="form-control" required>
+<!--                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"-->
+<!--                               class="form-control" required>-->
+                        <ng-select
+                                name="ProductName"
+                                [items]="products"
+                                [(ngModel)]="selectedBranch.ProductName"
+                                [multiple]="false"
+                                bindLabel="name"
+                                bindValue="_id"
+                                placeholder="Select options"
+                                (ngModelChange)="getBrandes()"
+                                [searchable]="true">
+                        </ng-select>
                     </div>
                 </div>
                 <div class="row">
@@ -131,8 +142,18 @@
                     </div>
                     <div class="col-sm-6 form-group mb-4">
                         <label for="brand">Brand</label>
-                        <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand"
-                               class="form-control" required>
+<!--                        <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand"-->
+<!--                               class="form-control" required>-->
+                        <ng-select
+                                name="Brand"
+                                [items]="brandData"
+                                [(ngModel)]="selectedBranch.Brand"
+                                [multiple]="false"
+                                bindLabel="brands"
+                                bindValue="_id"
+                                placeholder="Select options"
+                                [searchable]="true">
+                        </ng-select>
                     </div>
                 </div>
                 <div class="row">
