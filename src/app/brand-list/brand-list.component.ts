@@ -3,108 +3,153 @@ import { ApiRequestService } from '../services/api-request.service';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import Swal from 'sweetalert2'; 
 
 @Component({
   selector: 'app-brand-list',
   standalone: true,
   imports: [FormsModule, CommonModule],
   templateUrl: './brand-list.component.html',
-  styleUrl: './brand-list.component.css'
+  styleUrls: ['./brand-list.component.css']
 })
 export class BrandListComponent {
   brands: any[] = [];
-  products: any[] = [];  // Array to hold the list of products
-  currentBrand: any = { proId: '', brands: '' };  
+  products: any[] = [];
+  currentBrand: any = { proId: '', brands: '' };
   errorMessage: string = '';
-  page = 1;  
-  limit = 10; 
+  page = 1;
+  limit = 10;
 
   constructor(
     private apiRequestService: ApiRequestService,
-    private modalService: NgbModal  
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.loadBrands();
-    this.loadProducts();  
+    this.loadProducts();
   }
 
-  // Method to load brands
   loadBrands(): void {
     const data = { page: this.page, limit: this.limit };
     this.apiRequestService.getAllBrands(data).subscribe({
       next: (response) => {
-        this.brands = response; 
+        this.brands = response;
       },
       error: (error) => {
-        this.errorMessage = 'Error fetching brands!';
-        console.error(error);
+        this.showError('Error fetching brands!');
       }
     });
   }
 
-  // Method to load products
   loadProducts(): void {
-    this.apiRequestService.getProducts({ page: 1, limit: 10 }).subscribe(
-      (data) => {
-        this.products = data;  
+    this.apiRequestService.getProducts({ page: 1, limit: 10 }).subscribe({
+      next: (data) => {
+        this.products = data;
       },
-      (error) => {
-        console.error('Error fetching products:', error);
+      error: (error) => {
+        this.showError('Error fetching products!');
       }
-    );
+    });
   }
 
-  // Method to open modal and add a new brand
+  // Add brand: Open the modal
   addBrand(brandModal: any): void {
-    this.currentBrand = { proId: '', brands: '' }; 
+    this.currentBrand = { proId: '', brands: '' };  
     this.modalService.open(brandModal);  
   }
 
-  // Method to open modal and edit an existing brand
+  // Edit brand: Open the modal with current brand data
   editBrand(brand: any, brandModal: any): void {
     this.currentBrand = { ...brand }; 
     this.modalService.open(brandModal);  
   }
 
-  // Method to save brand (add or update)
-  saveBrand(): void {
+
+  brandExists(productId: string, brandName: string): boolean {
+    return this.brands.some(brand => brand.proId === productId && brand.brands.toLowerCase() === brandName.toLowerCase());
+  }
+
+  // Save brand (add or update)
+  saveBrand(brandModal: any): void {
+    if (this.brandExists(this.currentBrand.proId, this.currentBrand.brands)) {
+      this.showError('Brand already exists for this product!');
+      return;  
+    }
+
+    const successMessage = this.currentBrand._id ? 'Brand updated successfully!' : 'Brand added successfully!';
+    const errorMessage = this.currentBrand._id ? 'Error updating brand!' : 'Error creating brand!';
+
     if (this.currentBrand._id) {
+      // Update brand
       this.apiRequestService.updateBrand(this.currentBrand._id, this.currentBrand).subscribe({
         next: () => {
-          this.loadBrands(); 
-          this.currentBrand = { proId: '', brands: '' }; 
+          this.loadBrands();
+          this.showSuccess(successMessage).then(() => {
+            this.modalService.dismissAll();  
+          });
         },
-        error: (error) => {
-          this.errorMessage = 'Error updating brand!';
-          console.error(error);
+        error: () => {
+          this.showError(errorMessage).then(() => {
+            this.modalService.dismissAll();  
+          });
         }
       });
     } else {
-      // Otherwise, create a new brand
+      // Create brand
       this.apiRequestService.createBrand(this.currentBrand).subscribe({
         next: () => {
-          this.loadBrands(); 
-          this.currentBrand = { proId: '', brands: '' }; 
+          this.loadBrands();
+          this.showSuccess(successMessage).then(() => {
+            this.modalService.dismissAll();  
+          });
         },
-        error: (error) => {
-          this.errorMessage = 'Error creating brand!';
-          console.error(error);
+        error: () => {
+          this.showError(errorMessage).then(() => {
+            this.modalService.dismissAll();  
+          });
         }
       });
     }
+    this.currentBrand = { proId: '', brands: '' }; 
   }
 
-  // Method to delete a brand by its ID
+  // Delete brand
   deleteBrand(id: string): void {
-    this.apiRequestService.deleteBrand(id).subscribe({
-      next: () => {
-        this.loadBrands(); 
-      },
-      error: (error) => {
-        this.errorMessage = 'Error deleting brand!';
-        console.error(error);
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'You won\'t be able to revert this!',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiRequestService.deleteBrand(id).subscribe(() => {
+          this.loadBrands();
+          Swal.fire('Deleted!', 'Your brand has been deleted.', 'success');
+        }, (error) => {
+          this.showError('Error deleting brand!');
+        });
       }
+    });
+  }
+
+  // Show success alert
+  showSuccess(message: string): Promise<any> {
+    return Swal.fire({
+      icon: 'success',
+      title: 'Success',
+      text: message,
+    });
+  }
+
+ 
+  showError(message: string): Promise<any> {
+    return Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: message,
     });
   }
 }
