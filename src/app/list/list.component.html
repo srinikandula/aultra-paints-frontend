@@ -7,7 +7,7 @@
                    class="form-control "/>
         </div>
         <div class="col-sm-2">
-            <button (click)="onCreateBatch()" class="btn btn-primary">Create Batch Numbers</button>
+            <button (click)="onCreateBatch()" class="btn btn-primary">Create Batch</button>
         </div>
     </div>
     <div class="row">
@@ -18,15 +18,16 @@
                 <tr>
                     <th>S.NO</th>
                     <th>Branch</th>
-                    <th>Redeemable Points</th>
-                    <th>CouponSeries</th>
-                    <th>Creation Date</th>
-                    <th>Expiry Date</th>
-                    <th>Batch Number</th>
-                    <th>Brand</th>
                     <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>CouponSeries</th>
+                    <th>Batch Number</th>
+                    <th>Redeemable Points</th>
+                    <th>Value</th>
                     <th>Volume</th>
                     <th>Quantity</th>
+                    <th>Creation Date</th>
+                    <th>Expiry Date</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -34,15 +35,16 @@
                 <tr *ngFor="let branch of branches; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ branch.Branch }}</td>
-                    <td>{{ branch.RedeemablePoints }}</td>
-                    <td>{{ branch.CouponSeries }}</td>
-                    <td>{{ branch.CreationDate | date:'shortDate' }}</td>
-                    <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
-                    <td>{{ branch.BatchNumber }}</td>
-                    <td>{{ branch.Brand }}</td>
                     <td>{{ branch.ProductName }}</td>
+                    <td>{{ branch.Brand }}</td>
+                    <td>{{ branch.CouponSeries }}</td>
+                    <td>{{ branch.BatchNumber }}</td>
+                    <td>{{ branch.RedeemablePoints }}</td>
+                    <td>{{ branch.value }}</td>
                     <td>{{ branch.Volume }}</td>
                     <td>{{ branch.Quantity }}</td>
+                    <td>{{ branch.CreationDate | date:'shortDate' }}</td>
+                    <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
                     <td>
                         <button (click)="onUpdate(branch)" class="btn btn-warning" title="Update">
                             <i class="bx bx-edit"></i>  <!-- Edit icon -->
@@ -57,14 +59,22 @@
         </div>
 
         <!-- Pagination Controls -->
-        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
-            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"
-                    style="background-color:#dc3545">Previous
-            </button>
-            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"
-                    style="background-color:#1179ef;">Next
-            </button>
+<!--        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">-->
+<!--            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"-->
+<!--                    style="background-color:#dc3545">Previous-->
+<!--            </button>-->
+<!--            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>-->
+<!--            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"-->
+<!--                    style="background-color:#1179ef;">Next-->
+<!--            </button>-->
+<!--        </div>-->
+
+        <div class="d-flex justify-content-end">
+            <div class="pagination-controls">
+                <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+                <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+            </div>
         </div>
 
     </div>

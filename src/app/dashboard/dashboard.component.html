@@ -19,26 +19,27 @@
         <ul class="nav flex-column">
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('/dashboard/list')">
-                <i class="bx bx-list-ul px-2" style="font-size: 30px;"></i>
-                <span *ngIf="!isSidebarCollapsed">List</span>
+                <i class="bx bxs-notepad px-2" style="font-size: 30px;"></i>
+                <span *ngIf="!isSidebarCollapsed">Batches</span>
             </li>
 
             <!-- Transactions -->
             <li class="nav-item" (click)="navigateTo('/dashboard/transactions')">
-                <i class="bx bx-transfer px-2" style="font-size: 30px;"></i>
-                <span *ngIf="!isSidebarCollapsed">Transactions</span>
+                <i class="bx bxs-coupon px-2" style="font-size: 30px;"></i>
+                <span *ngIf="!isSidebarCollapsed">Coupons</span>
             </li>
 
             <!-- Product List (new item) -->
             <li class="nav-item" (click)="navigateTo('/dashboard/product-list')">
-                <i class="bx bx-label" style="font-size: 30px;"></i> <!-- Product icon -->
+                <i class="bx bxl-product-hunt px-2" style="font-size: 30px;"></i> <!-- Product icon -->
                 <span *ngIf="!isSidebarCollapsed">Product</span>
             </li>
         </ul>
 
          <!-- Brand List (New Item) -->
          <li class="nav-item" (click)="navigateTo('/dashboard/brand-list')">
-            <i class="bx bx-tag" style="font-size: 30px;"></i> <!-- Tag icon for Brand -->
+<!--             <i class="bx bxs-coupon px-2" style="font-size: 30px;"></i> &lt;!&ndash; Tag icon for Brand &ndash;&gt;-->
+             <h3 class="px-2" style="font-weight: bolder">B</h3>
             <span *ngIf="!isSidebarCollapsed">Brand</span>
         </li>
 

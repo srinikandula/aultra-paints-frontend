@@ -1,7 +1,7 @@
 <!-- Main content -->
 <div class="container-fluid container-mt shadow-sm">
     <div>
-        <h4>Transactions</h4>
+        <h4>Coupons</h4>
 
         <!-- Table Wrapper -->
         <div class="table-wrapper">
@@ -9,7 +9,7 @@
                 <thead>
                 <tr>
                     <th scope="col">S.NO</th>
-                    <th>Transaction Id</th>
+                    <th>Coupons Id</th>
                     <th>Batch Id</th>
                     <th>Is Processed</th>
                     <th>QR Code</th>
@@ -26,7 +26,9 @@
                     <td>{{ item.batchName }}</td>
                     <td>{{ item.isProcessed }}</td>
                     <td>
-                        <button (click)="setQrUrl(item.qr_code)">QR</button>
+                        <button class="btn btn-light btn-lg" (click)="setQrUrl(item.qr_code)">
+                            <i class="bx bx-qr" [ngStyle]="{ 'color': item.isProcessed ? 'red' : ''}"></i>
+                        </button>
                     </td>
                     <td>{{ item.createdAt | date }}</td>
                     <td>{{ item.updatedAt | date }}</td>
@@ -55,12 +57,12 @@
         <div class="modal-content">
             <div class="modal-header justify-content-between">
                 <h5 class="modal-title">QR Code</h5>
-                <button type="button" class="close" (click)="closeUpdateModal()">
+                <button type="button" class="btn-close" (click)="closeUpdateModal()">
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
             <div class="modal-body text-center">
-                <img ngSrc="{{qrUrl}}" width="150" height="150">
+                <img ngSrc="{{qrUrl}}" width="400" height="400">
             </div>
         </div>
     </div>
