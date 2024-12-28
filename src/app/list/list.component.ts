@@ -19,9 +19,9 @@ export class ListComponent {
   totalPages = 1;
   totalBranches = 0;
   limit = 10;
-  searchQuery: string = '';  // Search query for BatchNumber
-  showUpdateModal = false; // Flag to show modal
-  selectedBranch: any = {}; // Store the selected branch for update
+  searchQuery: string = '';  
+  showUpdateModal = false; 
+  selectedBranch: any = {}; 
 
   constructor(private orderService: OrderService,
               private router: Router,

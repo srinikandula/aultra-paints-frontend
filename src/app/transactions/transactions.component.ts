@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import {DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
+import {CommonModule, DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage} from "@angular/common";
 import {FormsModule} from "@angular/forms";
 import {OrderService} from "../order.service";
 import {Router} from "@angular/router";
@@ -15,7 +15,9 @@ import {ApiRequestService} from "../services/api-request.service";
         NgForOf,
         NgIf,
         NgClass,
-        NgOptimizedImage
+        NgOptimizedImage,
+        CommonModule,
+        FormsModule
     ],
   templateUrl: './transactions.component.html',
   styleUrl: './transactions.component.css'
