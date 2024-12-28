@@ -74,12 +74,14 @@ export class ListComponent {
 
   prevPage(): void {
     if (this.currentPage > 1) {
+      this.currentPage = this.currentPage - 1
       this.loadBranches(this.currentPage - 1);
     }
   }
 
   nextPage(): void {
     if (this.currentPage < this.totalPages) {
+      this.currentPage = this.currentPage + 1
       this.loadBranches(this.currentPage + 1);
     }
   }

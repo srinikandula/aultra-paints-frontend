@@ -4,40 +4,38 @@
         <div class="row">
             <h4>Branch Details</h4>
             <div class="row">
-                <div class="field col-sm-4">
-                    <label for="branchName">Branch Name</label>
-                    <select id="branchName" [(ngModel)]="branchName" name="branchName" required class="form-control">
+                <div class="col-sm-3 mb-3">
+                    <label for="branchName" class="form-label">Branch Name</label>
+                    <select id="branchName" [(ngModel)]="branchName" name="branchName" required class="form-select">
                         <option value="" disabled selected>Select a branch</option>
                         <option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</option>
                     </select>
                 </div>
-                <div class="field col-sm-4">
-                    <label for="redeemablePoints">Redeemable Points</label>
-                    <input type="number" id="redeemablePoints" [(ngModel)]="redeemablePoints" name="redeemablePoints" placeholder="Enter Points" required class="form-control"/>
+                <div class="col-sm-3 mb-3">
+                    <label class="form-label" for="productName">Product Name</label>
+                    <input type="text" id="productName" placeholder="Enter Product Name" [(ngModel)]="ProductName" name="ProductName" required class="form-control"/>
                 </div>
-            </div>
 <!--                <div class="field col-sm-4">-->
 <!--                    <label for="couponSeries">Coupon Series</label>-->
 <!--                    <input type="text" id="couponSeries" [(ngModel)]="couponSeries" name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>-->
 <!--                </div>-->
-            <div class="row">
-                <div class="col-sm-4">
-                    <label for="creationDate">Creation Date</label>
+                <div class="col-sm-3 mb-3">
+                    <label class="form-label" for="creationDate">Creation Date</label>
                     <div class="input-group mb-3">
                         <input id="creationDate" class="form-control" placeholder="yyyy-mm-dd" name="creationDate" [(ngModel)]="creationDate" required ngbDatepicker #cd="ngbDatepicker"/>
                         <div class="input-group-append">
-                            <button class="btn calendar-btn" (click)="cd.toggle()" type="button">
+                            <button class="btn btn-light" (click)="cd.toggle()" type="button">
                                 <i class="bx bx-calendar"></i>
                             </button>
                         </div>
                     </div>
                 </div>
-                <div class="col-sm-4">
-                    <label for="expiryDate">Expiry Date</label>
+                <div class="col-sm-3 mb-3">
+                    <label class="form-label" for="expiryDate">Expiry Date</label>
                     <div class="input-group mb-3">
                         <input id="expiryDate" class="form-control" placeholder="yyyy-mm-dd" name="expiryDate" [(ngModel)]="expiryDate" ngbDatepicker #e="ngbDatepicker" required/>
                         <div class="input-group-append">
-                            <button class="btn calendar-btn" (click)="e.toggle()" type="button">
+                            <button class="btn btn-light" (click)="e.toggle()" type="button">
                                 <i class="bx bx-calendar"></i>
                             </button>
                         </div>
@@ -47,31 +45,39 @@
         </div>
 
         <!-- Product Details Section -->
-        <div class="row" style="margin-top: 40px;">
+        <div class="row">
             <h4>Batch Number Details</h4>
             <div *ngFor="let BatchNumber of BatchNumbers; let i = index, let l = last" class="row mb-3">
-                <div class="field col-sm-3">
-                    <label for="batchNumber{{i}}">Batch Number</label>
-                    <input type="text" id="batchNumber{{i}}" [(ngModel)]="BatchNumber.BatchNumber" name="BatchNumber{{i}}" required class="form-control"/>
+                <div class="col-sm-2">
+                    <label class="form-label" for="batchNumber{{i}}">Batch Number</label>
+                    <input type="number" id="batchNumber{{i}}" maxlength="4" oninput="this.BatchNumber.BatchNumber = this.BatchNumber.BatchNumber.replace(/[^0-9]/g, '').slice(0, 4);" [(ngModel)]="BatchNumber.BatchNumber" name="BatchNumber{{i}}" required class="form-control"/>
                 </div>
-                <div class="field col-sm-3">
-                    <label for="productName{{i}}">Product Name</label>
-                    <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName" name="ProductName{{i}}" required class="form-control"/>
+<!--                <div class="field col-sm-3">-->
+<!--                    <label for="productName{{i}}">Product Name</label>-->
+<!--                    <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName" name="ProductName{{i}}" required class="form-control"/>-->
+<!--                </div>-->
+                <div class="col-sm-2">
+                    <label class="form-label" for="brand{{i}}">Brand</label>
+                    <input type="text" id="brand{{i}}" placeholder="Enter Brand" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required class="form-control"/>
                 </div>
-                <div class="field col-sm-2">
-                    <label for="brand{{i}}">Brand</label>
-                    <input type="text" id="brand{{i}}" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required class="form-control"/>
+                <div class="col-sm-2">
+                    <label class="form-label" for="redeemablePoints{{i}}">Redeemable Points</label>
+                    <input type="number" id="redeemablePoints{{i}}" maxlength="4" oninput="this.BatchNumber.redeemablePoints = this.BatchNumber.redeemablePoints.replace(/[^0-9]/g, '').slice(0, 4);" [(ngModel)]="BatchNumber.redeemablePoints" name="redeemablePoints{{i}}" placeholder="Enter Points" required class="form-control"/>
                 </div>
-                <div class="field col-sm-1">
-                    <label for="volume{{i}}">Volume</label>
-                    <select id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="Volume{{i}}" required class="form-control">
+                <div class="col-sm-1">
+                    <label class="form-label" for="value{{i}}">Value</label>
+                    <input type="number" id="value{{i}}" [(ngModel)]="BatchNumber.value" maxlength="4" oninput="this.BatchNumber.value = this.BatchNumber.value.replace(/[^0-9]/g, '').slice(0, 4);" name="value{{i}}" required class="form-control"/>
+                </div>
+                <div class="col-sm-2">
+                    <label class="form-label" for="volume{{i}}">Volume</label>
+                    <select id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="volume{{i}}" required class="form-select">
                         <option value="" selected>Select Volume</option>
                         <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
                     </select>
                 </div>
-                <div class="field col-sm-1">
-                    <label for="quantity{{i}}">Quantity</label>
-                    <input type="text" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}" required class="form-control"/>
+                <div class="col-sm-1">
+                    <label class="form-label" for="quantity{{i}}">Quantity</label>
+                    <input type="number" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}" maxlength="4" oninput="this.BatchNumber.Quantity = this.BatchNumber.Quantity.replace(/[^0-9]/g, '').slice(0, 4);" required class="form-control"/>
                 </div>
                 <div class="col-sm-2 mt-auto">
                     <button type="button" class="btn btn-danger mx-2" (click)="deleteProduct(i)">

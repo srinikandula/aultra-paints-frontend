@@ -7,7 +7,7 @@
                    class="form-control "/>
         </div>
         <div class="col-sm-2">
-            <button (click)="onCreateBatch()" class="btn btn-primary">Create Batch Numbers</button>
+            <button (click)="onCreateBatch()" class="btn btn-primary">Create Batch</button>
         </div>
     </div>
     <div class="row">
@@ -18,15 +18,16 @@
                 <tr>
                     <th>S.NO</th>
                     <th>Branch</th>
-                    <td>Redeemable Points</td>
-                    <td>CouponSeries</td>
-                    <th>Creation Date</th>
-                    <th>Expiry Date</th>
-                    <th>Batch Number</th>
-                    <th>Brand</th>
                     <th>Product Name</th>
+                    <th>Brand</th>
+                    <th>CouponSeries</th>
+                    <th>Batch Number</th>
+                    <th>Redeemable Points</th>
+                    <th>Value</th>
                     <th>Volume</th>
                     <th>Quantity</th>
+                    <th>Creation Date</th>
+                    <th>Expiry Date</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -34,15 +35,16 @@
                 <tr *ngFor="let branch of branches; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ branch.Branch }}</td>
-                    <td>{{ branch.RedeemablePoints }}</td>
-                    <td>{{ branch.CouponSeries }}</td>
-                    <td>{{ branch.CreationDate | date:'shortDate' }}</td>
-                    <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
-                    <td>{{ branch.BatchNumber }}</td>
-                    <td>{{ branch.Brand }}</td>
                     <td>{{ branch.ProductName }}</td>
+                    <td>{{ branch.Brand }}</td>
+                    <td>{{ branch.CouponSeries }}</td>
+                    <td>{{ branch.BatchNumber }}</td>
+                    <td>{{ branch.RedeemablePoints }}</td>
+                    <td>{{ branch.value }}</td>
                     <td>{{ branch.Volume }}</td>
                     <td>{{ branch.Quantity }}</td>
+                    <td>{{ branch.CreationDate | date:'shortDate' }}</td>
+                    <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
                     <td>
                         <button (click)="onUpdate(branch)" class="btn btn-warning" title="Update">
                             <i class="bx bx-edit"></i>  <!-- Edit icon -->
@@ -57,14 +59,22 @@
         </div>
 
         <!-- Pagination Controls -->
-        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
-            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"
-                    style="background-color:#dc3545">Previous
-            </button>
-            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"
-                    style="background-color:#1179ef;">Next
-            </button>
+<!--        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">-->
+<!--            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"-->
+<!--                    style="background-color:#dc3545">Previous-->
+<!--            </button>-->
+<!--            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>-->
+<!--            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"-->
+<!--                    style="background-color:#1179ef;">Next-->
+<!--            </button>-->
+<!--        </div>-->
+
+        <div class="d-flex justify-content-end">
+            <div class="pagination-controls">
+                <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+                <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+            </div>
         </div>
 
     </div>
@@ -83,21 +93,21 @@
             <!--<form (ngSubmit)="onUpdateSubmit()">-->
             <div class="modal-body">
                 <div class="row">
-                    <div class="col-sm-9 form-group mb-4">
+                    <div class="col-sm-6 form-group mb-4">
                         <label for="branchName">Branch</label>
                         <input type="text" id="branchName" [(ngModel)]="selectedBranch.Branch" name="Branch"
                                class="form-control" required>
                     </div>
+                    <div class="col-sm-6 form-group mb-4">
+                        <label for="productName">Product Name</label>
+                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"
+                               class="form-control" required>
+                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 form-group mb-4">
-                        <label for="redeemablePoints">Redeemable Points</label>
-                        <input type="number" id="redeemablePoints" [(ngModel)]="selectedBranch.redeemablePoints"
-                               name="redeemablePoints" placeholder="Enter Points" required class="form-control"/>
-                    </div>
-                    <div class="col-sm-6 form-group mb-4">
+                    <div class="col-sm-9 form-group mb-4">
                         <label for="couponSeries">Coupon Series</label>
-                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.couponSeries"
+                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.CouponSeries"
                                name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>
                     </div>
                 </div>
@@ -114,34 +124,38 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-9 form-group mb-4">
+                    <div class="col-sm-6 form-group mb-4">
                         <label for="batchNumber">Batch Number</label>
                         <input type="text" id="batchNumber" [(ngModel)]="selectedBranch.BatchNumber"
                                name="BatchNumber" class="form-control" required>
                     </div>
-                </div>
-                <div class="row">
                     <div class="col-sm-6 form-group mb-4">
                         <label for="brand">Brand</label>
                         <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand"
                                class="form-control" required>
                     </div>
-                    <div class="col-sm-6 form-group mb-4">
-                        <label for="productName">Product Name</label>
-                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"
-                               class="form-control" required>
-                    </div>
                 </div>
                 <div class="row">
-                    <div class="col-sm-6 form-group mb-4">
-                        <label for="volume">Volume</label>
-                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume"
-                               class="form-control" required>
+<!--                    <div class="col-sm-6 form-group mb-4">-->
+<!--                        <label for="productName">Product Name</label>-->
+<!--                        <input type="text" id="productName" [(ngModel)]="selectedBranch.ProductName" name="ProductName"-->
+<!--                               class="form-control" required>-->
+<!--                    </div>-->
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="redeemablePoints">Points</label>
+                        <input type="number" id="redeemablePoints" [(ngModel)]="selectedBranch.RedeemablePoints" name="redeemablePoints" required class="form-control"/>
                     </div>
-                    <div class="col-sm-6 form-group mb-4">
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="value">Value</label>
+                        <input type="number" id="value" [(ngModel)]="selectedBranch.value" name="value" required class="form-control"/>
+                    </div>
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="volume">Volume</label>
+                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume" class="form-control" required>
+                    </div>
+                    <div class="col-sm-2 form-group mb-4">
                         <label for="quantity">Quantity</label>
-                        <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity"
-                               class="form-control" required>
+                        <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity" class="form-control" required>
                     </div>
                 </div>
             </div>
