@@ -50,17 +50,13 @@ export class ApiRequestService {
     );
   }
 
-  // Get all products
-  getProducts(data: any) {
+   // Get all products with pagination
+   getProducts(data: any): Observable<any> {
     const params = new HttpParams()
       .set('page', data.page.toString())
       .set('limit', data.limit.toString());
 
-    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getProducts, { params }).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+    return this.http.get<any>(this.ApiUrls.mainUrl + this.ApiUrls.getProducts, { params });
   }
 
   // Get a product by its ID
@@ -99,17 +95,12 @@ export class ApiRequestService {
     );
   }
 
-  // Get all brands
-  getAllBrands(data: any) {
+  getAllBrands(data: any): Observable<any> {
     const params = new HttpParams()
       .set('page', data.page.toString())
       .set('limit', data.limit.toString());
-    
-    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getBrands, { params }).pipe(
-      map((res: any) => {
-        return res;
-      })
-    );
+
+    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getBrands, { params });
   }
 
   // Get brands by Product ID
@@ -139,4 +130,36 @@ export class ApiRequestService {
     );
   }
 
+   // Get all users
+   getUsers(page: number, limit: number) {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getUsers, { params }).pipe(
+      map((res: any) => res)
+    );
+  }
+
+  // Add a new user
+  addUser(user: any) {
+    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.addUser, user).pipe(
+      map((res: any) => res)
+    );
+  }
+
+  // Update an existing user
+  updateUser(id: string, user: any) {
+    return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.updateUser + '/' + id, user).pipe(
+      map((res: any) => res)
+    );
+  }
+
+  // Delete a user by ID
+  deleteUser(id: string) {
+    return this.http.delete(this.ApiUrls.mainUrl + this.ApiUrls.deleteUser + '/' + id).pipe(
+      map((res: any) => res)
+    );
+  }
 }
+
+

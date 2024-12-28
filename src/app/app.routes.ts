@@ -9,6 +9,7 @@ import {AuthGuard} from "./guards/auth.guard";
 import {NoAuthGuard} from "./guards/no-auth.guard";
 import { ProductListComponent } from './product-list/product-list.component';
 import { BrandListComponent } from './brand-list/brand-list.component';
+import { UserListComponent } from './user-list/user-list.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
@@ -22,6 +23,7 @@ export const routes: Routes = [
             {path: 'dashboard/transactions', component: TransactionsComponent},
             {path: 'dashboard/product-list', component: ProductListComponent},
             {path: 'dashboard/brand-list', component: BrandListComponent},
+            {path: 'dashboard/user-list', component: UserListComponent},
         ]
     },
   { path: '**', redirectTo: 'login' } // Fallback route

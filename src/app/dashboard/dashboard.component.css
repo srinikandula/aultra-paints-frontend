@@ -52,24 +52,23 @@
 
 /* Content area */
 .content {
-  margin-left: 270px; /* Space for the sidebar */
-  margin-top: 85px;   /* Space for the fixed navbar */
+  margin-left: 270px; 
+  margin-top: 85px;   
   margin-right: 20px;
   margin-bottom: auto;
   transition: margin-left 0.3s ease-in-out, margin-top 0.3s ease-in-out;
 }
 
 .content.collapsed {
-  margin-left: 75px; /* Adjusted content margin when sidebar is collapsed */
+  margin-left: 75px; 
 }
 
 /* Navbar styles */
 .navbar {
   /*margin-left: 60px; !* Ensure the navbar starts below the sidebar *!*/
-  z-index: 50; /* Lower z-index compared to the sidebar */
-  margin-top: 0; /* Reset top margin */
-  position: fixed; /* Position navbar relative to sidebar */
-  /*background-color:#FFFFFF;*/
+  z-index: 50; 
+  margin-top: 0; 
+  position: fixed; 
   background-color: #2C3E50;
   border: 2px solid #19232c;
 }

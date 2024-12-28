@@ -12,6 +12,12 @@ export class ApiUrlsService {
   // API Urls
   register = 'auth/register';
 
+  // Users API URLs
+  getUsers = 'users/all';
+  addUser = 'users/add';
+  updateUser = 'users';
+  deleteUser = 'users';
+
   // batchApiUrls
   createBatch = 'batchNumbers/add'
   getBatches = 'batchNumbers';

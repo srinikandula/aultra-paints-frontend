@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center">
         <!-- Logo before the toggle button -->
         <div class="navbar-brand">
-            <img src="assets/img/app_logo.png" alt="Logo" style="height: 40px;"> <!-- Adjust height as needed -->
+            <img src="assets/img/app_logo.png" alt="Logo" style="height: 40px;"> 
         </div>
 
         <!-- Sidebar Toggle Button -->
@@ -17,6 +17,13 @@
     <!-- Sidebar (above the navbar) -->
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
         <ul class="nav flex-column">
+
+            <!-- User List (New Item) -->
+         <li class="nav-item" (click)="navigateTo('/dashboard/user-list')">
+            <i class="bx bx-user-circle" style="font-size: 30px;"></i> 
+            <span *ngIf="!isSidebarCollapsed">Users</span>
+        </li>
+
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('/dashboard/list')">
                 <i class="bx bxs-notepad px-2" style="font-size: 30px;"></i>
@@ -43,6 +50,7 @@
             <span *ngIf="!isSidebarCollapsed">Brand</span>
         </li>
 
+
         <!-- Sidebar Footer -->
         <div class="sidebar-footer" (click)="logout()">
             <div class="sidebar-link">
@@ -53,7 +61,7 @@
 
     <!-- Main Content Area (includes navbar and router outlet) -->
     <main class="content" [ngClass]="{ 'collapsed': isSidebarCollapsed }">
-        <!-- Dynamic Content Loaded via Router -->
+       
         <router-outlet></router-outlet>
     </main>
 </div>

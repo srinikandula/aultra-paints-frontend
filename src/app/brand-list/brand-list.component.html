@@ -1,68 +1,79 @@
 <div class="container-fluid container-mt shadow-sm">
-    <div>
-      <h4>Brands</h4>
-  
-      <!-- Add Button -->
-      <div class="col-sm-2 ml-auto" style="margin-left: 1070px; margin-top: -50px;">
-        <button class="btn btn-primary" (click)="addBrand(brandModal)">Add Brand</button>
-      </div>
-  
-      <!-- Table to display brands -->
-      <div class="table-wrapper">
-        <table class="table table-hover">
-          <thead>
-            <tr>
-              <th scope="col">S.NO</th>
-              <th scope="col">Product ID</th>
-              <th scope="col">Brand</th>
-              <th scope="col">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let brand of brands; let i = index">
-              <td>{{ i + 1 }}</td>
-              <td>{{ brand.proId }}</td>
-              <td>{{ brand.brands }}</td>
-              <td>
-                <button class="btn btn-warning" (click)="editBrand(brand, brandModal)">Edit</button>
-                <button class="btn btn-danger" (click)="deleteBrand(brand._id)">Delete</button>
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
+  <div>
+    <h4>Brands</h4>
+
+    <!-- Add Button -->
+    <div class="col-sm-2 ml-auto" style="margin-left: 1070px; margin-top: -50px;">
+      <button class="btn btn-primary" (click)="addBrand(brandModal)">Add Brand</button>
+    </div>
+
+    <!-- Table to display brands -->
+    <div class="table-wrapper">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th scope="col">S.NO</th>
+            <th scope="col">Product ID</th>
+            <th scope="col">Brand</th>
+            <th scope="col">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let brand of brands; let i = index">
+            <td>{{ (currentPage - 1) * limit + i + 1 }}</td> 
+            <td>{{ brand.proId }}</td>
+            <td>{{ brand.brands }}</td>
+            <td>
+              <button class="btn btn-warning" (click)="editBrand(brand, brandModal)">Edit</button>
+              <button class="btn btn-danger" (click)="deleteBrand(brand._id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
     </div>
   </div>
-  
-  <!-- Modal for Add/Edit Brand -->
-<ng-template #brandModal let-modal>
-  <div class="modal-header">
-    <h4 class="modal-title" id="modal-basic-title">{{ currentBrand._id ? 'Edit' : 'Add' }} Brand</h4>
-  </div>
-  <div class="modal-body">
-    <form>
-      <div class="form-group">
-        <label for="productId">Product</label>
-        <select class="form-control" id="productId" [(ngModel)]="currentBrand.proId" name="proId" required *ngIf="products.length > 0">
-          <option *ngFor="let product of products" [value]="product._id">
-            {{ product.name }}
-          </option>
-        </select>
-        <div *ngIf="products.length === 0" class="text-muted">Loading products...</div>
-      </div>
-      <div class="form-group">
-        <label for="brandName">Brand Name</label>
-        <input type="text" class="form-control" id="brandName" [(ngModel)]="currentBrand.brands" name="brands" required />
-      </div>
+</div>
 
-      <div *ngIf="errorMessage" class="alert alert-danger mt-2">
-        {{"Brand already exists for this product"}}
-      </div>
-    </form>
-  </div>
-  <div class="modal-footer">
-    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-    <!-- Pass brandModal to saveBrand method -->
-    <button type="button" class="btn btn-primary" (click)="saveBrand(brandModal)">Save</button>
-  </div>
+<!-- Pagination Controls -->
+<div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
+  <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"
+          style="background-color:#dc3545">Previous
+  </button>
+  <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+  <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"
+          style="background-color:#1179ef;">Next
+  </button>
+</div>
+
+<!-- Modal for Add/Edit Brand -->
+<ng-template #brandModal let-modal>
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{ currentBrand._id ? 'Edit' : 'Add' }} Brand</h4>
+</div>
+<div class="modal-body">
+  <form>
+    <div class="form-group">
+      <label for="productId">Product</label>
+      <select class="form-control" id="productId" [(ngModel)]="currentBrand.proId" name="proId" required *ngIf="products.length > 0">
+        <option *ngFor="let product of products" [value]="product._id">
+          {{ product.name }}
+        </option>
+      </select>
+      <div *ngIf="products.length === 0" class="text-muted">Loading products...</div>
+    </div>
+    <div class="form-group">
+      <label for="brandName">Brand Name</label>
+      <input type="text" class="form-control" id="brandName" [(ngModel)]="currentBrand.brands" name="brands" required />
+    </div>
+
+    <div *ngIf="errorMessage" class="alert alert-danger mt-2">
+      {{"Brand already exists for this product"}}
+    </div>
+  </form>
+</div>
+<div class="modal-footer">
+  <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+  <!-- Pass brandModal to saveBrand method -->
+  <button type="button" class="btn btn-primary" (click)="saveBrand(brandModal)">Save</button>
+</div>
 </ng-template>
