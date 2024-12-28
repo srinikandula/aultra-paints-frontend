@@ -1,51 +1,49 @@
- <div class="container-fluid container-mt shadow-sm">
-      <div>
-          <h4>Product</h4>
+<div class="container-fluid container-mt shadow-sm">
+    <div>
+        <h4>Product</h4>
 
-          <div class="col-sm-2 ml-auto" style="margin-left: 1060px; margin-top: -50px;">
+        <div class="col-sm-2 ml-auto" style="margin-left: 1060px; margin-top: -50px;">
             <button class="btn btn-primary" (click)="addProduct(productModal)">Add Product</button>
         </div>
-        
-          <div class="table-wrapper">
-              <table class="table table-hover">
-                  <thead>
-                      <tr>
-                          <th scope="col">S.NO</th>
-                          <th scope="col">Product Name</th>
-                          <th scope="col">Actions</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                      <tr *ngFor="let product of products; let i = index">
-                          <td>{{ i + 1 }}</td>
-                          <td>{{ product.name }}</td>
-                          <td>
-                              <button class="btn btn-warning" (click)="editProduct(product, productModal)">Edit</button>
-                              <button class="btn btn-danger" (click)="deleteProduct(product._id)">Delete</button>
-                          </td>
-                      </tr>
-                  </tbody>
-              </table>
-          </div>
-      </div>
+
+        <div class="table-wrapper">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">S.NO</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let product of products; let i = index">
+                    <td>{{ i + 1 }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>
+                        <button class="btn btn-warning" (click)="editProduct(product, productModal)">Edit</button>
+                        <button class="btn btn-danger" (click)="deleteProduct(product._id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-  
-   <!-- Modal for Add/Edit Product -->
+</div>
+
+<!-- Modal for Add/Edit Product -->
 <ng-template #productModal let-modal>
     <div class="modal-header">
-      <h4 class="modal-title" id="modal-basic-title">{{ currentProduct._id ? 'Edit' : 'Add' }} Product</h4>
+        <h4 class="modal-title" id="modal-basic-title">{{ currentProduct._id ? 'Edit' : 'Add' }} Product</h4>
     </div>
     <div class="modal-body">
-      <form>
-        <div class="form-group">
-          <label for="productName">Product Name</label>
-          <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name" required />
+        <div class="form-group mb-4">
+            <label for="productName">Product Name</label>
+            <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name" required/>
         </div>
-      </form>
     </div>
     <div class="modal-footer">
-      <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-      <button type="button" class="btn btn-primary" (click)="saveProduct(); modal.close()">Save</button>
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="saveProduct(); modal.close()">Save</button>
     </div>
-  </ng-template>
+</ng-template>
   
