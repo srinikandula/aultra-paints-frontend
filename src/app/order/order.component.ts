@@ -101,21 +101,21 @@ export class OrderComponent implements OnInit {
     }
 
     addProduct() {
-        const isEmpty = this.BatchNumbers.some(
-            (batchNumber) =>
-                !batchNumber.BatchNumber ||
-                !batchNumber.Brand._id ||
-                !batchNumber.redeemablePoints ||
-                !batchNumber.value ||
-                !batchNumber.Volume ||
-                !batchNumber.Quantity
-        );
-        if (isEmpty) {
-            this.errorEmptyStr = 'Please fill all the fields';
-            return;
-        }
+        // const isEmpty = this.BatchNumbers.some(
+        //     (batchNumber) =>
+        //         !batchNumber.BatchNumber ||
+        //         !batchNumber.Brand._id ||
+        //         !batchNumber.redeemablePoints ||
+        //         !batchNumber.value ||
+        //         !batchNumber.Volume ||
+        //         !batchNumber.Quantity
+        // );
+        // if (isEmpty) {
+        //     this.errorEmptyStr = 'Please fill all the fields';
+        //     return;
+        // }
         this.BatchNumbers.push({BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0});
-        this.errorEmptyStr = '';
+        // this.errorEmptyStr = '';
     }
 
     // Delete a product from the products array
