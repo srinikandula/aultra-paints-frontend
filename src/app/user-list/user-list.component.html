@@ -7,7 +7,7 @@
         <!--      <button class="btn btn-primary" (click)="addUser(brandModal)">Add User</button>-->
         <!--    </div>-->
         <div class="row mb-4">
-            <div class="col-sm-8"><h4>Batches</h4></div>
+            <div class="col-sm-8"><h4>Users</h4></div>
             <div class="col-sm-2">
                 <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..."
                        class="form-control "/>
@@ -24,10 +24,10 @@
                 <tr>
                     <th>#</th>
                     <th>Name</th>
-                    <th>Mobile</th>
+                    <th>Mobile Number</th>
                     <th>Email</th>
                     <th>Redeemed Points</th>
-                    <th>Cash</th>
+                    <th>Total cash Reward</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
@@ -38,10 +38,14 @@
                     <td>{{ user.mobile }}</td>
                     <td>{{ user.email }}</td>
                     <td>{{ user.redeemablePoints }}</td>
-                    <td>{{ user.cash }}</td>
+                    <td>{{ user.totalcash }}</td>
                     <td>
-                        <button class="btn btn-warning" (click)="editUser(user, editUserModal)">Edit</button>
-                        <button class="btn btn-danger" (click)="deleteUser(user._id)">Delete</button>
+                        <button (click)="editUser(user, editUserModal)" class="btn btn-warning" title="Update">
+                            <i class="bx bx-edit"></i>  <!-- Edit icon -->
+                        </button>
+                        <button (click)="deleteUser(user._id)" class="btn btn-danger" title="Delete">
+                            <i class="bx bx-trash"></i>
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -61,36 +65,96 @@
 <!-- Modal for Add User -->
 <ng-template #brandModal let-modal>
     <div class="modal-header">
-        <h4 class="modal-title">Add User</h4>
+      <h4 class="modal-title">Add User</h4>
     </div>
     <div class="modal-body">
-        <form>
-            <!-- Add Name -->
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required/>
-            </div>
-            <!-- Add Email -->
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email"
-                       required/>
-            </div>
-            <!-- Add Password -->
-            <div class="form-group">
-                <label for="password">Password</label>
-                <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password"
-                       name="password" required/>
-            </div>
-        </form>
+      <form #userForm="ngForm">
+        <!-- Add Name -->
+        <div class="form-group">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"  required placeholder="Enter full name"/>
+        </div>
+  
+        <!-- Add Mobile Number (10 digits) -->
+        <div class="form-group">
+          <label for="mobile">Mobile Number</label>
+          <input
+            type="text"
+            class="form-control"
+            id="mobile"
+            [(ngModel)]="currentUser.mobile"
+            name="mobile"
+            pattern="^\d{10}$"  
+            required
+            #mobile="ngModel"
+            placeholder="Enter 10-digit mobile number"
+          />
+          <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
+            Mobile number must be exactly 10 digits.
+          </div>
+        </div>
+  
+        <!-- Add Email -->
+        <!-- <div class="form-group">
+          <label for="email">Email</label>
+          <input
+            type="email"
+            class="form-control"
+            id="email"
+            [(ngModel)]="currentUser.email"
+            name="email"
+            required
+            #email="ngModel"
+          />
+          <div *ngIf="email.invalid && email.touched" class="text-danger">
+            Please enter a valid email address.
+          </div>
+        </div> -->
+  
+        <!-- Add Password -->
+        <div class="form-group">
+          <label for="password">Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="password"
+            [(ngModel)]="currentUser.password"
+            name="password"
+            required
+            placeholder="Enter password"
+            
+          />
+        </div>
+  
+        <!-- Add Confirm Password -->
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Password</label>
+          <input
+            type="password"
+            class="form-control"
+            id="confirmPassword"
+            [(ngModel)]="currentUser.confirmPassword"
+            name="confirmPassword"
+            required
+            placeholder="Confirm your password"
+          />
+        </div>
+      </form>
     </div>
     <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="addNewUser(modal)">Save</button>
-        <!-- Calls addNewUser -->
+      <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+      <button
+        type="button"
+        class="btn btn-primary"
+        (click)="addNewUser(modal)"
+        [disabled]="userForm.invalid"
+      >
+        Save
+      </button>
     </div>
-</ng-template>
-
+  </ng-template>
+  
+  
 <!-- Modal for Edit User -->
 <ng-template #editUserModal let-modal>
     <div class="modal-header">
@@ -101,24 +165,31 @@
             <!-- Edit Name -->
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required/>
+                <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required placeholder="Enter full name" />
             </div>
+
+            <!-- Edit Mobile -->
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile" required placeholder="Enter 10-digit mobile number" />
+            </div>
+
             <!-- Edit Email -->
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email"
-                       required/>
+                <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" required placeholder="Enter email address" />
             </div>
+
             <!-- Edit Redeemable Points -->
             <div class="form-group">
-                <label for="redeemablePoints">Redeemable Points</label>
-                <input type="number" class="form-control" id="redeemablePoints"
-                       [(ngModel)]="currentUser.redeemablePoints" name="redeemablePoints"/>
+                <label for="redeemablePoints">Redeemed Points</label>
+                <input type="number" class="form-control" id="redeemablePoints" [(ngModel)]="currentUser.redeemablePoints" name="redeemablePoints" placeholder="Enter redeemable points"/>
             </div>
+
             <!-- Edit Cash -->
             <div class="form-group">
-                <label for="cash">Cash</label>
-                <input type="number" class="form-control" id="cash" [(ngModel)]="currentUser.cash" name="cash"/>
+                <label for="cash">Total cash Reward</label>
+                <input type="number" class="form-control" id="cash" [(ngModel)]="currentUser.cash" name="cash" placeholder="Enter total cash reward" />
             </div>
         </form>
     </div>

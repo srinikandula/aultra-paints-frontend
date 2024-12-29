@@ -24,6 +24,7 @@
                         id="mobile"
                         class="form-control"
                         [(ngModel)]="mobile"
+                        maxlength="10" oninput="mobile = mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                         name="email"
                         placeholder="Enter your mobilr"
                         required
@@ -38,7 +39,6 @@
                         id="email"
                         class="form-control"
                         [(ngModel)]="email"
-                        maxlength="10" oninput="mobile = mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                         name="email"
                         placeholder="Enter your email"
                         required
