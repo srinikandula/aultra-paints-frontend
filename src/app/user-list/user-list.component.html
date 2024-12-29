@@ -32,16 +32,15 @@
               <td>{{ user.mobile }}</td>
               <td>{{ user.email }}</td>
               <td>{{ user.redeemablePoints }}</td>
-              <td>{{ user.totalcash }}</td>
-  
-              <!-- Status Column: Switch Button to Toggle User Status -->
+              <td>{{ user.cash }}</td>
               <td>
                 <label class="switch">
-                  <input type="checkbox" [checked]="user.status === 'active'"
-                         (change)="toggleUserStatus(user._id, user.status, $event)">
-                  <span class="slider round"></span>
-                </label>
+                    <input type="checkbox"  [checked]="user.status === 'active'" 
+                           (change)="toggleUserStatus(user._id, user.status, $event)">
+                    <span class="slider round"></span>
+                  </label>
               </td>
+              
   
               <!-- Actions Column: Edit and Delete Buttons -->
               <td>
