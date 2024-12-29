@@ -41,11 +41,12 @@ export class UserListComponent {
   }
 
   // Open modal for adding a new user
-  addUser(brandModal: any): void { 
+  addUser(brandModal: any): void {
     // Reset currentUser object to ensure fields are blank
-    this.currentUser = { name: '', email: '', password: '', redeemablePoints: null, cash: null };  
+    this.currentUser = { name: '', mobile: '',   password: '',  };  
     this.modalService.open(brandModal);  
   }
+  
 
   // Open modal for editing a user
   editUser(user: any, content: any): void {
@@ -54,8 +55,15 @@ export class UserListComponent {
     this.modalService.open(content, { size: 'lg' });
   }
 
+  
+
   // Save user (Add)
   addNewUser(modal: any): void {
+    if (this.currentUser.password !== this.currentUser.confirmPassword) {
+      this.showError('Password and Confirm Password do not match!');
+      return;
+    }
+
     this.apiService.addUser(this.currentUser).subscribe(
       (data) => {
         this.loadUsers();
@@ -68,7 +76,7 @@ export class UserListComponent {
       }
     );
   }
-
+  
   // Save user (Update)
   updateUser(modal: any): void {
     if (this.currentUser._id) {
@@ -76,7 +84,7 @@ export class UserListComponent {
         (data) => {
           this.loadUsers(); 
           this.showSuccess('User updated successfully!');
-          this.currentUser = {};  // Clear currentUser after saving
+          this.currentUser = {};  
           modal.close(); 
         },
         (error) => {

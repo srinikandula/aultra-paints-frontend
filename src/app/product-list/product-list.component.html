@@ -20,8 +20,12 @@
                     <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
                     <td>{{ product.name }}</td>
                     <td>
-                        <button class="btn btn-warning" (click)="editProduct(product, productModal)">Edit</button>
-                        <button class="btn btn-danger" (click)="deleteProduct(product._id)">Delete</button>
+                        <button (click)="editProduct(product, productModal)" class="btn btn-warning" title="Update">
+                            <i class="bx bx-edit"></i>  <!-- Edit icon -->
+                        </button>
+                        <button (click)="deleteProduct(product._id)" class="btn btn-danger" title="Delete">
+                            <i class="bx bx-trash"></i>
+                        </button>
                     </td>
                 </tr>
                 </tbody>
@@ -48,7 +52,7 @@
         <div class="form-group mb-4">
             <label for="productName">Product Name</label>
             <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name"
-                   required/>
+                   required placeholder="Enter product name"/>
         </div>
     </div>
     <div class="modal-footer">
@@ -56,4 +60,3 @@
         <button type="button" class="btn btn-primary" (click)="saveProduct(); modal.close()">Save</button>
     </div>
 </ng-template>
-  
