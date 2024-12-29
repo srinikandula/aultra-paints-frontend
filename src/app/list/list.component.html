@@ -115,13 +115,13 @@
                         </ng-select>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-9 form-group mb-4">
-                        <label for="couponSeries">Coupon Series</label>
-                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.CouponSeries"
-                               name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>
-                    </div>
-                </div>
+<!--                <div class="row">-->
+<!--                    <div class="col-sm-9 form-group mb-4">-->
+<!--                        <label for="couponSeries">Coupon Series</label>-->
+<!--                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.CouponSeries"-->
+<!--                               name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>-->
+<!--                    </div>-->
+<!--                </div>-->
                 <div class="row">
                     <div class="col-sm-6 form-group mb-4">
                         <label for="creationDate">Creation Date</label>
@@ -141,7 +141,7 @@
                                name="BatchNumber" class="form-control" required>
                     </div>
                     <div class="col-sm-6 form-group mb-4">
-                        <label for="brand">Brand</label>
+                        <label for="Brand">Brand</label>
 <!--                        <input type="text" id="brand" [(ngModel)]="selectedBranch.Brand" name="Brand"-->
 <!--                               class="form-control" required>-->
                         <ng-select
@@ -172,7 +172,16 @@
                     </div>
                     <div class="col-sm-2 form-group mb-4">
                         <label for="volume">Volume</label>
-                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume" class="form-control" required>
+                        <select id="volume" [(ngModel)]="selectedBranch.Volume" name="volume" required class="form-select">
+                            <option value="" selected>Select Volume</option>
+                            <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
+                        </select>
+<!--                        <input type="number" id="volume" [(ngModel)]="selectedBranch.Volume" name="Volume" class="form-control" required>-->
+                    </div>
+                    <div class="col-sm-2 form-group mb-4">
+                        <label for="couponSeries">Coupon Series</label>
+                        <input readonly type="text" id="couponSeries" [(ngModel)]="selectedBranch.CouponSeries"
+                               name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"/>
                     </div>
                     <div class="col-sm-2 form-group mb-4">
                         <label for="quantity">Quantity</label>

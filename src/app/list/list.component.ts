@@ -34,6 +34,7 @@ export class ListComponent implements OnInit {
     };
     products: any = [];
     brandData: any = [];
+    volumes: string[] = ['10 LT', '20 LT', '30 LT', '50 LT', '100 LT'];
 
     constructor(private orderService: OrderService,
                 private router: Router,

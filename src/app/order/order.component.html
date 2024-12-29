@@ -56,17 +56,15 @@
         </div>
 
         <!-- Product Details Section -->
-        <div class="row">
-            <h4>Batch Number Details</h4>
-            <div *ngFor="let BatchNumber of BatchNumbers; let i = index, let l = last" class="row mb-3">
+        <h4>Batch Number Details</h4>
+        <div *ngFor="let BatchNumber of BatchNumbers; let i = index, let l = last" class="row mb-3">
+            <div class="row">
                 <div class="col-sm-2">
                     <label class="form-label" for="batchNumber{{i}}">Batch Number</label>
-                    <input type="number" id="batchNumber{{i}}" maxlength="4" oninput="this.BatchNumber.BatchNumber = this.BatchNumber.BatchNumber.replace(/[^0-9]/g, '').slice(0, 4);" [(ngModel)]="BatchNumber.BatchNumber" name="BatchNumber{{i}}" required class="form-control"/>
+                    <input type="number" id="batchNumber{{i}}" maxlength="4"
+                           oninput="this.BatchNumber.BatchNumber = this.BatchNumber.BatchNumber.replace(/[^0-9]/g, '').slice(0, 4);"
+                           [(ngModel)]="BatchNumber.BatchNumber" name="BatchNumber{{i}}" required class="form-control"/>
                 </div>
-<!--                <div class="field col-sm-3">-->
-<!--                    <label for="productName{{i}}">Product Name</label>-->
-<!--                    <input type="text" id="productName{{i}}" [(ngModel)]="BatchNumber.ProductName" name="ProductName{{i}}" required class="form-control"/>-->
-<!--                </div>-->
                 <div class="col-sm-2">
                     <label class="form-label" for="brand{{i}}">Brand</label>
 <!--                    <input type="text" id="brand{{i}}" placeholder="Enter Brand" [(ngModel)]="BatchNumber.Brand" name="Brand{{i}}" required class="form-control"/>-->
@@ -89,28 +87,32 @@
                     <label class="form-label" for="value{{i}}">Value</label>
                     <input type="number" id="value{{i}}" [(ngModel)]="BatchNumber.value" maxlength="4" oninput="this.BatchNumber.value = this.BatchNumber.value.replace(/[^0-9]/g, '').slice(0, 4);" name="value{{i}}" required class="form-control"/>
                 </div>
-                <div class="col-sm-2">
+                <div class="col-sm-1">
                     <label class="form-label" for="volume{{i}}">Volume</label>
                     <select id="volume{{i}}" [(ngModel)]="BatchNumber.Volume" name="volume{{i}}" required class="form-select">
                         <option value="" selected>Select Volume</option>
                         <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
                     </select>
                 </div>
+                <div class="field col-sm-2">
+                    <label class="form-label" for="CouponSeries{{i}}">Coupon Series</label>
+                    <input type="number" id="CouponSeries{{i}}" [(ngModel)]="BatchNumber.CouponSeries" name="CouponSeries{{i}}" required class="form-control"/>
+                </div>
                 <div class="col-sm-1">
                     <label class="form-label" for="quantity{{i}}">Quantity</label>
                     <input type="number" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}" maxlength="4" oninput="this.BatchNumber.Quantity = this.BatchNumber.Quantity.replace(/[^0-9]/g, '').slice(0, 4);" required class="form-control"/>
                 </div>
-                <div class="col-sm-2 mt-auto">
-                    <button type="button" class="btn btn-danger mx-2" (click)="deleteProduct(i)">
+                <div class="col-sm-1 mt-auto">
+                    <button type="button" class="btn btn-danger my-1" (click)="deleteProduct(i)">
                         <i class="bx bx-trash"></i>
                     </button>
-                    <button type="button" class="btn btn-success mx-2" (click)="addProduct()" *ngIf="l">
+                    <button type="button" class="btn btn-success my-1" (click)="addProduct()" *ngIf="l">
                         <i class="bx bx-plus"></i>
                     </button>
                 </div>
             </div>
         </div>
-
+        <span *ngIf="errorEmptyStr" style="color: red">{{errorEmptyStr}}</span>
         <div class="d-flex flex-row-reverse mt-4">
             <button class="bd-highlight btn btn-light mx-2" (click)="cancel()">Cancel</button>
             <button type="reset" class="bd-highlight btn btn-danger mx-2" (click)="resetForm()">Reset</button>

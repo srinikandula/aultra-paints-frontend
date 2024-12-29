@@ -23,22 +23,17 @@ export class OrderComponent implements OnInit {
     creationDate = new Date();
     expiryDate = new Date();
 
-    options = [
-        { id: 1, label: 'Option 1' },
-        { id: 2, label: 'Option 2' },
-        { id: 3, label: 'Option 3' }
-    ];
-
     BatchNumbers: any[] = [
         // { BatchNumber: '', Brand: {, ProductName: '', Volume: 0, Quantity: 0 }
-        {BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
+        {CouponSeries : 0, BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
         // {BatchNumber: '2', Brand: 'SONY', ProductName: 'TV', Volume: 0, Quantity: 0}
     ];
 
-    volumes: number[] = [10, 20, 30, 50, 100];
+    volumes: string[] = ['10 LT', '20 LT', '30 LT', '50 LT', '100 LT'];
     branchNames: string[] = ['Central Hub', 'Main Street', 'Pine Valley', 'Lakeview'];
     products: any = [];
     brandData: any = [];
+    errorEmptyStr: any = '';
 
     constructor(private ApiUrls: ApiUrlsService, private ApiRequest: ApiRequestService, private router: Router,) {
     }
@@ -106,7 +101,21 @@ export class OrderComponent implements OnInit {
     }
 
     addProduct() {
+        const isEmpty = this.BatchNumbers.some(
+            (batchNumber) =>
+                !batchNumber.BatchNumber ||
+                !batchNumber.Brand._id ||
+                !batchNumber.redeemablePoints ||
+                !batchNumber.value ||
+                !batchNumber.Volume ||
+                !batchNumber.Quantity
+        );
+        if (isEmpty) {
+            this.errorEmptyStr = 'Please fill all the fields';
+            return;
+        }
         this.BatchNumbers.push({BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0});
+        this.errorEmptyStr = '';
     }
 
     // Delete a product from the products array

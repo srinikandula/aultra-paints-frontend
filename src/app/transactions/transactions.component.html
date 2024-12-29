@@ -9,8 +9,10 @@
                 <thead>
                 <tr>
                     <th scope="col">S.NO</th>
-                    <th>Coupons Id</th>
-                    <th>Batch Id</th>
+                    <th>Coupon Code</th>
+                    <th>Batch</th>
+                    <th>Points</th>
+                    <th>Value</th>
                     <th>Is Redeemed</th>
                     <th>QR Code</th>
                     <th>Created At</th>
@@ -22,10 +24,11 @@
                 <tbody>
                 <tr *ngFor="let item of transactions; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
-                    <td>{{ item.transactionId }}</td>
-                    <td>{{ item.batchName }}</td>
-                    <td>{{ item.isProcessed }}</td>
-
+                    <td>{{ item.couponCode }}</td>
+                    <td>{{ item.batchName }} - {{ item.batchNumber }}</td>
+                    <td>{{ item.redeemablePoints }}</td>
+                    <td>{{ item.value }}</td>
+                    <td>{{ item.isProcessed ? 'Yes' : 'No' }}</td>
                     <td>
                         <button class="btn btn-light btn-lg" (click)="setQrUrl(item.qr_code)">
                             <i class="bx bx-qr" [ngStyle]="{ 'color': item.isProcessed ? 'red' : ''}"></i>
