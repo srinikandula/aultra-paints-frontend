@@ -45,6 +45,14 @@ export class ApiRequestService {
         }));
     }
 
+     // Toggle the user status (active/inactive)
+  toggleUserStatus(userId: string) {
+    return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.toggleUserStatus + `/${userId}`, {}).pipe(map((res: any) => {
+      return res;
+    }));
+  }
+
+
 
     // Create a new product
     createProduct(data: any) {
