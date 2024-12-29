@@ -11,11 +11,12 @@ export class ApiUrlsService {
     mainUrl = "http://localhost:4300/api/";
     // mainUrl = "https://paintsapi.whizzard.in/api/";
 
-  // Users API URLs
-  getUsers = 'users/all';
-  addUser = 'users/add';
-  updateUser = 'users';
-  deleteUser = 'users';
+    // Users API URLs
+    getUsers = 'users/all';
+    addUser = 'users/add';
+    updateUser = 'users';
+    deleteUser = 'users';
+    searchUser = 'users/searchUser';
 
     // API Urls
     register = 'auth/register';
@@ -24,8 +25,10 @@ export class ApiUrlsService {
     createBatch = 'batchNumbers/add'
     getBatches = 'batchNumbers';
     searchBranch = 'batchNumbers/';
-    couponSeries = 'batchNumbers/couponSeries'
-    updateBatch = 'batchNumbers/update/'
+    couponSeries = 'batchNumbers/couponSeries';
+    updateBatch = 'batchNumbers/update/';
+    deleteBatch = 'batchNumbers/delete/';
+    branchDeletedAffectedCouponsCount = 'batchNumbers/branchDeletedAffectedCouponsCount/'
 
 //   transactions
     getTransactions = 'transaction';

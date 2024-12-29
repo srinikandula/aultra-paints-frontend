@@ -16,6 +16,7 @@ import {ApiUrlsService} from "../services/api-urls.service";
 export class RegisterComponent {
   name: string = '';
   email: string = '';
+  mobile: string = '';
   password: string = '';
   successMessage: string = '';
   errorMessage: string = '';

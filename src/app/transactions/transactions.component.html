@@ -11,12 +11,12 @@
                     <th scope="col">S.NO</th>
                     <th>Coupons Id</th>
                     <th>Batch Id</th>
-                    <th>Is Processed</th>
+                    <th>Is Redeemed</th>
                     <th>QR Code</th>
                     <th>Created At</th>
-                    <th>Updated At</th>
+<!--                    <th>Updated At</th>-->
                     <th>Created By</th>
-                    <th>Updated By</th>
+<!--                    <th>Updated By</th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -25,15 +25,16 @@
                     <td>{{ item.transactionId }}</td>
                     <td>{{ item.batchName }}</td>
                     <td>{{ item.isProcessed }}</td>
+
                     <td>
                         <button class="btn btn-light btn-lg" (click)="setQrUrl(item.qr_code)">
                             <i class="bx bx-qr" [ngStyle]="{ 'color': item.isProcessed ? 'red' : ''}"></i>
                         </button>
                     </td>
                     <td>{{ item.createdAt | date }}</td>
-                    <td>{{ item.updatedAt | date }}</td>
+<!--                    <td>{{ item.updatedAt | date }}</td>-->
                     <td>{{ item.createdByName }}</td>
-                    <td>{{ item.updatedByNam }}</td>
+<!--                    <td>{{ item.updatedByNam }}</td>-->
                 </tr>
                 </tbody>
             </table>

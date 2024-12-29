@@ -45,8 +45,8 @@ export class AuthService {
     return null;
   }
 
-  logIn(email: string, password: string): Observable<any> {
-    return this.http.post<any>(this.apiUrls.mainUrl + '/auth/login', { email, password })
+  logIn(mobile: string, password: string): Observable<any> {
+    return this.http.post<any>(this.apiUrls.mainUrl + 'auth/login', { mobile, password })
         .pipe(map(response => {
           if (response) {
             console.log(response);

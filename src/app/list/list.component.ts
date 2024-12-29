@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {ApiUrlsService} from "../services/api-urls.service";
 import {ApiRequestService} from "../services/api-request.service";
 import {NgSelectComponent} from "@ng-select/ng-select";
+import Swal from "sweetalert2";
 
 @Component({
     selector: 'app-list',
@@ -110,29 +111,49 @@ export class ListComponent implements OnInit {
 
     onUpdateSubmit(): void {
         // Pass the selectedBranch and its BatchNumber to the updateBranch method
-        this.apiRequest.update(this.ApiUrls.updateBatch + this.selectedBranch._id, this.selectedBranch).subscribe((response) => {
-            alert('Branch updated successfully!');
-            this.loadBranches(); // Reload the branches list
-            this.closeUpdateModal(); // Close the modal
-        }, (error) => {
-            console.error('Error updating branch:', error);
-            alert('Error updating branch');
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to update this batch?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, update it!',
+            cancelButtonText: 'No, cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.apiRequest.update(this.ApiUrls.updateBatch + this.selectedBranch._id, this.selectedBranch).subscribe((response) => {
+                    this.loadBranches(); // Reload the branches list
+                    this.closeUpdateModal(); // Close the modal
+                    Swal.fire({icon: 'success', title: 'Success', text: 'Batches updated'});
+                }, (error) => {
+                    console.error('Error updating batch:', error);
+                });
+            }
         });
     }
 
-    onDelete(batchNumber: string): void {
-        const confirmDelete = confirm('Are you sure you want to delete this branch?');
-        if (confirmDelete) {
-            this.orderService.deleteBranch(batchNumber).subscribe(
-                (response) => {
-                    alert('Branch deleted successfully!');
-                    this.loadBranches(); // Reload branches after deletion
-                },
-                (error) => {
-                    console.error('Error deleting branch:', error);
+    onDelete(id: string): void {
+        this.apiRequest.getCouponSeries(this.ApiUrls.branchDeletedAffectedCouponsCount + id).subscribe((response) => {
+            console.log(response)
+            let text = response.message;
+            Swal.fire({
+                title: 'Are you sure?',
+                html: `${response.message} <br>  You won\'t be able to revert this!`,
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, delete it!',
+                cancelButtonText: 'No, keep it'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    this.apiRequest.delete(this.ApiUrls.deleteBatch + id).subscribe((response) => {
+                        this.loadBranches();
+                    }, (error) => {
+                        console.error('Error deleting branch:', error);
+                    });
                 }
-            );
-        }
+            });
+        }, (error) => {
+            console.error(error);
+        });
     }
 
     // Method to close the update modal

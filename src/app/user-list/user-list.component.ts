@@ -17,6 +17,9 @@ export class UserListComponent {
   currentUser: any = {};  
   page: number = 1;
   limit: number = 10;
+  searchQuery: string = '';
+  currentPage: number = 1;
+  totalPages: number = 1;
 
   constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
 
@@ -26,9 +29,10 @@ export class UserListComponent {
 
   // Load users
   loadUsers(): void {
-    this.apiService.getUsers(this.page, this.limit).subscribe(
-      (response) => { 
-        this.users = response; 
+    this.page = this.currentPage
+    this.apiService.getUsers(this.page, this.limit, this.searchQuery).subscribe((response) => {
+        this.users = response.data;
+          this.totalPages = response.pages;
       },
       (error) => {
         console.error('Error fetching users:', error);
@@ -122,5 +126,21 @@ export class UserListComponent {
       title: 'Error',
       text: message,
     });
+  }
+
+  prevPage(): void {
+    console.log(this.currentPage, this.totalPages)
+    if (this.currentPage > 1) {
+      this.currentPage = this.currentPage - 1
+      this.loadUsers();
+    }
+  }
+
+  nextPage(): void {
+    console.log(this.currentPage, this.totalPages)
+    if (this.currentPage < this.totalPages) {
+      this.currentPage = this.currentPage + 1
+      this.loadUsers();
+    }
   }
 }

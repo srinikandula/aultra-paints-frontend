@@ -55,7 +55,7 @@ export class TransactionsComponent {
     prevPage(): void {
         if (this.currentPage > 1) {
             this.currentPage = this.currentPage - 1
-            this.getAllTransactions(this.currentPage - 1);
+            this.getAllTransactions(this.currentPage);
         }
     }
 

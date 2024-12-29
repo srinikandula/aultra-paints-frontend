@@ -55,29 +55,15 @@ export class ApiRequestService {
         );
     }
 
-    // Get all products
-    getProducts(data: any) {
+    // Get all products with pagination
+    getProducts(data: any): Observable<any> {
         const params = new HttpParams()
             .set('page', data.page.toString())
             .set('limit', data.limit.toString());
 
-        return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getProducts, {params}).pipe(
-            map((res: any) => {
-                return res;
-            })
-        );
+        return this.http.get<any>(this.ApiUrls.mainUrl + this.ApiUrls.getProducts, {params});
     }
 
-<<<<<<< HEAD
-   // Get all products with pagination
-   getProducts(data: any): Observable<any> {
-    const params = new HttpParams()
-      .set('page', data.page.toString())
-      .set('limit', data.limit.toString());
-
-    return this.http.get<any>(this.ApiUrls.mainUrl + this.ApiUrls.getProducts, { params });
-  }
-=======
     // Get a product by its ID
     getProductById(id: string) {
         return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getProductById + '/' + id).pipe(
@@ -95,7 +81,6 @@ export class ApiRequestService {
             })
         );
     }
->>>>>>> d929cc6 (Batches Changes)
 
     // Delete a product by its ID
     deleteProduct(id: string) {
@@ -116,27 +101,14 @@ export class ApiRequestService {
     }
 
     // Get all brands
-    getAllBrands(data: any) {
+    getAllBrands(data: any): Observable<any> {
         const params = new HttpParams()
             .set('page', data.page.toString())
             .set('limit', data.limit.toString());
 
-        return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getBrands, {params}).pipe(
-            map((res: any) => {
-                return res;
-            })
-        );
+        return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getBrands, {params});
     }
 
-<<<<<<< HEAD
-  getAllBrands(data: any): Observable<any> {
-    const params = new HttpParams()
-      .set('page', data.page.toString())
-      .set('limit', data.limit.toString());
-
-    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getBrands, { params });
-  }
-=======
     // Get brands by Product ID
     getBrandsByProductId(proId: string) {
         return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getBrandsByProductId + '/' + proId).pipe(
@@ -145,7 +117,6 @@ export class ApiRequestService {
             })
         );
     }
->>>>>>> d929cc6 (Batches Changes)
 
     // Update a brand
     updateBrand(id: string, data: any) {
@@ -179,36 +150,45 @@ export class ApiRequestService {
         }));
     }
 
-   // Get all users
-   getUsers(page: number, limit: number) {
-    const params = new HttpParams()
-      .set('page', page.toString())
-      .set('limit', limit.toString());
-    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getUsers, { params }).pipe(
-      map((res: any) => res)
-    );
-  }
+    // Get all users
+    getUsers(page: number, limit: number, searchQuery: any) {
+        // const params = new HttpParams()
+        //     .set('page', page.toString())
+        //     .set('limit', limit.toString());
+        let query = {
+            page: page,
+            limit: limit,
+            searchQuery: searchQuery
+        }
+        return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.searchUser, query).pipe(
+            map((res: any) => res)
+        );
+    }
 
-  // Add a new user
-  addUser(user: any) {
-    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.addUser, user).pipe(
-      map((res: any) => res)
-    );
-  }
+    // Add a new user
+    addUser(user: any) {
+        return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.addUser, user).pipe(
+            map((res: any) => res)
+        );
+    }
 
-  // Update an existing user
-  updateUser(id: string, user: any) {
-    return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.updateUser + '/' + id, user).pipe(
-      map((res: any) => res)
-    );
-  }
+    // Update an existing user
+    updateUser(id: string, user: any) {
+        return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.updateUser + '/' + id, user).pipe(
+            map((res: any) => res)
+        );
+    }
 
-  // Delete a user by ID
-  deleteUser(id: string) {
-    return this.http.delete(this.ApiUrls.mainUrl + this.ApiUrls.deleteUser + '/' + id).pipe(
-      map((res: any) => res)
-    );
-  }
+    // Delete a user by ID
+    deleteUser(id: string) {
+        return this.http.delete(this.ApiUrls.mainUrl + this.ApiUrls.deleteUser + '/' + id).pipe(
+            map((res: any) => res)
+        );
+    }
+
+    delete(subUrl: string) {
+        return this.http.delete(this.ApiUrls.mainUrl + subUrl).pipe(map((res: any) => res));
+    }
 }
 
 
