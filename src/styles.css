@@ -30,3 +30,7 @@ body { margin: 0; background-color: #f6f9fa!important }
 .table td, .table th {
     vertical-align: middle;
 }
+
+/*.form-label {*/
+/*    font-size: 14px;*/
+/*}*/
