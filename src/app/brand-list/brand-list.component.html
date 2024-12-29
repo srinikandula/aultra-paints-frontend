@@ -55,8 +55,8 @@
     <form>
       <!-- Product Dropdown with Placeholder -->
       <div class="form-group">
-        <label for="productId">Product</label>
-        <select class="form-control" id="productId" [(ngModel)]="currentBrand.proId" name="proId" required *ngIf="products.length > 0">
+        <label class="form-label" for="productId">Product</label>
+        <select class="form-select mb-3" id="productId" [(ngModel)]="currentBrand.proId" name="proId" required *ngIf="products.length > 0">
           <!-- Placeholder Option -->
           <option value="" disabled selected>Select a product</option>
           <!-- Product options -->
@@ -69,9 +69,9 @@
 
       <!-- Brand Name Input with Placeholder -->
       <div class="form-group">
-        <label for="brandName">Brand Name</label>
+        <label class="form-label" for="brandName">Brand Name</label>
         <!-- Brand Name Input with Placeholder -->
-        <input type="text" class="form-control" id="brandName" [(ngModel)]="currentBrand.brands" name="brands" required placeholder="Enter brand name" />
+        <input type="text" class="form-control mb-3" id="brandName" [(ngModel)]="currentBrand.brands" name="brands" required placeholder="Enter brand name" />
       </div>
 
       <div *ngIf="errorMessage" class="alert alert-danger mt-2">
