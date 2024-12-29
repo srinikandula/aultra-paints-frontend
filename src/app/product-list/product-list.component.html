@@ -1,47 +1,45 @@
- <div class="container-fluid container-mt shadow-sm">
-      <div>
-          <h4>Products</h4>
+<div class="container-fluid container-mt shadow-sm">
+    <div>
+        <h4>Products</h4>
 
         <div class="col-sm-2 ml-auto" style="margin-left: 1060px; margin-top: -50px;">
             <button class="btn btn-primary" (click)="addProduct(productModal)">Add Product</button>
         </div>
-        
-          <div class="table-wrapper">
-              <table class="table table-hover">
-                  <thead>
-                      <tr>
-                          <th scope="col">S.NO</th>
-                          <th scope="col">Product Name</th>
-                          <th scope="col">Actions</th>
-                      </tr>
-                  </thead>
-                  <tbody>
-                    <tr *ngFor="let product of products; let i = index">
-                        <td>{{ (currentPage - 1) * limit + i + 1 }}</td> 
-                        <td>{{ product.name }}</td>
-                        <td>
-                            <button class="btn btn-warning" (click)="editProduct(product, productModal)">Edit</button>
-                            <button class="btn btn-danger" (click)="deleteProduct(product._id)">Delete</button>
-                        </td>
-                    </tr>
-                  </tbody>                  
-              </table>
-          </div>
-      </div>
-    </div>
+
+        <div class="table-wrapper">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th scope="col">S.NO</th>
+                    <th scope="col">Product Name</th>
+                    <th scope="col">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let product of products; let i = index">
+                    <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
+                    <td>{{ product.name }}</td>
+                    <td>
+                        <button class="btn btn-warning" (click)="editProduct(product, productModal)">Edit</button>
+                        <button class="btn btn-danger" (click)="deleteProduct(product._id)">Delete</button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
 
         <!-- Pagination Controls -->
-        <div class="pagination-controls" style="display: flex; justify-content: flex-end; align-items: center;">
-          <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-secondary"
-                  style="background-color:#dc3545">Previous
-          </button>
-          <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-secondary"
-                  style="background-color:#1179ef;">Next
-          </button>
-      </div>
-  
-   <!-- Modal for Add/Edit Product -->
+        <div class="d-flex justify-content-end">
+            <div class="pagination-controls">
+                <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+                <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+                <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Add/Edit Product -->
 <ng-template #productModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{ currentProduct._id ? 'Edit' : 'Add' }} Product</h4>
@@ -49,7 +47,8 @@
     <div class="modal-body">
         <div class="form-group mb-4">
             <label for="productName">Product Name</label>
-            <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name" required/>
+            <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name"
+                   required/>
         </div>
     </div>
     <div class="modal-footer">

@@ -15,14 +15,15 @@ import {first} from "rxjs";
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
-  email: string = '';
+  // email: string = '';
+  mobile: string = '';
   password: string = '';
   errorMessage: string = '';
 
   constructor(private router: Router, private authService: AuthService) {}
 
   login() {
-    this.authService.logIn(this.email, this.password).pipe(first()).subscribe((data: any) => {
+    this.authService.logIn(this.mobile, this.password).pipe(first()).subscribe((data: any) => {
       console.log("Loggedin Successfully..!")
           // this.router.navigate(['/dashboard']); // Redirect to dashboard
         },

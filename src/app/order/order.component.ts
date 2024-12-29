@@ -7,6 +7,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import {ApiUrlsService} from "../services/api-urls.service";
 import {ApiRequestService} from "../services/api-request.service";
 import {Router} from "@angular/router";
+import Swal from "sweetalert2";
 
 @Component({
     selector: 'app-order',
@@ -67,17 +68,28 @@ export class OrderComponent implements OnInit {
             ExpiryDate: this.convertToISODate(this.expiryDate),
             BatchNumbers: this.BatchNumbers,
         };
-
-        this.ApiRequest.create(this.ApiUrls.createBatch, newBranch).subscribe(
-            (response: any) => {
-                console.log('Branch created successfully:', response.message);
-                this.resetForm();
-                this.router.navigate(['dashboard/list']);
-            },
-            (error: any) => {
-                console.error('Error creating branch:', error);
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to save this Batch?',
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, save it!',
+            cancelButtonText: 'No, cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                this.ApiRequest.create(this.ApiUrls.createBatch, newBranch).subscribe(
+                    (response: any) => {
+                        console.log('Branch created successfully:', response.message);
+                        this.resetForm();
+                        this.router.navigate(['dashboard/list']);
+                        Swal.fire({icon: 'success', title: 'Success', text: 'Batches created successfully.'});
+                    },
+                    (error: any) => {
+                        console.error('Error creating branch:', error);
+                    }
+                );
             }
-        );
+        });
     }
 
     resetForm() {

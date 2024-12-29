@@ -17,11 +17,11 @@
                 <thead>
                 <tr>
                     <th>S.NO</th>
+                    <th>Batch Number</th>
                     <th>Branch</th>
                     <th>Product Name</th>
                     <th>Brand</th>
                     <th>CouponSeries</th>
-                    <th>Batch Number</th>
                     <th>Redeemable Points</th>
                     <th>Value</th>
                     <th>Volume</th>
@@ -34,11 +34,11 @@
                 <tbody>
                 <tr *ngFor="let branch of branches; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
+                    <td>{{ branch.BatchNumber }}</td>
                     <td>{{ branch.Branch }}</td>
                     <td>{{ branch.ProductNameStr || 'NA' }}</td>
                     <td>{{ branch.BrandName || 'NA' }}</td>
                     <td>{{ branch.CouponSeries }}</td>
-                    <td>{{ branch.BatchNumber }}</td>
                     <td>{{ branch.RedeemablePoints }}</td>
                     <td>{{ branch.value }}</td>
                     <td>{{ branch.Volume }}</td>
@@ -49,7 +49,7 @@
                         <button (click)="onUpdate(branch)" class="btn btn-warning" title="Update">
                             <i class="bx bx-edit"></i>  <!-- Edit icon -->
                         </button>
-                        <button (click)="onDelete(branch.BatchNumber)" class="btn btn-danger" title="Delete">
+                        <button (click)="onDelete(branch._id)" class="btn btn-danger" title="Delete">
                             <i class="bx bx-trash"></i>
                         </button>
                     </td>
