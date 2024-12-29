@@ -1,0 +1,104 @@
+<div class="container-fluid container-mt shadow-sm">
+  <div>
+    <h4>Users</h4>
+
+    <!-- Add Button -->
+    <div class="col-sm-2 ml-auto" style="margin-left: 1200px; margin-top: -50px;">
+      <button class="btn btn-primary" (click)="addUser(brandModal)">Add User</button>
+    </div>
+
+    <!-- Table to display users -->
+    <div class="table-wrapper">
+      <table class="table table-hover">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Redeemable Points</th>
+            <th>Cash</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let user of users; let i = index">
+            <td>{{ i + 1 }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.redeemablePoints }}</td>
+            <td>{{ user.cash }}</td>
+            <td>
+              <button class="btn btn-warning" (click)="editUser(user, editUserModal)">Edit</button>
+              <button class="btn btn-danger" (click)="deleteUser(user._id)">Delete</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for Add User -->
+<ng-template #brandModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Add User</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <!-- Add Name -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required />
+      </div>
+      <!-- Add Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email" required />
+      </div>
+      <!-- Add Password -->
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password" required />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="addNewUser(modal)">Save</button> <!-- Calls addNewUser -->
+  </div>
+</ng-template>
+
+<!-- Modal for Edit User -->
+<ng-template #editUserModal let-modal>
+  <div class="modal-header">
+    <h4 class="modal-title">Edit User</h4>
+  </div>
+  <div class="modal-body">
+    <form>
+      <!-- Edit Name -->
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required />
+      </div>
+      <!-- Edit Email -->
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" name="email" required />
+      </div>
+      <!-- Edit Redeemable Points -->
+      <div class="form-group">
+        <label for="redeemablePoints">Redeemable Points</label>
+        <input type="number" class="form-control" id="redeemablePoints" [(ngModel)]="currentUser.redeemablePoints" name="redeemablePoints" />
+      </div>
+      <!-- Edit Cash -->
+      <div class="form-group">
+        <label for="cash">Cash</label>
+        <input type="number" class="form-control" id="cash" [(ngModel)]="currentUser.cash" name="cash" />
+      </div>
+    </form>
+  </div>
+  <div class="modal-footer">
+    <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+    <button type="button" class="btn btn-primary" (click)="updateUser(modal)">Save</button> <!-- Calls updateUser -->
+  </div>
+</ng-template>

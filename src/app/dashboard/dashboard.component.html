@@ -3,7 +3,7 @@
     <div class="d-flex align-items-center">
         <!-- Logo before the toggle button -->
         <div class="navbar-brand">
-            <img src="assets/img/app_logo.png" alt="Logo" style="height: 40px;"> <!-- Adjust height as needed -->
+            <img src="assets/img/app_logo.png" alt="Logo" style="height: 40px;"> 
         </div>
 
         <!-- Sidebar Toggle Button -->
@@ -17,6 +17,13 @@
     <!-- Sidebar (above the navbar) -->
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
         <ul class="nav flex-column">
+
+            <!-- User List (New Item) -->
+         <li class="nav-item" (click)="navigateTo('/dashboard/user-list')">
+            <i class="bx bx-user-circle" style="font-size: 30px;"></i> 
+            <span *ngIf="!isSidebarCollapsed">Users</span>
+        </li>
+
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('/dashboard/list')">
                 <i class="bx bx-list-ul px-2" style="font-size: 30px;"></i>
@@ -31,16 +38,17 @@
 
             <!-- Product List (new item) -->
             <li class="nav-item" (click)="navigateTo('/dashboard/product-list')">
-                <i class="bx bx-label" style="font-size: 30px;"></i> <!-- Product icon -->
+                <i class="bx bx-label" style="font-size: 30px;"></i>
                 <span *ngIf="!isSidebarCollapsed">Product</span>
             </li>
         </ul>
 
          <!-- Brand List (New Item) -->
          <li class="nav-item" (click)="navigateTo('/dashboard/brand-list')">
-            <i class="bx bx-tag" style="font-size: 30px;"></i> <!-- Tag icon for Brand -->
+            <i class="bx bx-tag" style="font-size: 30px;"></i>
             <span *ngIf="!isSidebarCollapsed">Brand</span>
         </li>
+
 
         <!-- Sidebar Footer -->
         <div class="sidebar-footer" (click)="logout()">
@@ -52,7 +60,7 @@
 
     <!-- Main Content Area (includes navbar and router outlet) -->
     <main class="content" [ngClass]="{ 'collapsed': isSidebarCollapsed }">
-        <!-- Dynamic Content Loaded via Router -->
+       
         <router-outlet></router-outlet>
     </main>
 </div>

@@ -16,17 +16,24 @@ export class ProductListComponent implements OnInit {
   products: any[] = [];
   currentProduct: any = { name: '' };
 
+  // Pagination variables
+  currentPage: number = 1;
+  totalPages: number = 1;
+  totalProducts: number = 0;
+  limit: number = 10;
+
   constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.loadProducts();
   }
 
-  // Load all products from the API
   loadProducts(): void {
-    this.apiService.getProducts({ page: 1, limit: 10 }).subscribe(
+    this.apiService.getProducts({ page: this.currentPage, limit: this.limit }).subscribe(
       (data) => {
-        this.products = data;  
+        this.products = data.products;  
+        this.totalPages = data.pagination.totalPages;  
+        this.totalProducts = data.pagination.totalProducts; 
       },
       (error) => {
         this.showError('Error fetching products!');
@@ -100,6 +107,19 @@ export class ProductListComponent implements OnInit {
     });
   }
 
+  
+   nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadProducts(); 
+    }
+  }
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadProducts();  
+    }
+  }
 
   showSuccess(message: string): void {
     Swal.fire({

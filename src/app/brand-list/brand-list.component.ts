@@ -17,8 +17,12 @@ export class BrandListComponent {
   products: any[] = [];
   currentBrand: any = { proId: '', brands: '' };
   errorMessage: string = '';
-  page = 1;
-  limit = 10;
+  // Pagination variables
+  currentPage: number = 1;
+  totalPages: number = 1;
+  totalProducts: number = 0;
+  limit: number = 10;
+  totalBrands:number = 0;
 
   constructor(
     private apiRequestService: ApiRequestService,
@@ -31,10 +35,12 @@ export class BrandListComponent {
   }
 
   loadBrands(): void {
-    const data = { page: this.page, limit: this.limit };
+    const data = { page: this.currentPage, limit: this.limit };
     this.apiRequestService.getAllBrands(data).subscribe({
-      next: (response) => {
-        this.brands = response;
+      next: (response: any) => {
+        this.brands = response.brands;
+        this.totalBrands = response.pagination.totalBrands;
+        this.totalPages = response.pagination.totalPages;
       },
       error: (error) => {
         this.showError('Error fetching brands!');
@@ -43,14 +49,16 @@ export class BrandListComponent {
   }
 
   loadProducts(): void {
-    this.apiRequestService.getProducts({ page: 1, limit: 10 }).subscribe({
-      next: (data) => {
-        this.products = data;
+    this.apiRequestService.getProducts({ page: this.currentPage, limit: this.limit }).subscribe(
+      (data) => {
+        this.products = data.products;  
+        this.totalPages = data.pagination.totalPages;  
+        this.totalProducts = data.pagination.totalProducts; 
       },
-      error: (error) => {
+      (error) => {
         this.showError('Error fetching products!');
       }
-    });
+    );
   }
 
   // Add brand: Open the modal
@@ -133,6 +141,19 @@ export class BrandListComponent {
         });
       }
     });
+  }
+
+  nextPage(): void {
+    if (this.currentPage < this.totalPages) {
+      this.currentPage++;
+      this.loadBrands(); 
+    }
+  }
+  prevPage(): void {
+    if (this.currentPage > 1) {
+      this.currentPage--;
+      this.loadBrands();  
+    }
   }
 
   // Show success alert
