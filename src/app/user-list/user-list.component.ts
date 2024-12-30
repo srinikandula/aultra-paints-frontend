@@ -21,6 +21,9 @@ export class UserListComponent {
   currentPage: number = 1;
   totalPages: number = 1;
 
+  // Mobile number validation pattern (10 digits)
+  mobilePattern = '^[0-9]{10}$'; 
+
   constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
 
   ngOnInit(): void {
@@ -32,7 +35,7 @@ export class UserListComponent {
     this.page = this.currentPage
     this.apiService.getUsers(this.page, this.limit, this.searchQuery).subscribe((response) => {
         this.users = response.data;
-          this.totalPages = response.pages;
+        this.totalPages = response.pages;
       },
       (error) => {
         console.error('Error fetching users:', error);
@@ -40,79 +43,60 @@ export class UserListComponent {
     );
   }
 
-  // user-list.component.ts
+  toggleUserStatus(userId: string, currentStatus: string, event: any): void {
+    const currentSwitchState = event.target.checked;
+    const action = currentSwitchState ? 'active' : 'inactive';  
 
-toggleUserStatus(userId: string, currentStatus: string, event: any): void {
-  // Get the current state of the switch (checked or unchecked)
-  const currentSwitchState = event.target.checked;
+    Swal.fire({
+      title: `Are you sure you want to mark this user as ${action}?`,
+      text: `You are about to mark this user as ${action}.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: `Yes, mark as ${action}`,
+      cancelButtonText: 'No, keep it',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiService.toggleUserStatus(userId, action).subscribe(
+          (response) => {
+            const user = response.user;
+            const userName = user ? user.name : 'User';
+            Swal.fire('Success', `${userName} has been successfully marked as ${action}.`, 'success');
 
-  // Determine the action based on the state of the switch
-  const action = currentSwitchState ? 'active' : 'inactive';  // If switch is checked, set to 'active', else 'inactive'
+            event.target.checked = action === 'active'; 
 
-  // Show confirmation dialog with the correct action (active or inactive)
-  Swal.fire({
-    title: `Are you sure you want to mark this user as ${action}?`,
-    text: `You are about to mark this user as ${action}.`,
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: `Yes, mark as ${action}`,
-    cancelButtonText: 'No, keep it',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // Correctly pass both arguments (userId and action)
-      this.apiService.toggleUserStatus(userId, action).subscribe(
-        (response) => {
-          const user = response.user;
-          const userName = user ? user.name : 'User';
-          Swal.fire('Success', `${userName} has been successfully marked as ${action}.`, 'success');
-
-          // Update the switch state in the UI (no need to manually toggle since it's already bound to user.status)
-          event.target.checked = action === 'active'; // Ensure the checkbox reflects the updated status
-
-          // Update the user's status in the local array for consistency
-          const updatedUser = this.users.find(u => u._id === userId);
-          if (updatedUser) {
-            updatedUser.status = action; // Update the status in the local array
+            const updatedUser = this.users.find(u => u._id === userId);
+            if (updatedUser) {
+              updatedUser.status = action; 
+            }
+          },
+          (error) => {
+            Swal.fire('Error', 'Failed to toggle user status', 'error');
+            event.target.checked = !currentSwitchState; 
+            console.error('Error toggling user status:', error);
           }
-        },
-        (error) => {
-          Swal.fire('Error', 'Failed to toggle user status', 'error');
-          event.target.checked = !currentSwitchState; // Revert to original state if API fails
-          console.error('Error toggling user status:', error);
-        }
-      );
-    } else {
-      // If the user cancels, revert the switch to its original state
-      event.target.checked = currentSwitchState;
-    }
-  });
-}
+        );
+      } else {
+        event.target.checked = currentSwitchState;
+      }
+    });
+  }
 
-  
-
-
-  // Open modal for adding a new user
   addUser(brandModal: any): void {
-    this.currentUser = { name: '', mobile: '',   password: '',  };  
+    this.currentUser = { name: '', mobile: '', password: '', };  
     this.modalService.open(brandModal);  
   }
-  
 
-  // Open modal for editing a user
   editUser(user: any, content: any): void {
     this.currentUser = { ...user };  
     this.modalService.open(content, { size: 'lg' });
   }
 
-  
-
-  // Save user (Add)
   addNewUser(modal: any): void {
     if (this.currentUser.password !== this.currentUser.confirmPassword) {
       this.showError('Password and Confirm Password do not match!');
       return;
     }
-
+  
     this.apiService.addUser(this.currentUser).subscribe(
       (data) => {
         this.loadUsers();
@@ -121,13 +105,26 @@ toggleUserStatus(userId: string, currentStatus: string, event: any): void {
         modal.close(); 
       },
       (error) => {
-        this.showError('Error adding user!');
+        // Check if the error response contains the 'Mobile already exists' message
+        if (error.error && error.error[0] === 'Mobile already exists') {
+          Swal.fire({
+            icon: 'error',
+            title: 'Duplicate Mobile Number',
+            text: 'This mobile number is already registered. Please enter a different number.',
+          });
+        } else {
+          this.showError('Error adding user!');
+        }
       }
     );
   }
   
-  // Save user (Update)
-  updateUser(modal: any): void {
+  updateUser(modal: any, userForm: any): void {
+    if (userForm.invalid) {
+      this.showError('Please fill in all the required fields correctly.');
+      return;
+    }
+  
     if (this.currentUser._id) {
       this.apiService.updateUser(this.currentUser._id, this.currentUser).subscribe(
         (data) => {
@@ -137,13 +134,22 @@ toggleUserStatus(userId: string, currentStatus: string, event: any): void {
           modal.close(); 
         },
         (error) => {
-          this.showError('Error updating user!');
+          // Check if the error response contains the 'Mobile already exists' message
+          if (error.error && error.error[0] === 'Mobile already exists') {
+            Swal.fire({
+              icon: 'error',
+              title: 'Duplicate Mobile Number',
+              text: 'This mobile number is already registered. Please enter a different number.',
+            });
+          } else {
+            this.showError('Error updating user!');
+          }
         }
       );
     }
   }
+  
 
-  // Delete user
   deleteUser(id: string): void {
     Swal.fire({
       title: 'Are you sure?',
@@ -167,7 +173,6 @@ toggleUserStatus(userId: string, currentStatus: string, event: any): void {
     });
   }
 
-  // Success message
   showSuccess(message: string): void {
     Swal.fire({
       icon: 'success',
@@ -176,7 +181,6 @@ toggleUserStatus(userId: string, currentStatus: string, event: any): void {
     });
   }
 
-  // Error message
   showError(message: string): void {
     Swal.fire({
       icon: 'error',
@@ -186,17 +190,15 @@ toggleUserStatus(userId: string, currentStatus: string, event: any): void {
   }
 
   prevPage(): void {
-    console.log(this.currentPage, this.totalPages)
     if (this.currentPage > 1) {
-      this.currentPage = this.currentPage - 1
+      this.currentPage = this.currentPage - 1;
       this.loadUsers();
     }
   }
 
   nextPage(): void {
-    console.log(this.currentPage, this.totalPages)
     if (this.currentPage < this.totalPages) {
-      this.currentPage = this.currentPage + 1
+      this.currentPage = this.currentPage + 1;
       this.loadUsers();
     }
   }

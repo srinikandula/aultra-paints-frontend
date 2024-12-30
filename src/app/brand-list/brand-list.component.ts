@@ -15,6 +15,7 @@ import Swal from 'sweetalert2';
 export class BrandListComponent {
   brands: any[] = [];
   products: any[] = [];
+  searchQuery: string = '';
   currentBrand: any = { proId: '', brands: '' };
   errorMessage: string = '';
   // Pagination variables
@@ -48,6 +49,7 @@ export class BrandListComponent {
     });
   }
 
+
   loadProducts(): void {
     this.apiRequestService.getProducts({ page: this.currentPage, limit: this.limit }).subscribe(
       (data) => {
@@ -59,6 +61,28 @@ export class BrandListComponent {
         this.showError('Error fetching products!');
       }
     );
+  }
+
+   // Search brands by name
+   searchBrands(): void {
+    if (this.searchQuery.trim() === '') {
+      this.loadBrands();  // If the search query is empty, load all brands
+      return;
+    }
+
+    this.apiRequestService.searchBrandsByName(this.searchQuery).subscribe({
+      next: (response: any) => {
+        if (response && response.length > 0) {
+          this.brands = response;  // Set brands to the search results
+        } else {
+          this.showError('No brands found matching your search!');
+          this.brands = [];  // Clear the list if no brands are found
+        }
+      },
+      error: (error) => {
+        this.showError('Error searching for brands!');
+      }
+    });
   }
 
   // Add brand: Open the modal
