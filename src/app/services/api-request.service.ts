@@ -46,7 +46,7 @@ export class ApiRequestService {
     }
 
      // Toggle the user status (active/inactive)
-  toggleUserStatus(userId: string) {
+  toggleUserStatus(userId: string, action: string) {
     return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.toggleUserStatus + `/${userId}`, {}).pipe(map((res: any) => {
       return res;
     }));
