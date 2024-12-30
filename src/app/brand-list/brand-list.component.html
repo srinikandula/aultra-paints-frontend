@@ -2,11 +2,25 @@
   <div>
     <h4>Brands</h4>
 
-    <!-- Add Button -->
-    <div class="col-sm-2 ml-auto" style="margin-left: 1070px; margin-top: -50px;">
-      <button class="btn btn-primary" (click)="addBrand(brandModal)">Add Brand</button>
-    </div>
+    
+    <div class="d-flex justify-content-end align-items-center" style="margin-top: -30px;">
+      <!-- Search Box aligned to the right -->
+      <div class="col-sm-3 mr-3">
+        <input 
+          [(ngModel)]="searchQuery" 
+          (input)="searchBrands()" 
+          placeholder="Search for brand name" 
+          class="form-control" 
+        />
+      </div>
 
+      <!-- Add Product Button aligned to the right (same line as Search Box) -->
+      <div>
+        <button class="btn btn-primary" (click)="addBrand(brandModal)">Add Brand</button>
+      </div>
+
+
+  </div>
     <!-- Table to display brands -->
     <div class="table-wrapper">
       <table class="table table-hover">

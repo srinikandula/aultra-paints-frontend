@@ -8,8 +8,8 @@ export class ApiUrlsService {
     constructor() {
     }
 
-    // mainUrl = "http://localhost:4300/api/";
-    mainUrl = "https://paintsapi.whizzard.in/api/";
+    mainUrl = "http://localhost:4300/api/";
+    // mainUrl = "https://paintsapi.whizzard.in/api/";
 
     // Users API URLs
     getUsers = 'users/all';
@@ -39,7 +39,7 @@ export class ApiUrlsService {
     createProduct = 'products';
     getProducts = 'products';
     getAllProducts = 'products/getAllProducts';
-    getProductById = 'products';
+    getProductByName = 'products/search'; 
     updateProduct = 'products';
     deleteProduct = 'products';
 
@@ -50,4 +50,5 @@ export class ApiUrlsService {
     updateBrand = 'brands';
     deleteBrand = 'brands';
     getAllBrandsForSelect = 'brands/getAllBrandsForSelect/'
+    searchBrandsByName = 'brands/search/'
 }

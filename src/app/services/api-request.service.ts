@@ -72,14 +72,12 @@ export class ApiRequestService {
         return this.http.get<any>(this.ApiUrls.mainUrl + this.ApiUrls.getProducts, {params});
     }
 
-    // Get a product by its ID
-    getProductById(id: string) {
-        return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getProductById + '/' + id).pipe(
-            map((res: any) => {
-                return res;
-            })
-        );
-    }
+    // Search for a product by name
+  searchProductByName(name: string) {
+    return this.http.get(`${this.ApiUrls.mainUrl}${this.ApiUrls.getProductByName}/${name}`).pipe(
+      map((res: any) => res)
+    );
+  }
 
     // Update a product by its ID
     updateProduct(id: string, data: any) {
@@ -125,6 +123,13 @@ export class ApiRequestService {
             })
         );
     }
+
+    // Search for brands by name
+  searchBrandsByName(name: string): Observable<any> {
+    return this.http.get(`${this.ApiUrls.mainUrl}/${this.ApiUrls.searchBrandsByName}${name}`).pipe(
+      map((res: any) => res)
+    );
+  }
 
     // Update a brand
     updateBrand(id: string, data: any) {

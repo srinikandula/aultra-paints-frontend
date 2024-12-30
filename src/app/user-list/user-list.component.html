@@ -143,47 +143,74 @@
   </ng-template>
   
     
-  <!-- Modal for Edit User -->
-  <ng-template #editUserModal let-modal>
-      <div class="modal-header">
-          <h4 class="modal-title">Edit User</h4>
-      </div>
-      <div class="modal-body">
-          <form>
-              <!-- Edit Name -->
-              <div class="form-group">
-                  <label for="name">Name</label>
-                  <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required placeholder="Enter full name" />
-              </div>
-  
-              <!-- Edit Mobile -->
-              <div class="form-group">
-                  <label for="mobile">Mobile Number</label>
-                  <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile" required placeholder="Enter 10-digit mobile number" />
-              </div>
-  
-              <!-- Edit Email -->
-              <div class="form-group">
-                  <label for="email">Email</label>
-                  <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" required placeholder="Enter email address" />
-              </div>
-  
-              <!-- Edit Redeemable Points -->
-              <div class="form-group">
-                  <label for="redeemablePoints">Redeemed Points</label>
-                  <input type="number" class="form-control" id="redeemablePoints" [(ngModel)]="currentUser.redeemablePoints" name="redeemablePoints" placeholder="Enter redeemable points"/>
-              </div>
-  
-              <!-- Edit Cash -->
-              <div class="form-group">
-                  <label for="cash">Total cash Reward</label>
-                  <input type="number" class="form-control" id="cash" [(ngModel)]="currentUser.cash" name="cash" placeholder="Enter total cash reward" />
-              </div>
-          </form>
-      </div>
-      <div class="modal-footer">
-          <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-          <button type="button" class="btn btn-primary" (click)="updateUser(modal)">Save</button>
-      </div>
-  </ng-template>
-  
+ <!-- Modal for Edit User -->
+<ng-template #editUserModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title">Edit User</h4>
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" (ngSubmit)="updateUser(modal, userForm)">
+            <!-- Edit Name -->
+            <div class="form-group">
+                <label for="name">Name</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="name" 
+                    [(ngModel)]="currentUser.name" 
+                    name="name" 
+                    required
+                    placeholder="Enter full name" 
+                    #name="ngModel" 
+                />
+                <div *ngIf="name.invalid && name.touched" class="text-danger">
+                    Name is required.
+                </div>
+            </div>
+
+            <!-- Edit Mobile -->
+            <div class="form-group">
+                <label for="mobile">Mobile Number</label>
+                <input 
+                    type="text" 
+                    class="form-control" 
+                    id="mobile" 
+                    [(ngModel)]="currentUser.mobile" 
+                    name="mobile" 
+                    [pattern]="mobilePattern" 
+                    required 
+                    placeholder="Enter 10-digit mobile number" 
+                    #mobile="ngModel" 
+                />
+                <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
+                    <div *ngIf="mobile.errors?.['required']">Mobile number is required.</div>
+                    <div *ngIf="mobile.errors?.['pattern']">Please enter a valid 10-digit mobile number.</div>
+                </div>
+            </div>
+            
+            <!-- Edit Email -->
+            <div class="form-group">
+                <label for="email">Email</label>
+                <input 
+                    type="email" 
+                    class="form-control" 
+                    id="email" 
+                    [(ngModel)]="currentUser.email" 
+                    required
+                    name="email" 
+                    placeholder="Enter email address" 
+                    #email="ngModel" 
+                />
+                <div *ngIf="email.invalid && email.touched" class="text-danger">
+                    <div *ngIf="email.errors?.['required']">Email is required.</div>
+                    <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+                </div>
+            </div>
+
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+        <button type="button" class="btn btn-primary" [disabled]="userForm.invalid" (click)="updateUser(modal, userForm)">Save</button>
+    </div>
+</ng-template>
