@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import { CommonModule, DatePipe, NgClass, NgForOf, NgIf, NgOptimizedImage } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { OrderService } from "../order.service";
@@ -22,13 +22,14 @@ import { ApiRequestService } from "../services/api-request.service";
     templateUrl: './transactions.component.html',
     styleUrls: ['./transactions.component.css']
 })
-export class TransactionsComponent {
+export class TransactionsComponent implements OnInit {
     currentPage = 1;
     totalPages = 1;
     limit = 10;
     transactions: any = [];
     qrUrl: any;
     showUpdateModal: boolean = false;
+    userId: string | null = '';
 
     constructor(private orderService: OrderService,
                 private router: Router,
@@ -36,11 +37,11 @@ export class TransactionsComponent {
                 private apiRequest: ApiRequestService) { }
 
     ngOnInit(): void {
-        this.getAllTransactions();
+        this.filterBasedOnUser();
     }
 
     getAllTransactions(page: number = this.currentPage) {
-        this.apiRequest.create(this.ApiUrls.getTransactions, {page: page, limit: this.limit}).subscribe(
+        this.apiRequest.create(this.ApiUrls.getTransactions, {page: page, limit: this.limit, userId: this.userId}).subscribe(
             (response: any) => {
                 this.transactions = response.transactionsData;
                 this.totalPages = response.pages;
@@ -73,5 +74,18 @@ export class TransactionsComponent {
 
     closeUpdateModal(): void {
         this.showUpdateModal = false; // Hide the modal
+    }
+
+    filterBasedOnUser() {
+        const urlParams = new URLSearchParams(this.router.url.split('?')[1]);
+        this.userId = urlParams.get('userId');
+        console.log(this.userId)
+        this.getAllTransactions();
+    }
+
+    onReset() {
+        this.userId = null;
+        this.getAllTransactions();
+        this.router.navigate(['dashboard/transactions']);
     }
 }

@@ -31,6 +31,15 @@ body { margin: 0; background-color: #f6f9fa!important }
     vertical-align: middle;
 }
 
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.cursor-pointer:hover {
+    font-size: 18px;
+    font-weight: 900;
+}
+
 /*.form-label {*/
 /*    font-size: 14px;*/
 /*}*/

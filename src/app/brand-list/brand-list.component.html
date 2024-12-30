@@ -46,6 +46,9 @@
             </button>
             </td>
           </tr>
+            <tr *ngIf="brands.length === 0">
+              <td class="text-center" colspan="4">No Records found</td>
+            </tr>
         </tbody>
       </table>
     </div>

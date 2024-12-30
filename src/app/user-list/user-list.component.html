@@ -19,10 +19,10 @@
               <th>Name</th>
               <th>Mobile Number</th>
               <th>Email</th>
-              <th>Redeemed Points</th>
-              <th>Total Cash Reward</th>
-              <th>Status</th> 
-              <th>Actions</th> 
+              <th class="text-center">Redeemed Points</th>
+              <th class="text-center">Total Cash Reward</th>
+              <th class="text-center">Status</th>
+              <th class="text-center">Actions</th>
             </tr>
           </thead>
           <tbody>
@@ -31,11 +31,11 @@
               <td>{{ user.name }}</td>
               <td>{{ user.mobile }}</td>
               <td>{{ user.email }}</td>
-              <td>{{ user.redeemablePoints }}</td>
-              <td>{{ user.cash }}</td>
-              <td>
+              <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">{{ user.redeemablePoints }}</td>
+              <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)" style="cursor: pointer">{{ user.cash }}</td>
+              <td class="text-center">
                 <label class="switch">
-                    <input type="checkbox"  [checked]="user.status === 'active'" 
+                    <input type="checkbox" [checked]="user.status === 'active'"
                            (change)="toggleUserStatus(user._id, user.status, $event)">
                     <span class="slider round"></span>
                   </label>
@@ -43,7 +43,7 @@
               
   
               <!-- Actions Column: Edit and Delete Buttons -->
-              <td>
+              <td class="text-center">
                 <button (click)="editUser(user, editUserModal)" class="btn btn-warning" title="Update">
                   <i class="bx bx-edit"></i>
                 </button>
@@ -51,6 +51,9 @@
                   <i class="bx bx-trash"></i>
                 </button>
               </td>
+            </tr>
+            <tr *ngIf="users.length === 0">
+                <td class="text-center" colspan="8">No Records found</td>
             </tr>
           </tbody>
         </table>

@@ -4,6 +4,7 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { ApiRequestService } from '../services/api-request.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-user-list',
@@ -22,9 +23,9 @@ export class UserListComponent {
   totalPages: number = 1;
 
   // Mobile number validation pattern (10 digits)
-  mobilePattern = '^[0-9]{10}$'; 
+  mobilePattern = '^[0-9]{10}$';
 
-  constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
+  constructor(private apiService: ApiRequestService, private modalService: NgbModal, private router: Router) {}
 
   ngOnInit(): void {
     this.loadUsers();
@@ -201,5 +202,9 @@ export class UserListComponent {
       this.currentPage = this.currentPage + 1;
       this.loadUsers();
     }
+  }
+
+  showRedeemedPoints(_id: any) {
+    this.router.navigate(['dashboard/transactions'], { queryParams: { userId: _id } });
   }
 }
