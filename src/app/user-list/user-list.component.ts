@@ -41,9 +41,9 @@ export class UserListComponent {
   }
 
   toggleUserStatus(userId: string, currentStatus: string, event: any): void {
+    // Determine the action based on the current status (toggle between 'active' and 'inactive')
     const action = currentStatus === 'active' ? 'inactive' : 'active';
-  
-    // Show SweetAlert for confirmation
+    
     Swal.fire({
       title: `Are you sure you want to ${action} this user?`,
       text: `You are about to ${action} this user.`,
@@ -53,24 +53,25 @@ export class UserListComponent {
       cancelButtonText: 'No, keep it',
     }).then((result) => {
       if (result.isConfirmed) {
-        // Proceed with the status toggle action if user confirms
         this.apiService.toggleUserStatus(userId).subscribe(
           (response) => {
-            // On success, toggle the switch state
+            // On success, show success message
             Swal.fire('Success', response.message, 'success');
-            event.target.checked = !event.target.checked; 
+            event.target.checked = action === 'active'; 
           },
           (error) => {
+            // On error, show error message
             Swal.fire('Error', 'Failed to toggle user status', 'error');
-            event.target.checked = !event.target.checked; 
+            event.target.checked = currentStatus === 'active'; 
             console.error('Error toggling user status:', error);
           }
         );
       } else {
-        event.target.checked = !event.target.checked;
+        event.target.checked = currentStatus === 'active';
       }
     });
   }
+  
   
 
   // Open modal for adding a new user
