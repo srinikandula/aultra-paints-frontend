@@ -40,9 +40,41 @@ export class UserListComponent {
     );
   }
 
+  toggleUserStatus(userId: string, currentStatus: string, event: any): void {
+    const action = currentStatus === 'active' ? 'inactive' : 'active';
+  
+    // Show SweetAlert for confirmation
+    Swal.fire({
+      title: `Are you sure you want to ${action} this user?`,
+      text: `You are about to ${action} this user.`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, toggle status',
+      cancelButtonText: 'No, keep it',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Proceed with the status toggle action if user confirms
+        this.apiService.toggleUserStatus(userId).subscribe(
+          (response) => {
+            // On success, toggle the switch state
+            Swal.fire('Success', response.message, 'success');
+            event.target.checked = !event.target.checked; 
+          },
+          (error) => {
+            Swal.fire('Error', 'Failed to toggle user status', 'error');
+            event.target.checked = !event.target.checked; 
+            console.error('Error toggling user status:', error);
+          }
+        );
+      } else {
+        event.target.checked = !event.target.checked;
+      }
+    });
+  }
+  
+
   // Open modal for adding a new user
   addUser(brandModal: any): void {
-    // Reset currentUser object to ensure fields are blank
     this.currentUser = { name: '', mobile: '',   password: '',  };  
     this.modalService.open(brandModal);  
   }
@@ -50,7 +82,6 @@ export class UserListComponent {
 
   // Open modal for editing a user
   editUser(user: any, content: any): void {
-    // Populate currentUser with the user data to be edited
     this.currentUser = { ...user };  
     this.modalService.open(content, { size: 'lg' });
   }
@@ -68,7 +99,7 @@ export class UserListComponent {
       (data) => {
         this.loadUsers();
         this.showSuccess('User added successfully!');
-        this.currentUser = {};  // Clear currentUser after saving
+        this.currentUser = {};  
         modal.close(); 
       },
       (error) => {

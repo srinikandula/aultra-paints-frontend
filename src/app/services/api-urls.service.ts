@@ -17,6 +17,7 @@ export class ApiUrlsService {
     updateUser = 'users';
     deleteUser = 'users';
     searchUser = 'users/searchUser';
+    toggleUserStatus = 'users/toggle-status';
 
     // API Urls
     register = 'auth/register';
