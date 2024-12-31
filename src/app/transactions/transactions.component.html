@@ -54,23 +54,23 @@
         <div class="row">
             <div class="col-sm-12 text-right">
                 <div class="d-flex justify-content-end">
-                    <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
-                        <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
-                    </select>
-                    <ngb-pagination class="mx-2"
-                            [(page)]="currentPage"
-                                    [pageSize]="limit"
-                                    [collectionSize]="totalPages"
-                                    [boundaryLinks]="true"
-                                    (pageChange)="handlePageChange($event)"
-                                    [maxSize]="5">
-                    </ngb-pagination>
+<!--                    <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">-->
+<!--                        <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>-->
+<!--                    </select>-->
+<!--                    <ngb-pagination class="mx-2"-->
+<!--                            [(page)]="currentPage"-->
+<!--                                    [pageSize]="limit"-->
+<!--                                    [collectionSize]="totalPages"-->
+<!--                                    [boundaryLinks]="true"-->
+<!--                                    (pageChange)="handlePageChange($event)"-->
+<!--                                    [maxSize]="5">-->
+<!--                    </ngb-pagination>-->
 
-                    <!--            <div class="pagination-controls">-->
-                    <!--                <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>-->
-                    <!--                <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>-->
-                    <!--                <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>-->
-                    <!--            </div>-->
+                                <div class="pagination-controls">
+                                    <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+                                    <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+                                    <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+                                </div>
                 </div>
             </div>
         </div>
