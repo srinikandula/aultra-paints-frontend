@@ -25,17 +25,7 @@ export class LoginComponent {
 
  
   login() {
-    // First, show the confirmation popup
-    Swal.fire({
-      title: 'Are you sure you want to login?',
-      text: "Please confirm to proceed with your login",
-      icon: 'question',
-      showCancelButton: true,
-      confirmButtonText: 'Yes, login!',
-      cancelButtonText: 'No, cancel',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        // User clicked "Yes", so proceed with the login
+
 
         this.authService.logIn(this.mobile, this.password).pipe(first()).subscribe({
           next: (data: any) => {
@@ -64,9 +54,5 @@ export class LoginComponent {
             });
           }
         });
-      } else {
-        console.log("Login canceled");
-      }
-    });
   }
 }

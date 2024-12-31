@@ -30,7 +30,7 @@ export class OrderComponent implements OnInit {
     ];
 
     volumes: string[] = ['10 LT', '20 LT', '30 LT', '50 LT', '100 LT'];
-    branchNames: string[] = ['Central Hub', 'Main Street', 'Pine Valley', 'Lakeview'];
+    branchNames: string[] = ['Dachepally', 'HayatNagar','Kukatpally', 'Pashamylaram', 'Vizag'];
     products: any = [];
     brandData: any = [];
     errorEmptyStr: any = '';
