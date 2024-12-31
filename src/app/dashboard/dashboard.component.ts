@@ -22,7 +22,6 @@ export class DashboardComponent implements OnInit {
   constructor(private router: Router, private AuthService: AuthService) {}
   
   ngOnInit() {
-    console.log(765456789);
     (($) => {
       $(document).ready( () => {
         const treeviewMenu = $('.app-menu');
