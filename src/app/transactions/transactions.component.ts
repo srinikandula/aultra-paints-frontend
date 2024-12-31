@@ -5,6 +5,7 @@ import { OrderService } from "../order.service";
 import { Router } from "@angular/router";
 import { ApiUrlsService } from "../services/api-urls.service";
 import { ApiRequestService } from "../services/api-request.service";
+import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 
 @Component({
     selector: 'app-transactions',
@@ -17,7 +18,8 @@ import { ApiRequestService } from "../services/api-request.service";
         NgClass,
         NgOptimizedImage,
         CommonModule,
-        FormsModule
+        FormsModule,
+        NgbPagination
     ],
     templateUrl: './transactions.component.html',
     styleUrls: ['./transactions.component.css']
@@ -30,6 +32,7 @@ export class TransactionsComponent implements OnInit {
     qrUrl: any;
     showUpdateModal: boolean = false;
     userId: string | null = '';
+    limitOptions: Array<any> = [10, 20, 50, 100];
 
     constructor(private orderService: OrderService,
                 private router: Router,
@@ -45,6 +48,7 @@ export class TransactionsComponent implements OnInit {
             (response: any) => {
                 this.transactions = response.transactionsData;
                 this.totalPages = response.pages;
+                // this.limitOptions = Array.from({length: Math.ceil(this.totalPages / this.limit)}, (_, i) => (i + 1) * this.limit);
                 // this.currentPage = response.currentPage;
             },
             (error: any) => {
@@ -87,5 +91,15 @@ export class TransactionsComponent implements OnInit {
         this.userId = null;
         this.getAllTransactions();
         this.router.navigate(['dashboard/transactions']);
+    }
+
+    handlePageChange($event: number) {
+        this.currentPage = $event;
+        this.getAllTransactions();
+    }
+
+    handleLimitChange() {
+        this.currentPage = 1;
+        this.getAllTransactions();
     }
 }
