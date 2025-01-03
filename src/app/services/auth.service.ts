@@ -49,7 +49,6 @@ export class AuthService {
     return this.http.post<any>(this.apiUrls.mainUrl + 'auth/login', { mobile, password })
         .pipe(map(response => {
           if (response) {
-            console.log(response);
             if (this.isLocalStorageAvailable()) {
               localStorage.setItem('authToken', JSON.stringify(response));
             }

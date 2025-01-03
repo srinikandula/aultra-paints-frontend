@@ -63,6 +63,11 @@ export class OrderComponent implements OnInit {
             ExpiryDate: this.convertToISODate(this.expiryDate),
             BatchNumbers: this.BatchNumbers,
         };
+        const lastBatch = newBranch.BatchNumbers[this.BatchNumbers.length - 1];
+        if (!lastBatch.BatchNumber || Object.keys(lastBatch.Brand).length === 0 || !lastBatch.redeemablePoints || !lastBatch.value || !lastBatch.Volume || !lastBatch.Quantity) {
+            this.errorEmptyStr = 'Please fill all fields for the current batch before adding a new one.';
+            return;
+        }
         Swal.fire({
             title: 'Are you sure?',
             text: 'Do you want to save this Batch?',
@@ -75,12 +80,13 @@ export class OrderComponent implements OnInit {
                 this.ApiRequest.create(this.ApiUrls.createBatch, newBranch).subscribe(
                     (response: any) => {
                         console.log('Branch created successfully:', response.message);
+                        this.errorEmptyStr = '';
                         this.resetForm();
                         this.router.navigate(['dashboard/list']);
                         Swal.fire({icon: 'success', title: 'Success', text: 'Batches created successfully.'});
-                    },
-                    (error: any) => {
+                    }, (error: any) => {
                         console.error('Error creating branch:', error);
+                        this.errorEmptyStr = error.message;
                     }
                 );
             }
@@ -101,21 +107,13 @@ export class OrderComponent implements OnInit {
     }
 
     addProduct() {
-        // const isEmpty = this.BatchNumbers.some(
-        //     (batchNumber) =>
-        //         !batchNumber.BatchNumber ||
-        //         !batchNumber.Brand._id ||
-        //         !batchNumber.redeemablePoints ||
-        //         !batchNumber.value ||
-        //         !batchNumber.Volume ||
-        //         !batchNumber.Quantity
-        // );
-        // if (isEmpty) {
-        //     this.errorEmptyStr = 'Please fill all the fields';
-        //     return;
-        // }
-        this.BatchNumbers.push({BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0});
-        // this.errorEmptyStr = '';
+        // Check if all required fields are filled before pushing a new BatchNumber object
+        const lastBatch = this.BatchNumbers[this.BatchNumbers.length - 1];
+        if (!lastBatch.BatchNumber || Object.keys(lastBatch.Brand).length === 0 || !lastBatch.redeemablePoints || !lastBatch.value || !lastBatch.Volume || !lastBatch.Quantity) {
+            this.errorEmptyStr = 'Please fill all fields for the current batch before adding a new one.';
+            return;
+        }
+        this.BatchNumbers.push({ BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0 });
     }
 
     // Delete a product from the products array
@@ -133,7 +131,6 @@ export class OrderComponent implements OnInit {
 
     getBrandes() {
         this.ApiRequest.getAll(this.ApiUrls.getAllBrandsForSelect + this.ProductName).subscribe((response: any) => {
-            console.log(response)
             this.brandData = response;
         })
     }
