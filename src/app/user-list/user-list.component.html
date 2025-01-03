@@ -107,17 +107,8 @@
           <!-- Add Mobile Number (10 digits) -->
           <div class="form-group">
             <label for="mobile">Mobile Number</label>
-            <input
-              type="text"
-              class="form-control"
-              id="mobile"
-              [(ngModel)]="currentUser.mobile"
-              name="mobile"
-              pattern="^\d{10}$"  
-              required
-              #mobile="ngModel"
-              placeholder="Enter 10-digit mobile number"
-            />
+            <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile" pattern="^\d{10}$"
+              required #mobile="ngModel" placeholder="Enter 10-digit mobile number" />
             <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
               Mobile number must be exactly 10 digits.
             </div>
@@ -126,29 +117,15 @@
           <!-- Add Password -->
           <div class="form-group">
             <label for="password">Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="password"
-              [(ngModel)]="currentUser.password"
-              name="password"
-              required
-              placeholder="Enter password"
-            />
+            <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"
+              required placeholder="Enter password" />
           </div>
     
           <!-- Add Confirm Password -->
           <div class="form-group">
             <label for="confirmPassword">Confirm Password</label>
-            <input
-              type="password"
-              class="form-control"
-              id="confirmPassword"
-              [(ngModel)]="currentUser.confirmPassword"
-              name="confirmPassword"
-              required
-              placeholder="Confirm your password"
-            />
+            <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"
+              name="confirmPassword" required placeholder="Confirm your password" />
           </div>
         </form>
       </div>
@@ -171,16 +148,8 @@
             <!-- Edit Name -->
             <div class="form-group">
                 <label for="name">Name</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="name" 
-                    [(ngModel)]="currentUser.name" 
-                    name="name" 
-                    required
-                    placeholder="Enter full name" 
-                    #name="ngModel" 
-                />
+                <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required
+                    placeholder="Enter full name" #name="ngModel" />
                 <div *ngIf="name.invalid && name.touched" class="text-danger">
                     Name is required.
                 </div>
@@ -189,17 +158,8 @@
             <!-- Edit Mobile -->
             <div class="form-group">
                 <label for="mobile">Mobile Number</label>
-                <input 
-                    type="text" 
-                    class="form-control" 
-                    id="mobile" 
-                    [(ngModel)]="currentUser.mobile" 
-                    name="mobile" 
-                    [pattern]="mobilePattern" 
-                    required 
-                    placeholder="Enter 10-digit mobile number" 
-                    #mobile="ngModel" 
-                />
+                <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
+                    [pattern]="mobilePattern" required placeholder="Enter 10-digit mobile number" #mobile="ngModel" />
                 <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
                     <div *ngIf="mobile.errors?.['required']">Mobile number is required.</div>
                     <div *ngIf="mobile.errors?.['pattern']">Please enter a valid 10-digit mobile number.</div>
@@ -209,16 +169,8 @@
             <!-- Edit Email -->
             <div class="form-group">
                 <label for="email">Email</label>
-                <input 
-                    type="email" 
-                    class="form-control" 
-                    id="email" 
-                    [(ngModel)]="currentUser.email" 
-                    required
-                    name="email" 
-                    placeholder="Enter email address" 
-                    #email="ngModel" 
-                />
+                <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" required name="email"
+                    placeholder="Enter email address" #email="ngModel" />
                 <div *ngIf="email.invalid && email.touched" class="text-danger">
                     <div *ngIf="email.errors?.['required']">Email is required.</div>
                     <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
