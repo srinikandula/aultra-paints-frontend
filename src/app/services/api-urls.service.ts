@@ -9,7 +9,7 @@ export class ApiUrlsService {
     }
 
     // mainUrl = "http://localhost:4300/api/";
-    mainUrl = "http://paintsapi.ultrapaints.in/api/";
+    mainUrl = "http://api.aultrapaints.com/api/";
 
     // Users API URLs
     getUsers = 'users/all';
