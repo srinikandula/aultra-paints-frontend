@@ -80,7 +80,7 @@
                     </ng-select>
                 </div>
                 <div class="col-sm-2">
-                    <label class="form-label" for="redeemablePoints{{i}}">Redeemable Points</label>
+                    <label class="form-label" for="redeemablePoints{{i}}">Reward Points</label>
                     <input type="number" id="redeemablePoints{{i}}" maxlength="4" oninput="this.BatchNumber.redeemablePoints = this.BatchNumber.redeemablePoints.replace(/[^0-9]/g, '').slice(0, 4);" [(ngModel)]="BatchNumber.redeemablePoints" name="redeemablePoints{{i}}" placeholder="Enter Points" required class="form-control"/>
                 </div>
                 <div class="col-sm-1">
