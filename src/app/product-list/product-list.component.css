@@ -1,8 +1,8 @@
 
   /* Button Styling */
-  button {
-    margin: 5px; /* Add space between buttons */
-  }
+  /*button {*/
+  /*  margin: 5px; !* Add space between buttons *!*/
+  /*}*/
 
   .d-flex {
     display: flex;
@@ -14,9 +14,9 @@
     width: auto; 
 }
 
-button {
-    margin-left: 50px; 
-}
+/*button {*/
+/*    margin-left: 50px; */
+/*}*/
 
 .table-wrapper {
     margin-top: 10px;

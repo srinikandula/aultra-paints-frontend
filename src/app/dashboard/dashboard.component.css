@@ -2,7 +2,7 @@
 .sidebar {
   width: 250px;
   position: fixed; /* Position sidebar fixed at the left */
-  top: 65px;
+  top: 56px;
   left: 0;
   bottom: 0;
   background-color:#2C3E50;
@@ -103,13 +103,13 @@
   margin-top: 0; 
   position: fixed; 
   background-color: #2C3E50;
-  border: 2px solid #19232c;
+  /*border: 2px solid #19232c;*/
 }
 
 .navbar-brand {
   /*font-weight: bold;*/
   padding: 0 30px !important;
-  border-right: 2px solid #19232c
+  /*border-right: 2px solid #19232c*/
 }
 
 .sidebar-footer {

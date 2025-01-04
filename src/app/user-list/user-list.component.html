@@ -1,179 +1,277 @@
 <div class="container-fluid container-mt shadow-sm">
-    <div>
-      <div class="row mb-4">
-        <div class="col-sm-8"><h4>Users</h4></div>
-        <div class="col-sm-2">
-          <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..." class="form-control "/>
+    <div class="row mb-4">
+        <div class="col-sm-2"><h4>Users</h4></div>
+        <div class="col-sm-10">
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="mx-3">
+                    <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..."
+                           class="form-control "/>
+                </div>
+                <button (click)="addUser(userModal)" class="btn btn-primary">Add User</button>
+            </div>
         </div>
-        <div class="col-sm-2">
-          <button (click)="addUser(brandModal)" class="btn btn-primary">Add User</button>
-        </div>
-      </div>
-  
-      <!-- Table to display users -->
-      <div class="table-wrapper">
+    </div>
+
+    <!-- Table to display users -->
+    <div class="table-wrapper">
         <table class="table table-hover">
-          <thead>
+            <thead>
             <tr>
-              <th>#</th>
-              <th>Name</th>
-              <th>Mobile Number</th>
-              <th>Email</th>
-              <th class="text-center">Redeemed Points</th>
-              <th class="text-center">Total Cash Reward</th>
-              <th class="text-center">Status</th>
-              <th class="text-center">Actions</th>
+                <th>#</th>
+                <th>Name</th>
+                <th>Mobile Number</th>
+<!--                    <th>Email</th>-->
+                <th class="text-center">Redeemed Points</th>
+                <th class="text-center">Total Cash Reward</th>
+                <th class="text-center">Status</th>
+                <th class="text-center">Actions</th>
             </tr>
-          </thead>
-          <tbody>
+            </thead>
+            <tbody>
             <tr *ngFor="let user of users; let i = index">
-              <td>{{ (currentPage - 1) * limit + (i + 1) }}</td>
-              <td>{{ user.name }}</td>
-              <td>{{ user.mobile }}</td>
-              <td>{{ user.email }}</td>
-              <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">{{ user.redeemablePoints }}</td>
-              <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)" style="cursor: pointer">{{ user.cash }}</td>
-              <td class="text-center">
-                <label class="switch">
-                    <input type="checkbox" [checked]="user.status === 'active'"
-                           (change)="toggleUserStatus(user._id, user.status, $event)">
-                    <span class="slider round"></span>
-                  </label>
-              </td>
-              
-  
-              <!-- Actions Column: Edit and Delete Buttons -->
-              <td class="text-center">
-                  <button (click)="resetPasswordModalOpen(user, resetPasswordModal)" class="btn btn-primary" title="Reset password">
-                      <i class='bx bxs-key'></i>
-                  </button>
-                <button (click)="editUser(user, editUserModal)" class="btn btn-warning" title="Update">
-                  <i class="bx bx-edit"></i>
-                </button>
-                <button (click)="deleteUser(user._id)" class="btn btn-danger" title="Delete">
-                  <i class="bx bx-trash"></i>
-                </button>
-              </td>
+                <td>{{ (currentPage - 1) * limit + (i + 1) }}</td>
+                <td>{{ user.name }}</td>
+                <td>{{ user.mobile }}</td>
+<!--                    <td>{{ user.email }}</td>-->
+                <td class="text-primary cursor-pointer text-center"
+                    (click)="showRedeemedPoints(user._id)">{{ user.redeemablePoints }}
+                </td>
+                <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)"
+                    style="cursor: pointer">{{ user.cash }}
+                </td>
+                <td class="text-center">
+                    <label class="switch">
+                        <input type="checkbox" [checked]="user.status === 'active'"
+                               (change)="toggleUserStatus(user._id, user.status, $event)">
+                        <span class="slider round"></span>
+                    </label>
+                </td>
+
+
+                <!-- Actions Column: Edit and Delete Buttons -->
+                <td class="text-center">
+                    <button (click)="resetPasswordModalOpen(user, resetPasswordModal)" class="btn btn-primary mx-2"
+                            title="Reset password">
+                        <i class='bx bxs-key'></i>
+                    </button>
+                    <button (click)="editUser(user, editUserModal)" class="btn btn-warning mx-2" title="Update">
+                        <i class="bx bx-edit"></i>
+                    </button>
+                    <button (click)="deleteUser(user._id)" class="btn btn-danger mx-2" title="Delete">
+                        <i class="bx bx-trash"></i>
+                    </button>
+                </td>
             </tr>
             <tr *ngIf="users.length === 0">
                 <td class="text-center" colspan="8">No Records found</td>
             </tr>
-          </tbody>
+            </tbody>
         </table>
-      </div>
-  
-  
-      <!-- Pagination Controls -->
-<!--        <div class="row">-->
-<!--            <div class="col-sm-12 text-right">-->
-<!--                <div class="d-flex justify-content-end">-->
-<!--                    <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">-->
-<!--                        <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>-->
-<!--                    </select>-->
-<!--                    <ngb-pagination class="mx-2"-->
-<!--                                    [(page)]="currentPage"-->
-<!--                                    [pageSize]="limit"-->
-<!--                                    [collectionSize]="totalPages"-->
-<!--                                    [boundaryLinks]="true"-->
-<!--                                    (pageChange)="handlePageChange($event)"-->
-<!--                                    [maxSize]="5">-->
-<!--                    </ngb-pagination>-->
-<!--                </div>-->
-<!--            </div>-->
-<!--        </div>-->
-      <div class="d-flex justify-content-end">
-        <div class="pagination-controls">
-          <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
-          <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-          <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
-        </div>
-      </div>
     </div>
-  </div>
-  
-  <!-- Modal for Add User -->
-  <ng-template #brandModal let-modal>
-      <div class="modal-header">
+
+
+    <!-- Pagination Controls -->
+    <!--        <div class="row">-->
+    <!--            <div class="col-sm-12 text-right">-->
+    <!--                <div class="d-flex justify-content-end">-->
+    <!--                    <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">-->
+    <!--                        <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>-->
+    <!--                    </select>-->
+    <!--                    <ngb-pagination class="mx-2"-->
+    <!--                                    [(page)]="currentPage"-->
+    <!--                                    [pageSize]="limit"-->
+    <!--                                    [collectionSize]="totalPages"-->
+    <!--                                    [boundaryLinks]="true"-->
+    <!--                                    (pageChange)="handlePageChange($event)"-->
+    <!--                                    [maxSize]="5">-->
+    <!--                    </ngb-pagination>-->
+    <!--                </div>-->
+    <!--            </div>-->
+    <!--        </div>-->
+    <div class="d-flex justify-content-end">
+        <div class="pagination-controls">
+            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal for Add User -->
+<ng-template #userModal let-modal>
+    <div class="modal-header">
         <h4 class="modal-title">Add User</h4>
-      </div>
-      <div class="modal-body">
-        <form #userForm="ngForm">
-          <!-- Add Name -->
-          <div class="form-group">
-            <label for="name">Name</label>
-            <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"  required placeholder="Enter full name"/>
-          </div>
-    
-          <!-- Add Mobile Number (10 digits) -->
-          <div class="form-group">
-            <label for="mobile">Mobile Number</label>
-            <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile" pattern="^\d{10}$"
-              required #mobile="ngModel" placeholder="Enter 10-digit mobile number" />
-            <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
-              Mobile number must be exactly 10 digits.
+    </div>
+    <div class="modal-body">
+        <form #userForm="ngForm" class="modal-box shadow-sm">
+            <!-- Add Name -->
+            <div class="row">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="name">Name</label>
+                    <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"
+                           required placeholder="Enter full name"/>
+                </div>
+<!--            </div>-->
+
+            <!-- Add Mobile Number (10 digits) -->
+<!--            <div class="row">-->
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="mobile">Mobile Number</label>
+                    <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
+                           maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
+                           pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
+                    <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
+                        Mobile number must be exactly 10 digits.
+                    </div>
+                </div>
             </div>
-          </div>
-    
-          <!-- Add Password -->
-          <div class="form-group">
-            <label for="password">Password</label>
-            <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"
-              required placeholder="Enter password" />
-          </div>
-    
-          <!-- Add Confirm Password -->
-          <div class="form-group">
-            <label for="confirmPassword">Confirm Password</label>
-            <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"
-              name="confirmPassword" required placeholder="Confirm your password" />
-          </div>
+
+            <!-- Add Password -->
+            <div class="row">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="password">Password</label>
+                    <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"
+                           required placeholder="Enter password"/>
+                </div>
+<!--            </div>-->
+
+            <!-- Add Confirm Password -->
+<!--            <div class="row">-->
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="confirmPassword">Confirm Password</label>
+                    <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"
+                           name="confirmPassword" required placeholder="Confirm your password"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="primaryContactPerson">Primary Contact Person</label>
+                    <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
+                           name="primaryContactPerson" required placeholder="Enter Primary Contact Person"/>
+                </div>
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="primaryContactPersonMobile">Primary Contact Person Mobile</label>
+                    <input type="text" class="form-control" id="primaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
+                           maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
+                           pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="parentDealer">Parent Dealer</label>
+                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
+                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
+                </div>
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="dealerCode">Dealer Code</label>
+                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
+                           name="dealerCode" required placeholder="Enter Dealer Code"/>
+                </div>
+                <div class="col-sm-4 mb-3 form-group">
+                    <label for="accountType" class="form-label">Type</label>
+                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
+                        <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 mb-3 form-group">
+                    <label for="address">Address</label>
+                    <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
+                              required placeholder="Enter address"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <ol>
+                        <li *ngFor="let err of errors; let i = index" style="color: red">{{err}}</li>
+                    </ol>
+                </div>
+            </div>
         </form>
-      </div>
-      <div class="modal-footer">
+    </div>
+    <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
         <button type="button" class="btn btn-primary" (click)="addNewUser(modal)" [disabled]="userForm.invalid">
-          Save
+            Save
         </button>
-      </div>
-  </ng-template>
-  
-    
- <!-- Modal for Edit User -->
+    </div>
+</ng-template>
+
+
+<!-- Modal for Edit User -->
 <ng-template #editUserModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Edit User</h4>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" (ngSubmit)="updateUser(modal, userForm)">
+<!--        <form #userForm="ngForm" (ngSubmit)="updateUser(modal, userForm)">-->
+        <form #userForm="ngForm" class="modal-box shadow-sm" (ngSubmit)="updateUser(modal, userForm)">
             <!-- Edit Name -->
-            <div class="form-group">
-                <label for="name">Name</label>
-                <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name" required
-                    placeholder="Enter full name" #name="ngModel" />
-                <div *ngIf="name.invalid && name.touched" class="text-danger">
-                    Name is required.
+            <div class="row">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="name">Name</label>
+                    <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"
+                           required placeholder="Enter full name"/>
+                </div>
+                <!--            </div>-->
+
+                <!-- Add Mobile Number (10 digits) -->
+                <!--            <div class="row">-->
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="mobile">Mobile Number</label>
+                    <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
+                           maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
+                           pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
+                    <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
+                        Mobile number must be exactly 10 digits.
+                    </div>
                 </div>
             </div>
 
-            <!-- Edit Mobile -->
-            <div class="form-group">
-                <label for="mobile">Mobile Number</label>
-                <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
-                    [pattern]="mobilePattern" required placeholder="Enter 10-digit mobile number" #mobile="ngModel" />
-                <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
-                    <div *ngIf="mobile.errors?.['required']">Mobile number is required.</div>
-                    <div *ngIf="mobile.errors?.['pattern']">Please enter a valid 10-digit mobile number.</div>
+            <div class="row">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="primaryContactPerson">Primary Contact Person</label>
+                    <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
+                           name="primaryContactPerson" required placeholder="Enter Primary Contact Person"/>
+                </div>
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="primaryContactPersonMobile">Primary Contact Person Mobile</label>
+                    <input type="text" class="form-control" id="primaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
+                           maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
+                           pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
                 </div>
             </div>
-            
-            <!-- Edit Email -->
-            <div class="form-group">
-                <label for="email">Email</label>
-                <input type="email" class="form-control" id="email" [(ngModel)]="currentUser.email" required name="email"
-                    placeholder="Enter email address" #email="ngModel" />
-                <div *ngIf="email.invalid && email.touched" class="text-danger">
-                    <div *ngIf="email.errors?.['required']">Email is required.</div>
-                    <div *ngIf="email.errors?.['email']">Please enter a valid email address.</div>
+            <div class="row">
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="parentDealer">Parent Dealer</label>
+                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
+                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
+                </div>
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="dealerCode">Dealer Code</label>
+                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
+                           name="dealerCode" required placeholder="Enter Dealer Code"/>
+                </div>
+                <div class="col-sm-4 mb-3 form-group">
+                    <label for="accountType" class="form-label">Type</label>
+                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
+                        <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-12 mb-3 form-group">
+                    <label for="address">Address</label>
+                    <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
+                              required placeholder="Enter address"></textarea>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-12">
+                    <ol>
+                        <li *ngFor="let err of errors; let i = index" style="color: red">{{err}}</li>
+                    </ol>
                 </div>
             </div>
 
@@ -181,7 +279,9 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="userForm.invalid" (click)="updateUser(modal, userForm)">Save</button>
+        <button type="button" class="btn btn-primary" [disabled]="userForm.invalid"
+                (click)="updateUser(modal, userForm)">Save
+        </button>
     </div>
 </ng-template>
 
@@ -196,14 +296,14 @@
             <div class="form-group">
                 <label for="newPassword">New Password</label>
                 <input
-                    type="password"
-                    class="form-control"
-                    id="newPassword"
-                    [(ngModel)]="currentUserResetPasswordForm.newPassword"
-                    name="newPassword"
-                    required
-                    placeholder="Enter new password"
-                    #newPassword="ngModel"
+                        type="password"
+                        class="form-control"
+                        id="newPassword"
+                        [(ngModel)]="currentUserResetPasswordForm.newPassword"
+                        name="newPassword"
+                        required
+                        placeholder="Enter new password"
+                        #newPassword="ngModel"
                 />
                 <div *ngIf="newPassword.invalid && newPassword.touched" class="text-danger">
                     New password is required.
@@ -214,14 +314,14 @@
             <div class="form-group">
                 <label for="confirmNewPassword">Confirm New Password</label>
                 <input
-                    type="password"
-                    class="form-control"
-                    id="confirmNewPassword"
-                    [(ngModel)]="currentUserResetPasswordForm.confirmNewPassword"
-                    name="confirmNewPassword"
-                    required
-                    placeholder="Confirm new password"
-                    #confirmNewPassword="ngModel"
+                        type="password"
+                        class="form-control"
+                        id="confirmNewPassword"
+                        [(ngModel)]="currentUserResetPasswordForm.confirmNewPassword"
+                        name="confirmNewPassword"
+                        required
+                        placeholder="Confirm new password"
+                        #confirmNewPassword="ngModel"
                 />
                 <div *ngIf="confirmNewPassword.invalid && confirmNewPassword.touched" class="text-danger">
                     <div *ngIf="confirmNewPassword.errors?.['required']">Confirmation is required.</div>
@@ -232,6 +332,8 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="resetPasswordForm.invalid" (click)="resetPassword(modal, resetPasswordForm)">Reset Password</button>
+        <button type="button" class="btn btn-primary" [disabled]="resetPasswordForm.invalid"
+                (click)="resetPassword(modal, resetPasswordForm)">Reset Password
+        </button>
     </div>
 </ng-template>

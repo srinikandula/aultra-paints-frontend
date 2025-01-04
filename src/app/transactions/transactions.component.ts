@@ -83,7 +83,6 @@ export class TransactionsComponent implements OnInit {
     filterBasedOnUser() {
         const urlParams = new URLSearchParams(this.router.url.split('?')[1]);
         this.userId = urlParams.get('userId');
-        console.log(this.userId)
         this.getAllTransactions();
     }
 

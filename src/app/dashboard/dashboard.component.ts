@@ -18,8 +18,11 @@ declare var jQuery: any;
 export class DashboardComponent implements OnInit {
   isSidebarCollapsed: boolean = false;  // Sidebar starts collapsed by default
   active: boolean = false;
+  currentUser: any = {};
 
-  constructor(private router: Router, private AuthService: AuthService) {}
+  constructor(private router: Router, private AuthService: AuthService) {
+    this.currentUser = this.AuthService.currentUserValue;
+  }
   
   ngOnInit() {
     (($) => {

@@ -75,3 +75,13 @@ body { margin: 0; background-color: #f6f9fa!important }
     background-color: #19232c;
     border-color: #19232c;
 }
+
+.modal-body {
+    background-color: #f6f9fa;
+}
+
+.modal-body .modal-box {
+    padding: 20px;
+    border-radius: 8px;
+    background-color: white;
+}
