@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import Swal from 'sweetalert2';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import { ApiRequestService } from '../services/api-request.service';
@@ -6,6 +6,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import {Router} from "@angular/router";
 import {ApiUrlsService} from "../services/api-urls.service";
+import {isArray} from "node:util";
 
 @Component({
   selector: 'app-user-list',
@@ -14,9 +15,12 @@ import {ApiUrlsService} from "../services/api-urls.service";
   templateUrl: './user-list.component.html',
   styleUrls: ['./user-list.component.css']
 })
-export class UserListComponent {
+export class UserListComponent implements OnInit {
   users: any[] = [];
-  currentUser: any = {};  
+  currentUser: any = {
+    accountType: 'P'
+  };
+  // currentUser.accountType = 'Painter';
   page: number = 1;
   limit: number = 10;
   searchQuery: string = '';
@@ -28,8 +32,11 @@ export class UserListComponent {
   limitOptions: number[] = [10, 20, 50, 100];
   userId: any = '';
   currentUserResetPasswordForm: any = {};
+  accountTypes: Array<any> = [{id: 'P', name: 'Painter'}, {id: 'C', name: 'Contractor'}, {id: 'D', name: 'Dealer'}];
+  errors: any;
 
-  constructor(private apiService: ApiRequestService, private modalService: NgbModal, private router: Router, private apiUrls: ApiUrlsService) {}
+  constructor(private apiService: ApiRequestService, private modalService: NgbModal, private router: Router, private apiUrls: ApiUrlsService) {
+  }
 
   ngOnInit(): void {
     this.loadUsers();
@@ -87,9 +94,10 @@ export class UserListComponent {
     });
   }
 
-  addUser(brandModal: any): void {
-    this.currentUser = { name: '', mobile: '', password: '', };  
-    this.modalService.open(brandModal);  
+  addUser(userModal: any): void {
+    this.currentUser = { name: '', mobile: '', password: '', };
+    this.currentUser.accountType = 'Painter';
+    this.modalService.open(userModal, { size: 'lg' });
   }
 
   editUser(user: any, content: any): void {
@@ -107,19 +115,17 @@ export class UserListComponent {
       (data) => {
         this.loadUsers();
         this.showSuccess('User added successfully!');
-        this.currentUser = {};  
+        this.currentUser = {};
+        this.errors = [];
         modal.close(); 
       },
       (error) => {
-        // Check if the error response contains the 'Mobile already exists' message
-        if (error.error && error.error[0] === 'Mobile already exists') {
-          Swal.fire({
-            icon: 'error',
-            title: 'Duplicate Mobile Number',
-            text: 'This mobile number is already registered. Please enter a different number.',
-          });
+        console.log(error)
+        this.errors = [];
+        if (error?.errors) {
+          this.errors = error.errors;
         } else {
-          this.showError('Error adding user!');
+          this.errors.push(error.message);
         }
       }
     );

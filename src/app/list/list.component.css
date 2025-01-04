@@ -75,13 +75,13 @@
     color: #555;
 }
 
-button {
-    margin-right: 5px;
-}
+/*button {*/
+/*    margin-right: 5px;*/
+/*}*/
 
-button i {
-    font-size: 14px; /* Smaller icon size */
-}
+/*button i {*/
+/*    font-size: 14px; !* Smaller icon size *!*/
+/*}*/
 
 /* Additional row height control */
 .table tr {

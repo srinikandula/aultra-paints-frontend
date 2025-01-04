@@ -40,7 +40,7 @@ export class AuthService {
 
   public isAuthenticated(): string | null {
     if (this.isLocalStorageAvailable()) {
-      return localStorage.getItem('authToken');
+      return JSON.parse(localStorage.getItem('authToken') || 'null');
     }
     return null;
   }
