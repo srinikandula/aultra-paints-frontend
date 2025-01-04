@@ -47,7 +47,7 @@ export class ProductListComponent implements OnInit {
    // Search products by name
    searchProducts(): void {
     if (this.searchQuery.trim() === '') {
-      this.loadProducts();  // If no search query, reload all products
+      this.loadProducts();  
       return;
     }
 
@@ -55,7 +55,7 @@ export class ProductListComponent implements OnInit {
     this.apiService.searchProductByName(this.searchQuery).subscribe(
       (data) => {
         if (data) {
-          this.products = [data];  // Assuming only one product is returned for the name search
+          this.products = [data];  
         } else {
           this.products = [];
           this.showError('No products found!');
@@ -74,7 +74,6 @@ export class ProductListComponent implements OnInit {
   }
 
   saveProduct(): void {
-    // Show SweetAlert for confirmation before saving
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to save this product?',
@@ -84,40 +83,50 @@ export class ProductListComponent implements OnInit {
       cancelButtonText: 'No, cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Close the modal immediately after the user confirms the save action
         this.modalService.dismissAll();
-
-        const productExists = this.products.some(product => product.name.toLowerCase() === this.currentProduct.name.toLowerCase());
   
-        if (productExists) {
-          this.showError('Product with this name already exists!');
-          return;  
+        if (this.currentProduct._id) {
+          const successMessage = 'Product updated successfully!';
+          const errorMessage = 'Error updating product!';
+  
+          // Proceed with the update API call
+          this.apiService.updateProduct(this.currentProduct._id, this.currentProduct).subscribe({
+            next: () => {
+              this.loadProducts();
+              this.showSuccess(successMessage);
+            },
+            error: () => {
+              this.showError(errorMessage);
+            }
+          });
+        } else {
+          // If there is no product ID, it's a new product, so we check for duplicates by name
+          const productExists = this.products.some(product => product.name.toLowerCase() === this.currentProduct.name.toLowerCase());
+          if (productExists) {
+            this.showError('Product with this name already exists!');
+            return;
+          }
+  
+          const successMessage = 'Product added successfully!';
+          const errorMessage = 'Error creating product!';
+  
+          // Proceed with the create API call
+          this.apiService.createProduct(this.currentProduct).subscribe({
+            next: () => {
+              this.loadProducts();
+              this.showSuccess(successMessage);
+            },
+            error: () => {
+              this.showError(errorMessage);
+            }
+          });
         }
   
-        // Determine success and error messages based on whether it's an update or a new product
-        const successMessage = this.currentProduct._id ? 'Product updated successfully!' : 'Product added successfully!';
-        const errorMessage = this.currentProduct._id ? 'Error updating product!' : 'Error creating product!';
-  
-        // If the product has an ID, it's an update, otherwise it's a new product
-        const saveRequest = this.currentProduct._id
-          ? this.apiService.updateProduct(this.currentProduct._id, this.currentProduct)
-          : this.apiService.createProduct(this.currentProduct);
-  
-        // Call the API to create or update the product
-        saveRequest.subscribe({
-          next: () => {
-            this.loadProducts();  
-            this.showSuccess(successMessage);
-          },
-          error: () => {
-            this.showError(errorMessage);
-          }
-        });
+        // Reset the current product after saving
         this.currentProduct = { name: '' };
       }
     });
   }
-  
   
   
 

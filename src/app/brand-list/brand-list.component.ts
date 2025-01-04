@@ -66,17 +66,17 @@ export class BrandListComponent {
    // Search brands by name
    searchBrands(): void {
     if (this.searchQuery.trim() === '') {
-      this.loadBrands();  // If the search query is empty, load all brands
+      this.loadBrands(); 
       return;
     }
 
     this.apiRequestService.searchBrandsByName(this.searchQuery).subscribe({
       next: (response: any) => {
         if (response && response.length > 0) {
-          this.brands = response;  // Set brands to the search results
+          this.brands = response;  
         } else {
           this.showError('No brands found matching your search!');
-          this.brands = [];  // Clear the list if no brands are found
+          this.brands = [];  
         }
       },
       error: (error) => {
@@ -103,7 +103,6 @@ export class BrandListComponent {
   }
 
   saveBrand(brandModal: any): void {
-    // Show SweetAlert for confirmation before saving
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to save this brand?',
@@ -115,15 +114,18 @@ export class BrandListComponent {
       if (result.isConfirmed) {
         this.modalService.dismissAll();
   
-        // Check if the brand already exists
-        if (this.brandExists(this.currentBrand.proId, this.currentBrand.brands)) {
-          this.showError('Brand already exists for this product!');
-          return;  
+        // Check if it's an existing brand (edit case)
+        if (!this.currentBrand._id) {
+          if (this.brandExists(this.currentBrand.proId, this.currentBrand.brands)) {
+            this.showError('Brand already exists for this product!');
+            return;  
+          }
         }
   
+        // Determine the success and error messages based on whether it's an update or a new brand
         const successMessage = this.currentBrand._id ? 'Brand updated successfully!' : 'Brand added successfully!';
         const errorMessage = this.currentBrand._id ? 'Error updating brand!' : 'Error creating brand!';
-  
+
         const saveRequest = this.currentBrand._id
           ? this.apiRequestService.updateBrand(this.currentBrand._id, this.currentBrand)
           : this.apiRequestService.createBrand(this.currentBrand);
@@ -131,7 +133,7 @@ export class BrandListComponent {
         // Call the API to create or update the brand
         saveRequest.subscribe({
           next: () => {
-            this.loadBrands();  
+            this.loadBrands();
             this.showSuccess(successMessage);
           },
           error: () => {
@@ -139,10 +141,11 @@ export class BrandListComponent {
           }
         });
   
-        this.currentBrand = { proId: '', brands: '' };  
+        this.currentBrand = { proId: '', brands: '' };
       }
     });
   }
+  
   
 
   // Delete brand

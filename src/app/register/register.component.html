@@ -25,14 +25,14 @@
                         class="form-control"
                         [(ngModel)]="mobile"
                         maxlength="10" oninput="mobile = mobile.replace(/[^0-9]/g, '').slice(0, 10);"
-                        name="email"
+                        name="mobile"
                         placeholder="Enter your mobile number"
                         required
                 />
             </div>
 
             <!-- Email Field -->
-            <!--<div class="mb-3">
+            <div class="mb-3">
                 <label for="email" class="form-label">Email Address</label>
                 <input
                         type="email"
@@ -43,7 +43,7 @@
                         placeholder="Enter your email"
                         required
                 />
-            </div> -->
+            </div>
 
             <!-- Password Field -->
             <div class="mb-3">
@@ -59,17 +59,20 @@
                 />
             </div>
 
+            <div *ngIf="errorMessage" class="text-danger mb-3">
+                {{ errorMessage }}
+            </div>
+
             <!-- Submit Button -->
             <button type="submit" class="btn btn-primary w-100">Register</button>
         </form>
 
-        <!-- Registration Link to Login -->
+       
         <p class="mt-3 text-center">
             Already have an account? <a routerLink="/login" class="text-primary">Login here</a>
         </p>
 
         <!-- Success or Error Message -->
         <p class="mt-3 text-success" *ngIf="successMessage">{{ successMessage }}</p>
-        <p class="mt-3 text-danger" *ngIf="errorMessage">{{ errorMessage }}</p>
     </div>
 </div>
