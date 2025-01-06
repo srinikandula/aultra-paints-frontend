@@ -16,15 +16,16 @@ import Swal from "sweetalert2";
   styleUrl: './create-batch.component.css'
 })
 export class CreateBatchComponent {
-branchName: string = '';
+    branchName: string = '';
     ProductName: object = {};
+    BatchNumber: string = '';
     couponSeriesList: string[] = ['Series A', 'Series B', 'Series C']; // Example data
     creationDate = new Date();
     expiryDate = new Date();
 
     BatchNumbers: any[] = [
         // { BatchNumber: '', Brand: {, ProductName: '', Volume: 0, Quantity: 0 }
-        {CouponSeries : 0, BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
+        {CouponSeries : 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
         // {BatchNumber: '2', Brand: 'SONY', ProductName: 'TV', Volume: 0, Quantity: 0}
     ];
 
@@ -61,10 +62,11 @@ branchName: string = '';
             CreationDate: this.convertToISODate(this.creationDate),
             ExpiryDate: this.convertToISODate(this.expiryDate),
             BatchNumbers: this.BatchNumbers,
+            BatchNumber: this.BatchNumber
         };
         const lastBatch = newBranch.BatchNumbers[this.BatchNumbers.length - 1];
-        if (!lastBatch.BatchNumber || Object.keys(lastBatch.Brand).length === 0 || !lastBatch.redeemablePoints || !lastBatch.value || !lastBatch.Volume || !lastBatch.Quantity) {
-            this.errorEmptyStr = 'Please fill all fields for the current batch before adding a new one.';
+        if (Object.keys(lastBatch.Brand).length === 0 || !lastBatch.redeemablePoints || !lastBatch.value || !lastBatch.Volume || !lastBatch.Quantity || !lastBatch.CouponSeries) {
+            this.errorEmptyStr = 'Please fill all fields for the current batch before adding a new one.....';
             return;
         }
         Swal.fire({
@@ -95,9 +97,10 @@ branchName: string = '';
     resetForm() {
         this.branchName = '';
         this.ProductName = {};
+        this.BatchNumber = '';
         this.creationDate = new Date();
         this.expiryDate = new Date();
-        this.BatchNumbers = [{BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0}];
+        this.BatchNumbers = [{Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0, CouponSeries: 0}];
     }
 
     convertToISODate(date: any) {
@@ -108,11 +111,11 @@ branchName: string = '';
     addProduct() {
         // Check if all required fields are filled before pushing a new BatchNumber object
         const lastBatch = this.BatchNumbers[this.BatchNumbers.length - 1];
-        if (!lastBatch.BatchNumber || Object.keys(lastBatch.Brand).length === 0 || !lastBatch.redeemablePoints || !lastBatch.value || !lastBatch.Volume || !lastBatch.Quantity) {
+        if (Object.keys(lastBatch.Brand).length === 0 || !lastBatch.redeemablePoints || !lastBatch.value || !lastBatch.Volume || !lastBatch.Quantity || !lastBatch.CouponSeries) {
             this.errorEmptyStr = 'Please fill all fields for the current batch before adding a new one.';
             return;
         }
-        this.BatchNumbers.push({ BatchNumber: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0 });
+        this.BatchNumbers.push({ CouponSeries: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0 });
     }
 
     // Delete a product from the products array

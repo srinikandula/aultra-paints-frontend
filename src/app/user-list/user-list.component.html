@@ -20,7 +20,8 @@
                 <th>#</th>
                 <th>Name</th>
                 <th>Mobile Number</th>
-<!--                    <th>Email</th>-->
+                <th>Type</th>
+                <!--                    <th>Email</th>-->
                 <th class="text-center">Reward Points</th>
                 <th class="text-center">Total Cash Reward</th>
                 <th class="text-center">Status</th>
@@ -32,7 +33,8 @@
                 <td>{{ (currentPage - 1) * limit + (i + 1) }}</td>
                 <td>{{ user.name }}</td>
                 <td>{{ user.mobile }}</td>
-<!--                    <td>{{ user.email }}</td>-->
+                <td>{{ user.accountType }}</td>
+                <!--                    <td>{{ user.email }}</td>-->
                 <td class="text-primary cursor-pointer text-center"
                     (click)="showRedeemedPoints(user._id)">{{ user.redeemablePoints }}
                 </td>
@@ -111,10 +113,10 @@
                     <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"
                            required placeholder="Enter full name"/>
                 </div>
-<!--            </div>-->
+                <!--            </div>-->
 
-            <!-- Add Mobile Number (10 digits) -->
-<!--            <div class="row">-->
+                <!-- Add Mobile Number (10 digits) -->
+                <!--            <div class="row">-->
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="mobile">Mobile Number</label>
                     <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
@@ -133,10 +135,10 @@
                     <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"
                            required placeholder="Enter password"/>
                 </div>
-<!--            </div>-->
+                <!--            </div>-->
 
-            <!-- Add Confirm Password -->
-<!--            <div class="row">-->
+                <!-- Add Confirm Password -->
+                <!--            <div class="row">-->
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="confirmPassword">Confirm Password</label>
                     <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"
@@ -144,6 +146,24 @@
                 </div>
             </div>
             <div class="row">
+                <div class="col-sm-4 mb-3 form-group">
+                    <label for="accountType" class="form-label">Type</label>
+                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
+                        <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
+                    <label class="form-label" for="parentDealer">Parent Dealer</label>
+                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
+                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
+                </div>
+                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
+                    <label class="form-label" for="dealerCode">Dealer Code</label>
+                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
+                           name="dealerCode" required placeholder="Enter Dealer Code"/>
+                </div>
+            </div>
+            <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="primaryContactPerson">Primary Contact Person</label>
                     <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
@@ -156,25 +176,7 @@
                            pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="parentDealer">Parent Dealer</label>
-                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
-                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
-                </div>
-                <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="dealerCode">Dealer Code</label>
-                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
-                           name="dealerCode" required placeholder="Enter Dealer Code"/>
-                </div>
-                <div class="col-sm-4 mb-3 form-group">
-                    <label for="accountType" class="form-label">Type</label>
-                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
-                        <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
+            <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
                     <label for="address">Address</label>
                     <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
@@ -205,7 +207,7 @@
         <h4 class="modal-title">Edit User</h4>
     </div>
     <div class="modal-body">
-<!--        <form #userForm="ngForm" (ngSubmit)="updateUser(modal, userForm)">-->
+        <!--        <form #userForm="ngForm" (ngSubmit)="updateUser(modal, userForm)">-->
         <form #userForm="ngForm" class="modal-box shadow-sm" (ngSubmit)="updateUser(modal, userForm)">
             <!-- Edit Name -->
             <div class="row">
@@ -230,6 +232,24 @@
             </div>
 
             <div class="row">
+                <div class="col-sm-4 mb-3 form-group">
+                    <label for="accountType" class="form-label">Type</label>
+                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
+                        <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
+                    </select>
+                </div>
+                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
+                    <label class="form-label" for="parentDealer">Parent Dealer</label>
+                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
+                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
+                </div>
+                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
+                    <label class="form-label" for="dealerCode">Dealer Code</label>
+                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
+                           name="dealerCode" required placeholder="Enter Dealer Code"/>
+                </div>
+            </div>
+            <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="primaryContactPerson">Primary Contact Person</label>
                     <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
@@ -242,25 +262,7 @@
                            pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
                 </div>
             </div>
-            <div class="row">
-                <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="parentDealer">Parent Dealer</label>
-                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
-                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
-                </div>
-                <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="dealerCode">Dealer Code</label>
-                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
-                           name="dealerCode" required placeholder="Enter Dealer Code"/>
-                </div>
-                <div class="col-sm-4 mb-3 form-group">
-                    <label for="accountType" class="form-label">Type</label>
-                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
-                        <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
+            <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
                     <label for="address">Address</label>
                     <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
