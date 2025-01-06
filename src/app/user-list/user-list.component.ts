@@ -118,15 +118,18 @@ export class UserListComponent implements OnInit {
         this.currentUser = {};
         this.errors = [];
         modal.close(); 
-      },
-      (error) => {
-        console.log(error)
-        this.errors = [];
-        if (error?.errors) {
-          this.errors = error.errors;
-        } else {
-          this.errors.push(error.message);
-        }
+      }, (error) => {
+        // this.errors = [];
+        // if (error?.errors) {
+        //   this.errors = error.errors;
+        // } else {
+        //   this.errors.push(error.message);
+        // }
+          if (error?.errors && error.errors.length > 0) {
+            this.errors = error.errors;
+          } else {
+            this.showError('Error updating user!');
+          }
       }
     );
   }
@@ -143,20 +146,25 @@ export class UserListComponent implements OnInit {
         (data) => {
           this.loadUsers();
           this.showSuccess('User updated successfully!');
-          this.currentUser = {};
+          this.errors = [];
+              this.currentUser = {};
           modal.close();
-        },
-        (error) => {
-          // Check if the error response contains the 'Mobile already exists' message
-          if (error.error && error.error[0] === 'Mobile already exists') {
-            Swal.fire({
-              icon: 'error',
-              title: 'Duplicate Mobile Number',
-              text: 'This mobile number is already registered. Please enter a different number.',
-            });
+        }, (error) => {
+          if (error?.errors && error.errors.length > 0) {
+            this.errors = error.errors;
           } else {
             this.showError('Error updating user!');
           }
+          // Check if the error response contains the 'Mobile already exists' message
+          // if (error.error && error.error[0] === 'Mobile already exists') {
+          //   Swal.fire({
+          //     icon: 'error',
+          //     title: 'Duplicate Mobile Number',
+          //     text: 'This mobile number is already registered. Please enter a different number.',
+          //   });
+          // } else {
+          //   this.showError('Error updating user!');
+          // }
         }
       );
     }
