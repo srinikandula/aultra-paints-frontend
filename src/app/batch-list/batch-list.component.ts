@@ -1,22 +1,23 @@
-import { Component, OnInit } from '@angular/core';
-import {OrderService} from '../order.service';
-import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { OrderService } from '../order.service';
+import { FormsModule } from '@angular/forms';
 import {Router} from '@angular/router';
 import {ApiUrlsService} from "../services/api-urls.service";
 import {ApiRequestService} from "../services/api-request.service";
-import {NgSelectComponent} from "@ng-select/ng-select";
+import { NgSelectComponent } from '@ng-select/ng-select';
 import Swal from "sweetalert2";
 
+
 @Component({
-    selector: 'app-list',
-    standalone: true,
-    imports: [CommonModule, FormsModule, NgSelectComponent],
-    templateUrl: './list.component.html',
-    styleUrls: ['./list.component.css']
+  selector: 'app-batch-list',
+  standalone: true,
+  imports: [FormsModule, CommonModule, NgSelectComponent],
+  templateUrl: './batch-list.component.html',
+  styleUrl: './batch-list.component.css'
 })
-export class ListComponent implements OnInit {
-    branches: any[] = [];
+export class BatchListComponent {
+branches: any[] = [];
     currentPage = 1;
     totalPages = 1;
     totalBranches = 0;
@@ -83,7 +84,7 @@ export class ListComponent implements OnInit {
     }
 
     onCreateBatch(): void {
-        this.router.navigate(['/dashboard/order']);
+        this.router.navigate(['/dashboard/create-batch']);
     }
 
     prevPage(): void {
@@ -167,3 +168,4 @@ export class ListComponent implements OnInit {
         })
     }
 }
+

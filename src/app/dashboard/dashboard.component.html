@@ -23,7 +23,7 @@
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
         <ul class="nav flex-column app-menu">
             <!-- Dashboard List -->
-            <li class="nav-item" (click)="navigateTo('/dashboard/list')">
+            <li class="nav-item" (click)="navigateTo('/dashboard/batch-list')">
                 <div class="menu">
                     <i class="bx px-2 bxs-notepad" style="font-size: 20px;"></i>
                     <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Batches</span>
