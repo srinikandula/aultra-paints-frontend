@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-import { OrderService } from '../order.service';
-import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { Component } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { NgbDatepickerModule, NgbDateStruct, NgbAlertModule } from '@ng-bootstrap/ng-bootstrap';
 import { NgSelectModule } from '@ng-select/ng-select';
 import {ApiUrlsService} from "../services/api-urls.service";
@@ -10,14 +9,14 @@ import {Router} from "@angular/router";
 import Swal from "sweetalert2";
 
 @Component({
-    selector: 'app-order',
-    standalone: true,
-    imports: [FormsModule, CommonModule, NgbDatepickerModule, NgbAlertModule, NgSelectModule],
-    templateUrl: './order.component.html',
-    styleUrls: ['./order.component.css']
+  selector: 'app-create-batch',
+  standalone: true,
+  imports: [FormsModule, CommonModule,NgbDatepickerModule, NgbAlertModule, NgSelectModule],
+  templateUrl: './create-batch.component.html',
+  styleUrl: './create-batch.component.css'
 })
-export class OrderComponent implements OnInit {
-    branchName: string = '';
+export class CreateBatchComponent {
+branchName: string = '';
     ProductName: object = {};
     couponSeriesList: string[] = ['Series A', 'Series B', 'Series C']; // Example data
     creationDate = new Date();
@@ -135,3 +134,5 @@ export class OrderComponent implements OnInit {
         })
     }
 }
+
+
