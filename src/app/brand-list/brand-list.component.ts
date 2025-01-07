@@ -77,11 +77,11 @@ export class BrandListComponent {
     this.apiRequestService.searchBrandsByName(this.searchQuery, this.currentPage, this.limit).subscribe({
       next: (response: any) => {
         if (response && response.data && response.data.length > 0) {
-          this.brands = response.data;  // Brands found based on the search query
+          this.brands = response.data; 
           this.totalBrands = response.total;
           this.totalPages = response.pages;
         } else {
-          this.brands = [];  // No brands found
+          this.brands = []; 
         }
       },
       error: (error) => {

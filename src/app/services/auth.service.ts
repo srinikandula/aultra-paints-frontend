@@ -45,19 +45,33 @@ export class AuthService {
     return null;
   }
 
-  logIn(mobile: string, password: string): Observable<any> {
-    return this.http.post<any>(this.apiUrls.mainUrl + 'auth/login', { mobile, password })
-        .pipe(map(response => {
-          if (response) {
-            if (this.isLocalStorageAvailable()) {
-              localStorage.setItem('authToken', JSON.stringify(response));
-            }
-            this.router.navigate([this.returnUrl]);
-            this.currentUserSubject.next(response);
-          }
+
+   // Method to send OTP to the provided mobile number
+   loginWithOTP(mobile: string): Observable<any> {
+    return this.http.post<any>(this.apiUrls.mainUrl + 'auth/loginWithOTP', { mobile })
+      .pipe(map(response => {
+        if (response) {
           return response;
-        }));
+        }
+      }));
   }
+
+  // Method to verify the OTP entered by the user
+  verifyOTP(mobile: string, otp: number): Observable<any> {
+    return this.http.post<any>(this.apiUrls.mainUrl + 'auth/verifyOTP', { mobile, otp })
+      .pipe(map(response => {
+        if (response) {
+          if (this.isLocalStorageAvailable()) {
+            localStorage.setItem('authToken', JSON.stringify(response));
+          }
+            this.currentUserSubject.next(response);
+          // Navigate to the dashboard or specified route
+          this.router.navigate(['/']);
+        }
+        return response;
+      }));
+  }
+  
 
   logOut(): void {
     if (this.isLocalStorageAvailable()) {
