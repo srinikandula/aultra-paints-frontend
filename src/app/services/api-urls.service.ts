@@ -8,8 +8,8 @@ export class ApiUrlsService {
     constructor() {
     }
 
-    mainUrl = "http://localhost:4300/api/";
-    // mainUrl = "https://api.aultrapaints.com/api/";
+    // mainUrl = "http://localhost:4300/api/";
+    mainUrl = "https://api.aultrapaints.com/api/";
 
     // Users API URLs
     getUsers = 'users/all';
