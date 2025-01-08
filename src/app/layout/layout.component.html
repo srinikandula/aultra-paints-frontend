@@ -21,7 +21,16 @@
 <div class="dashboard-container">
     <!-- Sidebar (above the navbar) -->
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
-        <ul class="nav flex-column app-menu">
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType !== 'Super User'">
+            <!-- Dashboard List -->
+            <li class="nav-item" (click)="navigateTo('dashboard')">
+                <div class="menu">
+                    <i class="bx px-2 bxs-dashboard" style="font-size: 20px;"></i>
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Dashboard</span>
+                </div>
+            </li>
+        </ul>
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'Super User'">
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('dashboard')">
                 <div class="menu">

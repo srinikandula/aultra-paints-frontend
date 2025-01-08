@@ -34,7 +34,6 @@ export class DashboardComponent implements OnInit {
   userDashboard(): void {
     // debugger
     this.apiService.create(this.apiUrls.userDashboard, {id: this.currentUser.id, accountType: this.currentUser.accountType}).subscribe((response) => {
-      console.log(response)
       this.userDashboardData = response.data;
     }, (error) => {
       console.error('Error loading branches:', error);
