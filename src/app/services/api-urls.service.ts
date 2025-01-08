@@ -8,8 +8,8 @@ export class ApiUrlsService {
     constructor() {
     }
 
-    // mainUrl = "http://localhost:4300/api/";
-    mainUrl = "https://api.aultrapaints.com/api/";
+    mainUrl = "http://localhost:4300/api/";
+    // mainUrl = "https://api.aultrapaints.com/api/";
 
     // Users API URLs
     getUsers = 'users/all';
@@ -19,6 +19,7 @@ export class ApiUrlsService {
     searchUser = 'users/searchUser';
     toggleUserStatus = 'users/toggle-status';
     resetPassword = 'users/resetPassword';
+    userDashboard = 'users/userDashboard';
 
     // API Urls
     register = 'auth/register';
