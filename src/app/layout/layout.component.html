@@ -1,0 +1,104 @@
+<!-- Navbar (below the sidebar) -->
+<nav class="navbar fixed-top">
+    <div class="d-flex">
+        <!-- Logo before the toggle button -->
+        <div class="navbar-brand">
+            <img src="assets/img/app_logo.png" alt="Logo" style="height: 40px;">
+        </div>
+
+        <!-- Sidebar Toggle Button -->
+        <button class="sidebar-toggle-btn navbar-toggler" (click)="toggleSidebar()" style="border: none; background: transparent;">
+            <i class="bx px-2" [ngClass]="isSidebarCollapsed ? 'bx-menu' : 'bx-x'" style="font-size: 20px; color: white"></i>
+        </button>
+    </div>
+    <div class="d-flex">
+        <div style="color: white; padding: 0 30px">
+            {{currentUser.fullName}}
+        </div>
+    </div>
+</nav>
+
+<div class="dashboard-container">
+    <!-- Sidebar (above the navbar) -->
+    <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType !== 'Super User'">
+            <!-- Dashboard List -->
+            <li class="nav-item" (click)="navigateTo('dashboard')">
+                <div class="menu">
+                    <i class="bx px-2 bxs-dashboard" style="font-size: 20px;"></i>
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Dashboard</span>
+                </div>
+            </li>
+        </ul>
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'Super User'">
+            <!-- Dashboard List -->
+            <li class="nav-item" (click)="navigateTo('dashboard')">
+                <div class="menu">
+                    <i class="bx px-2 bxs-dashboard" style="font-size: 20px;"></i>
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Dashboard</span>
+                </div>
+            </li>
+            <li class="nav-item" (click)="navigateTo('batch-list')">
+                <div class="menu">
+                    <i class="bx px-2 bxs-notepad" style="font-size: 20px;"></i>
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Batches</span>
+                </div>
+            </li>
+
+            <!-- Transactions -->
+            <li class="nav-item" (click)="navigateTo('transactions')">
+                <div class="menu">
+                    <i class="bx px-2 bxs-coupon" style="font-size: 20px;"></i>
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Coupons</span>
+                </div>
+            </li>
+
+            <li class="nav-item treeview">
+                <div class="menu" (click)="toggle()">
+                    <i class="bx px-2 bxs-cog" style="font-size: 20px;"></i>
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Masters</span>
+                    <span style="position: relative;">
+                        <i class="bx px-2 bxs-chevron-down custom-menu-arrow" *ngIf="active" style="font-size: 20px;"></i>
+                        <i class="bx px-2 bxs-chevron-right custom-menu-arrow" *ngIf="!active" style="font-size: 20px;"></i>
+                    </span>
+                </div>
+                <ul class="submenu" [ngClass]="active ? 'sub-menu-active-height' : '0'">
+                    <!-- User List (New Item) -->
+                    <li class="nav-item" (click)="navigateTo('user-list')">
+                        <i class="bx px-2 bx-user-circle" style="font-size: 20px;"></i>
+                        <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Users</span>
+                    </li>
+
+                    <!-- Product List (new item) -->
+                    <li class="nav-item" (click)="navigateTo('product-list')">
+                        <i class="bx px-2 bxl-product-hunt" style="font-size: 20px;"></i> <!-- Product icon -->
+                        <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Product</span>
+                    </li>
+
+                    <!-- Brand List (New Item) -->
+                    <li class="nav-item" (click)="navigateTo('brand-list')">
+                        <!--             <i class="bx px-2 bxs-coupon" style="font-size: 20px;"></i> &lt;!&ndash; Tag icon for Brand &ndash;&gt;-->
+                        <div style="display: flex">
+                            <h5 class="px-2" style="font-weight: bolder; margin-bottom: 0">B</h5>
+                            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Brand</span>
+                        </div>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+
+
+        <!-- Sidebar Footer -->
+        <div class="sidebar-footer" (click)="logout()">
+            <div class="sidebar-link">
+                <i class="bx px-2 bx-log-out"></i><span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc"
+                                                        class="px-2">Logout</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content Area (includes navbar and router outlet) -->
+    <main class="content" [ngClass]="{ 'collapsed': isSidebarCollapsed }">
+        <router-outlet></router-outlet>
+    </main>
+</div>

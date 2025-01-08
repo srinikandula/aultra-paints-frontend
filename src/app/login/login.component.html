@@ -38,11 +38,7 @@
               />
               <p *ngIf="errorMessage" class="text-danger text-center mt-3">{{ errorMessage }}</p>
 
-              <button
-                type="submit"
-                class="btn btn-primary btn-aultra-paints w-100"
-                [disabled]="mobile.length !== 10 || loading"
-              >
+              <button type="submit" class="btn btn-primary btn-aultra-paints w-100" [disabled]="mobile.length !== 10 || loading">
                 Get OTP
               </button>
             </div>
@@ -54,24 +50,12 @@
           <form (ngSubmit)="login()">
             <div class="mb-3">
               <label for="otp" class="form-label">OTP</label>
-              <input
-                type="text"
-                id="otp"
-                maxlength="6"
-                class="form-control"
-                [(ngModel)]="otp"
-                name="otp"
-                placeholder="Enter OTP"
-                required
-              />
+              <input type="text" id="otp" maxlength="6" class="form-control" [(ngModel)]="otp" name="otp"
+                placeholder="Enter OTP" required />
             </div>
             <p *ngIf="errorMessage" class="text-danger text-center mt-3">{{ errorMessage }}</p>
-            
-            <button
-              type="submit"
-              class="btn btn-primary btn-aultra-paints w-100"
-              [disabled]="!otp || loading"
-            >
+              <p *ngIf="otpSuccessMessage" class="text-success text-center mt-3">{{ otpSuccessMessage }}</p>
+            <button type="submit" class="btn btn-primary btn-aultra-paints w-100" [disabled]="!otp || loading">
               Verify OTP
             </button>
           </form>

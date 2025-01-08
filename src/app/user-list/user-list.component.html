@@ -52,10 +52,10 @@
 
                 <!-- Actions Column: Edit and Delete Buttons -->
                 <td class="text-center">
-                    <button (click)="resetPasswordModalOpen(user, resetPasswordModal)" class="btn btn-primary mx-2"
-                            title="Reset password">
-                        <i class='bx bxs-key'></i>
-                    </button>
+<!--                    <button (click)="resetPasswordModalOpen(user, resetPasswordModal)" class="btn btn-primary mx-2"-->
+<!--                            title="Reset password">-->
+<!--                        <i class='bx bxs-key'></i>-->
+<!--                    </button>-->
                     <button (click)="editUser(user, editUserModal)" class="btn btn-warning mx-2" title="Update">
                         <i class="bx bx-edit"></i>
                     </button>
@@ -129,22 +129,22 @@
             </div>
 
             <!-- Add Password -->
-            <div class="row">
-                <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="password">Password</label>
-                    <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"
-                           required placeholder="Enter password"/>
-                </div>
-                <!--            </div>-->
+<!--            <div class="row">-->
+<!--                <div class="col-sm-6 mb-3 form-group">-->
+<!--                    <label class="form-label" for="password">Password</label>-->
+<!--                    <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"-->
+<!--                           required placeholder="Enter password"/>-->
+<!--                </div>-->
+<!--                &lt;!&ndash;            </div>&ndash;&gt;-->
 
-                <!-- Add Confirm Password -->
-                <!--            <div class="row">-->
-                <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="confirmPassword">Confirm Password</label>
-                    <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"
-                           name="confirmPassword" required placeholder="Confirm your password"/>
-                </div>
-            </div>
+<!--                &lt;!&ndash; Add Confirm Password &ndash;&gt;-->
+<!--                &lt;!&ndash;            <div class="row">&ndash;&gt;-->
+<!--                <div class="col-sm-6 mb-3 form-group">-->
+<!--                    <label class="form-label" for="confirmPassword">Confirm Password</label>-->
+<!--                    <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"-->
+<!--                           name="confirmPassword" required placeholder="Confirm your password"/>-->
+<!--                </div>-->
+<!--            </div>-->
             <div class="row">
                 <div class="col-sm-4 mb-3 form-group">
                     <label for="accountType" class="form-label">Type</label>

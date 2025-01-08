@@ -17,68 +17,72 @@ import Swal from 'sweetalert2';
 })
 export class LoginComponent {
     mobile: string = '';
-  otp: any;
-  errorMessage: string = '';
-  otpSent: boolean = false;
-  loading: boolean = false;
+    otp: any;
+    errorMessage: string = '';
+    otpSuccessMessage: string = '';
+    otpSent: boolean = false;
+    loading: boolean = false;
 
-  constructor(private router: Router, private authService: AuthService) {}
-
-  ngOnInit(): void {}
-
-  handleMobileChange(): void {
-    this.clearMessages();
-    this.otpSent = false;  
-  }
-
-  getOTP(): void {
-    if (this.mobile.length === 10) {
-      this.loading = true;
-      this.clearMessages();
-      this.authService.loginWithOTP(this.mobile).pipe(first()).subscribe({
-        next: (response) => {
-          this.loading = false;
-          this.otpSent = true; // Show OTP input after success
-          console.log('OTP sent successfully:', response);
-        },
-        error: (error) => {
-          this.loading = false;
-          this.errorMessage = 'Mobile Number not found';
-          console.error('API error:', error);
-        },
-      });
-    } else {
-      this.errorMessage = 'Please enter a valid 10-digit mobile number.';
+    constructor(private router: Router, private authService: AuthService) {
     }
-  }
 
-  login(): void {
-    if (this.otpSent && this.otp) {
-      const otp = parseInt(this.otp);
-      this.loading = true;
-      this.clearMessages();
-      this.authService.verifyOTP(this.mobile, otp).pipe(first()).subscribe({
-        next: (response) => {
-          this.loading = false;
-          Swal.fire({
-            title: 'Success!',
-            text: 'Login successful. Redirecting to your dashboard.',
-            icon: 'success',
-            confirmButtonText: 'OK',
-          });
-        },
-        error: (error) => {
-          this.loading = false;
-          this.errorMessage = 'Invalid OTP. Please try again.';
-        },
-      });
-    } else {
-      this.errorMessage = 'Please enter a valid OTP.';
+    ngOnInit(): void {
     }
-  }
 
-  // Method to clear both success and error messages
-  clearMessages(): void {
-    this.errorMessage = '';
-  }
+    handleMobileChange(): void {
+        this.clearMessages();
+        this.otpSent = false;
+    }
+
+    getOTP(): void {
+        if (this.mobile.length === 10) {
+            this.loading = true;
+            this.clearMessages();
+            this.authService.loginWithOTP(this.mobile).pipe(first()).subscribe({
+                next: (response) => {
+                    this.loading = false;
+                    this.otpSent = true; // Show OTP input after success
+                    this.otpSuccessMessage = 'OTP sent successfully';
+                    console.log('OTP sent successfully:', response);
+                }, error: (error) => {
+                    this.loading = false;
+                    this.otpSuccessMessage = '';
+                    this.errorMessage = 'Mobile Number not found';
+                    console.error('API error:', error);
+                },
+            });
+        } else {
+            this.errorMessage = 'Please enter a valid 10-digit mobile number.';
+        }
+    }
+
+    login(): void {
+        if (this.otpSent && this.otp) {
+            const otp = parseInt(this.otp);
+            this.loading = true;
+            this.clearMessages();
+            this.authService.verifyOTP(this.mobile, otp).pipe(first()).subscribe({
+                next: (response) => {
+                    this.loading = false;
+                    Swal.fire({
+                        title: 'Success!',
+                        text: 'Login successful. Redirecting to your dashboard.',
+                        icon: 'success',
+                        confirmButtonText: 'OK',
+                    });
+                },
+                error: (error) => {
+                    this.loading = false;
+                    this.errorMessage = 'Invalid OTP. Please try again.';
+                },
+            });
+        } else {
+            this.errorMessage = 'Please enter a valid OTP.';
+        }
+    }
+
+    // Method to clear both success and error messages
+    clearMessages(): void {
+        this.errorMessage = '';
+    }
 }

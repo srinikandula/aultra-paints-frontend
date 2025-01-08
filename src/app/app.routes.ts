@@ -10,20 +10,22 @@ import { BrandListComponent } from './brand-list/brand-list.component';
 import { UserListComponent } from './user-list/user-list.component';
 import { BatchListComponent } from './batch-list/batch-list.component';
 import { CreateBatchComponent } from './create-batch/create-batch.component';
+import {LayoutComponent} from "./layout/layout.component";
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
     {path: 'register', component: RegisterComponent},
     {
-        path: '', component: DashboardComponent, canActivate: [AuthGuard],
+        path: '', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
-            {path: '', component: BatchListComponent, canActivate: [AuthGuard]},
-            {path: 'dashboard/batch-list', component: BatchListComponent, canActivate: [AuthGuard]},
-            {path: 'dashboard/create-batch', component:CreateBatchComponent },
-            {path: 'dashboard/transactions', component: TransactionsComponent},
-            {path: 'dashboard/product-list', component: ProductListComponent},
-            {path: 'dashboard/brand-list', component: BrandListComponent},
-            {path: 'dashboard/user-list', component: UserListComponent},
+            {path: '', component: DashboardComponent, canActivate: [AuthGuard]},
+            {path: 'dashboard', component: DashboardComponent, canActivate: [AuthGuard]},
+            {path: 'batch-list', component: BatchListComponent, canActivate: [AuthGuard]},
+            {path: 'create-batch', component:CreateBatchComponent, canActivate: [AuthGuard]},
+            {path: 'transactions', component: TransactionsComponent, canActivate: [AuthGuard]},
+            {path: 'product-list', component: ProductListComponent, canActivate: [AuthGuard]},
+            {path: 'brand-list', component: BrandListComponent, canActivate: [AuthGuard]},
+            {path: 'user-list', component: UserListComponent, canActivate: [AuthGuard]},
         ]
     },
   { path: '**', redirectTo: 'login' } 
