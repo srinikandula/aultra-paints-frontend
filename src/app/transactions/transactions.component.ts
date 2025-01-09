@@ -89,7 +89,7 @@ export class TransactionsComponent implements OnInit {
     onReset() {
         this.userId = null;
         this.getAllTransactions();
-        this.router.navigate(['dashboard/transactions']);
+        this.router.navigate(['/transactions']);
     }
 
     handlePageChange($event: number) {

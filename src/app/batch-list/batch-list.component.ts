@@ -84,7 +84,7 @@ branches: any[] = [];
     }
 
     onCreateBatch(): void {
-        this.router.navigate(['/dashboard/create-batch']);
+        this.router.navigate(['/create-batch']);
     }
 
     prevPage(): void {
