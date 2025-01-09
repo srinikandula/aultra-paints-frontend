@@ -11,10 +11,12 @@ import { UserListComponent } from './user-list/user-list.component';
 import { BatchListComponent } from './batch-list/batch-list.component';
 import { CreateBatchComponent } from './create-batch/create-batch.component';
 import {LayoutComponent} from "./layout/layout.component";
+import {PrivacyPolicyComponent} from "./privacy-policy/privacy-policy.component";
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
     {path: 'register', component: RegisterComponent},
+    {path: 'privacy-policy', component: PrivacyPolicyComponent},
     {
         path: '', component: LayoutComponent, canActivate: [AuthGuard],
         children: [
