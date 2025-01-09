@@ -83,7 +83,7 @@ export class CreateBatchComponent {
                         console.log('Branch created successfully:', response.message);
                         this.errorEmptyStr = '';
                         this.resetForm();
-                        this.router.navigate(['dashboard/list']);
+                        this.router.navigate(['/list']);
                         Swal.fire({icon: 'success', title: 'Success', text: 'Batches created successfully.'});
                     }, (error: any) => {
                         console.error('Error creating branch:', error);
@@ -128,7 +128,7 @@ export class CreateBatchComponent {
     }
 
     cancel(): void {
-        this.router.navigate(['dashboard/list']);
+        this.router.navigate(['/list']);
     }
 
     getBrandes() {

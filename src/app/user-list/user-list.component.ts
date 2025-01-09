@@ -260,7 +260,7 @@ export class UserListComponent implements OnInit {
     }
 
     showRedeemedPoints(_id: any) {
-        this.router.navigate(['dashboard/transactions'], {queryParams: {userId: _id}});
+        this.router.navigate(['/transactions'], {queryParams: {userId: _id}});
     }
 
     handlePageChange($event: number) {
