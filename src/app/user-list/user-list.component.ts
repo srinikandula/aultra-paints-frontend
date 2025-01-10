@@ -36,7 +36,7 @@ export class UserListComponent implements OnInit {
     currentUserResetPasswordForm: any = {};
     accountTypes: Array<any> = [
         {id: 'Painter', name: 'Painter'},
-        {id: 'Controller', name: 'Contractor'},
+        {id: 'Contractor', name: 'Contractor'},
         {id: 'Dealer', name: 'Dealer'},
         {id: 'Super User', name: 'Super User'},
     ];
@@ -57,8 +57,7 @@ export class UserListComponent implements OnInit {
         this.apiService.getUsers(this.page, this.limit, this.searchQuery).subscribe((response) => {
                 this.users = response.data;
                 this.totalPages = response.total;
-                // this.limitOptions = Array.from({length: Math.ceil(this.totalPages / this.limit)}, (_, i) => (i + 1) * this.limit);
-            },
+             },
             (error) => {
                 console.error('Error fetching users:', error);
             }
@@ -115,11 +114,6 @@ export class UserListComponent implements OnInit {
     }
 
     addNewUser(modal: any): void {
-        // if (this.currentUser.password !== this.currentUser.confirmPassword) {
-        //     this.showError('Password and Confirm Password do not match!');
-        //     return;
-        // }
-
         this.apiService.addUser(this.currentUser).subscribe(
             (data) => {
                 this.loadUsers();
