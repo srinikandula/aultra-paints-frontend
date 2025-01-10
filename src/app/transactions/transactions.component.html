@@ -19,6 +19,8 @@
                     <th>Value</th>
                     <th>Is Redeemed</th>
                     <th>QR Code</th>
+                    <th>Redeemed by</th>
+                    <th>Cash paid to</th>
                     <th>Created At</th>
 <!--                    <th>Updated At</th>-->
                     <th>Created By</th>
@@ -38,6 +40,8 @@
                             <i class="bx bx-qr" [ngStyle]="{ 'color': item.isProcessed ? 'red' : ''}"></i>
                         </button>
                     </td>
+                    <td>{{ item.redeemedByName || 'NA'}}</td>
+                    <td>{{ item.redeemedByMobile || 'NA'}}</td>
                     <td>{{ item.createdAt | date }}</td>
 <!--                    <td>{{ item.updatedAt | date }}</td>-->
                     <td>{{ item.createdByName }}</td>
