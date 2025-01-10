@@ -17,7 +17,7 @@
         <table class="table table-hover">
             <thead>
             <tr>
-                <th>#</th>
+                <th>S.NO</th>
                 <th>Name</th>
                 <th>Mobile Number</th>
                 <th>Type</th>
@@ -109,8 +109,8 @@
             <!-- Add Name -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="name">Name</label>
-                    <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"
+                    <label class="form-label" for="addName">Name</label>
+                    <input type="text" class="form-control" id="addName" [(ngModel)]="currentUser.name" name="addName"
                            required placeholder="Enter full name"/>
                 </div>
                 <!--            </div>-->
@@ -118,8 +118,8 @@
                 <!-- Add Mobile Number (10 digits) -->
                 <!--            <div class="row">-->
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="mobile">Mobile Number</label>
-                    <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
+                    <label class="form-label" for="addMobile">Mobile Number</label>
+                    <input type="text" class="form-control" id="addMobile" [(ngModel)]="currentUser.mobile" name="addMobile"
                            maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
                     <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
@@ -146,40 +146,40 @@
 <!--                </div>-->
 <!--            </div>-->
             <div class="row">
-                <div class="col-sm-4 mb-3 form-group">
-                    <label for="accountType" class="form-label">Type</label>
-                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label for="addAccountType" class="form-label">Type</label>
+                    <select id="addAccountType" [(ngModel)]="currentUser.accountType" name="addAccountType" class="form-select">
                         <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
                     </select>
                 </div>
-                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
-                    <label class="form-label" for="parentDealer">Parent Dealer</label>
-                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
-                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
-                </div>
-                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
-                    <label class="form-label" for="dealerCode">Dealer Code</label>
-                    <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
-                           name="dealerCode" required placeholder="Enter Dealer Code"/>
+<!--                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">-->
+<!--                    <label class="form-label" for="parentDealer">Parent Dealer</label>-->
+<!--                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"-->
+<!--                           name="parentDealer" required placeholder="Enter Parent Dealer"/>-->
+<!--                </div>-->
+                <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
+                    <label class="form-label" for="addDealerCode">Dealer Code</label>
+                    <input type="text" class="form-control" id="addDealerCode" [(ngModel)]="currentUser.dealerCode"
+                           name="addDealerCode" required placeholder="Enter Dealer Code"/>
                 </div>
             </div>
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="primaryContactPerson">Primary Contact Person</label>
-                    <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
-                           name="primaryContactPerson" required placeholder="Enter Primary Contact Person"/>
+                    <label class="form-label" for="addPrimaryContactPerson">Primary Contact Person</label>
+                    <input type="text" class="form-control" id="addPrimaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
+                           name="addPrimaryContactPerson" required placeholder="Enter Primary Contact Person"/>
                 </div>
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="primaryContactPersonMobile">Primary Contact Person Mobile</label>
-                    <input type="text" class="form-control" id="primaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
+                    <label class="form-label" for="addPrimaryContactPersonMobile">Primary Contact Person Mobile</label>
+                    <input type="text" class="form-control" id="addPrimaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
                            maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
-                           pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
+                           pattern="^\d{10}$" name="addPrimaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
                 </div>
             </div>
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label for="address">Address</label>
-                    <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
+                    <label for="addAddress">Address</label>
+                    <textarea class="form-control" id="addAddress" [(ngModel)]="currentUser.address" name="addAddress" rows="3"
                               required placeholder="Enter address"></textarea>
                 </div>
             </div>
@@ -232,18 +232,18 @@
             </div>
 
             <div class="row">
-                <div class="col-sm-4 mb-3 form-group">
+                <div class="col-sm-6 mb-3 form-group">
                     <label for="accountType" class="form-label">Type</label>
                     <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
                         <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
                     </select>
                 </div>
-                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
-                    <label class="form-label" for="parentDealer">Parent Dealer</label>
-                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"
-                           name="parentDealer" required placeholder="Enter Parent Dealer"/>
-                </div>
-                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
+<!--                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">-->
+<!--                    <label class="form-label" for="parentDealer">Parent Dealer</label>-->
+<!--                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"-->
+<!--                           name="parentDealer" required placeholder="Enter Parent Dealer"/>-->
+<!--                </div>-->
+                <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
                     <label class="form-label" for="dealerCode">Dealer Code</label>
                     <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
                            name="dealerCode" required placeholder="Enter Dealer Code"/>

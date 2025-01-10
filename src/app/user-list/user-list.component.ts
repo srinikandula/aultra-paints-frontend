@@ -20,6 +20,8 @@ export class UserListComponent implements OnInit {
     users: any[] = [];
     loginUser: any = {};
     currentUser: any = {
+        name: '',
+        mobile: '',
         accountType: 'P'
     };
     // currentUser.accountType = 'Painter';
