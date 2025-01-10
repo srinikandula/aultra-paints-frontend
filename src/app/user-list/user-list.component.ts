@@ -115,10 +115,10 @@ export class UserListComponent implements OnInit {
     }
 
     addNewUser(modal: any): void {
-        if (this.currentUser.password !== this.currentUser.confirmPassword) {
-            this.showError('Password and Confirm Password do not match!');
-            return;
-        }
+        // if (this.currentUser.password !== this.currentUser.confirmPassword) {
+        //     this.showError('Password and Confirm Password do not match!');
+        //     return;
+        // }
 
         this.apiService.addUser(this.currentUser).subscribe(
             (data) => {
