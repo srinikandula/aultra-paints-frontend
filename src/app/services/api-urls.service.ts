@@ -8,8 +8,8 @@ export class ApiUrlsService {
     constructor() {
     }
 
-    // mainUrl = "http://localhost:4300/api/";
-    mainUrl = "https://api.aultrapaints.com/api/";
+    mainUrl = "http://localhost:4300/api/";
+    // mainUrl = "https://api.aultrapaints.com/api/";
 
     // Users API URLs
     getUsers = 'users/all';
@@ -53,4 +53,20 @@ export class ApiUrlsService {
     deleteBrand = 'brands';
     getAllBrandsForSelect = 'brands/getAllBrandsForSelect/'
     searchBrandsByName = 'brands/search'
+
+    // API Urls for Product Offers
+    createProductOffer = 'productOffers/create';
+    searchProductOffers = 'productOffers/searchProductOffers'
+    getProductOffers = 'productOffers/getProductOffers';
+    getProductOfferById = 'productOffers/getProductOfferById/';
+    updateProductOffer = 'productOffers/update/';
+    deleteProductOffer = 'productOffers/delete/';
+
+    // API Urls for Reward Schemes
+    createRewardScheme = 'rewardSchemes/create';
+    searchRewardSchemes = 'rewardSchemes/searchRewardSchemes'
+    getRewardSchemes = 'rewardSchemes/getRewardSchemes';
+    getRewardSchemeById = 'rewardSchemes/getRewardSchemeById/';
+    updateRewardScheme = 'rewardSchemes/update/';
+    deleteRewardScheme = 'rewardSchemes/delete/';
 }

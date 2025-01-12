@@ -71,7 +71,8 @@
 
                     <!-- Product List (new item) -->
                     <li class="nav-item" (click)="navigateTo('product-list')">
-                        <i class="bx px-2 bxl-product-hunt" style="font-size: 20px;"></i> <!-- Product icon -->
+<!--                        <i class="bx px-2 bxl-product-hunt" style="font-size: 20px;"></i> &lt;!&ndash; Product icon &ndash;&gt;-->
+                        <img class="px-2" src="/assets/img/product_w.png" alt="Logo" style="height: 20px;">
                         <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Product</span>
                     </li>
 
@@ -79,8 +80,25 @@
                     <li class="nav-item" (click)="navigateTo('brand-list')">
                         <!--             <i class="bx px-2 bxs-coupon" style="font-size: 20px;"></i> &lt;!&ndash; Tag icon for Brand &ndash;&gt;-->
                         <div style="display: flex">
-                            <h5 class="px-2" style="font-weight: bolder; margin-bottom: 0">B</h5>
+<!--                            <h5 class="px-2" style="font-weight: bolder; margin-bottom: 0">B</h5>-->
+                            <img class="px-2" src="/assets/img/brand_w.png" alt="Logo" style="height: 20px;">
                             <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Brand</span>
+                        </div>
+                    </li>
+
+                    <li class="nav-item" (click)="navigateTo('product-offers')">
+                        <!--             <i class="bx px-2 bxs-coupon" style="font-size: 20px;"></i> &lt;!&ndash; Tag icon for Brand &ndash;&gt;-->
+                        <div style="display: flex">
+                            <img class="px-2" src="/assets/img/Product_Offers_w.png" alt="Logo" style="height: 20px;">
+                            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Product Offers</span>
+                        </div>
+                    </li>
+
+                    <li class="nav-item" (click)="navigateTo('reward-schemes')">
+                        <!--             <i class="bx px-2 bxs-coupon" style="font-size: 20px;"></i> &lt;!&ndash; Tag icon for Brand &ndash;&gt;-->
+                        <div style="display: flex">
+                            <img class="px-2" src="/assets/img/Reward_Schemes_w.png" alt="Logo" style="height: 20px;">
+                            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Reward Schemes</span>
                         </div>
                     </li>
                 </ul>
