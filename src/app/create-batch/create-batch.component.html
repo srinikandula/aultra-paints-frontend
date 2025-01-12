@@ -7,7 +7,7 @@
             <div class="col-sm-3 mb-3">
                 <label for="branchName" class="form-label">Branch Name</label>
                 <select id="branchName" [(ngModel)]="branchName" name="branchName" required class="form-select">
-                    <option value="" disabled selected>Select a branch</option>
+                    <option value="" selected>Select a branch</option>
                     <option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</option>
                 </select>
             </div>

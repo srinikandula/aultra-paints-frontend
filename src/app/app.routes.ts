@@ -12,6 +12,8 @@ import { BatchListComponent } from './batch-list/batch-list.component';
 import { CreateBatchComponent } from './create-batch/create-batch.component';
 import {LayoutComponent} from "./layout/layout.component";
 import {PrivacyPolicyComponent} from "./privacy-policy/privacy-policy.component";
+import {RewardSchemesComponent} from "./reward-schemes/reward-schemes.component";
+import {ProductOffersComponent} from "./product-offers/product-offers.component";
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
@@ -28,6 +30,8 @@ export const routes: Routes = [
             {path: 'product-list', component: ProductListComponent, canActivate: [AuthGuard]},
             {path: 'brand-list', component: BrandListComponent, canActivate: [AuthGuard]},
             {path: 'user-list', component: UserListComponent, canActivate: [AuthGuard]},
+            {path: 'product-offers', component: ProductOffersComponent, canActivate: [AuthGuard]},
+            {path: 'reward-schemes', component: RewardSchemesComponent, canActivate: [AuthGuard]},
         ]
     },
   { path: '**', redirectTo: 'login' } 
