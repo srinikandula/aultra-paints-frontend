@@ -213,6 +213,7 @@ input:checked + .slider:before {
 
 .reward-schemes-card {
     width: 230px;
+    height: 300px;
 }
 
 .reward-schemes-card .card-body {
