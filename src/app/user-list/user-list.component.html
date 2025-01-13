@@ -106,19 +106,19 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="modal-box shadow-sm">
-            <!-- Add Name -->
+            <!-- Add Name and Mobile Number in One Row -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="addName">Name</label>
+                    <label class="form-label" for="addName">Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentUser.name" name="addName"
-                           required placeholder="Enter full name"/>
+                           required placeholder="Enter full name" #name="ngModel"/>
+                    <div *ngIf="name.invalid && name.touched" class="text-danger">
+                        Name is required.
+                    </div>
                 </div>
-                <!--            </div>-->
 
-                <!-- Add Mobile Number (10 digits) -->
-                <!--            <div class="row">-->
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="addMobile">Mobile Number</label>
+                    <label class="form-label" for="addMobile">Mobile Number <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addMobile" [(ngModel)]="currentUser.mobile" name="addMobile"
                            maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
@@ -128,61 +128,60 @@
                 </div>
             </div>
 
-            <!-- Add Password -->
-<!--            <div class="row">-->
-<!--                <div class="col-sm-6 mb-3 form-group">-->
-<!--                    <label class="form-label" for="password">Password</label>-->
-<!--                    <input type="password" class="form-control" id="password" [(ngModel)]="currentUser.password" name="password"-->
-<!--                           required placeholder="Enter password"/>-->
-<!--                </div>-->
-<!--                &lt;!&ndash;            </div>&ndash;&gt;-->
-
-<!--                &lt;!&ndash; Add Confirm Password &ndash;&gt;-->
-<!--                &lt;!&ndash;            <div class="row">&ndash;&gt;-->
-<!--                <div class="col-sm-6 mb-3 form-group">-->
-<!--                    <label class="form-label" for="confirmPassword">Confirm Password</label>-->
-<!--                    <input type="password" class="form-control" id="confirmPassword" [(ngModel)]="currentUser.confirmPassword"-->
-<!--                           name="confirmPassword" required placeholder="Confirm your password"/>-->
-<!--                </div>-->
-<!--            </div>-->
+            <!-- Add Account Type and Dealer Code in One Row -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label for="addAccountType" class="form-label">Type</label>
-                    <select id="addAccountType" [(ngModel)]="currentUser.accountType" name="addAccountType" class="form-select">
+                    <label for="addAccountType" class="form-label">Type <span class="text-danger">*</span></label>
+                    <select id="addAccountType" [(ngModel)]="currentUser.accountType" name="addAccountType" class="form-select" #accountType="ngModel">
                         <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
                     </select>
+                    <div *ngIf="accountType.invalid && accountType.touched" class="text-danger">
+                        Account Type is required.
+                    </div>
                 </div>
-<!--                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">-->
-<!--                    <label class="form-label" for="parentDealer">Parent Dealer</label>-->
-<!--                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"-->
-<!--                           name="parentDealer" required placeholder="Enter Parent Dealer"/>-->
-<!--                </div>-->
+
                 <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
-                    <label class="form-label" for="addDealerCode">Dealer Code</label>
+                    <label class="form-label" for="addDealerCode">Dealer Code <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addDealerCode" [(ngModel)]="currentUser.dealerCode"
-                           name="addDealerCode" required placeholder="Enter Dealer Code"/>
+                           name="addDealerCode" required placeholder="Enter Dealer Code" #dealerCode="ngModel"/>
+                    <div *ngIf="dealerCode.invalid && dealerCode.touched" class="text-danger">
+                        Dealer Code is required.
+                    </div>
                 </div>
             </div>
+
+            <!-- Add Primary Contact Person and Primary Contact Mobile in One Row (for Dealers) -->
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="addPrimaryContactPerson">Primary Contact Person</label>
+                    <label class="form-label" for="addPrimaryContactPerson">Primary Contact Person <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addPrimaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
-                           name="addPrimaryContactPerson" required placeholder="Enter Primary Contact Person"/>
+                           name="addPrimaryContactPerson" required placeholder="Enter Primary Contact Person" #primaryContactPerson="ngModel"/>
+                    <div *ngIf="primaryContactPerson.invalid && primaryContactPerson.touched" class="text-danger">
+                        Primary Contact Person is required.
+                    </div>
                 </div>
+
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="addPrimaryContactPersonMobile">Primary Contact Person Mobile</label>
+                    <label class="form-label" for="addPrimaryContactPersonMobile">Primary Contact Person Mobile <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addPrimaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
                            maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
-                           pattern="^\d{10}$" name="addPrimaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
+                           pattern="^\d{10}$" name="addPrimaryContactPersonMobile" required #primaryMobile="ngModel" placeholder="Enter Primary Contact Person Mobile"/>
+                    <div *ngIf="primaryMobile.invalid && primaryMobile.touched" class="text-danger">
+                        Mobile number must be exactly 10 digits.
+                    </div>
                 </div>
             </div>
+
+            <!-- Address in One Row (if Dealer) -->
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label for="addAddress">Address</label>
+                    <label for="addAddress">Address</label> <!-- Removed the '*' for Address -->
                     <textarea class="form-control" id="addAddress" [(ngModel)]="currentUser.address" name="addAddress" rows="3"
-                              required placeholder="Enter address"></textarea>
+                              placeholder="Enter address" #address="ngModel"></textarea>
+                    <!-- Removed error message for Address -->
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-12">
                     <ol>
@@ -200,28 +199,24 @@
     </div>
 </ng-template>
 
-
 <!-- Modal for Edit User -->
 <ng-template #editUserModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title">Edit User</h4>
     </div>
     <div class="modal-body">
-        <!--        <form #userForm="ngForm" (ngSubmit)="updateUser(modal, userForm)">-->
         <form #userForm="ngForm" class="modal-box shadow-sm" (ngSubmit)="updateUser(modal, userForm)">
             <!-- Edit Name -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="name">Name</label>
+                    <label class="form-label" for="name">Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"
                            required placeholder="Enter full name"/>
                 </div>
-                <!--            </div>-->
 
                 <!-- Add Mobile Number (10 digits) -->
-                <!--            <div class="row">-->
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="mobile">Mobile Number</label>
+                    <label class="form-label" for="mobile">Mobile Number <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
                            maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
@@ -233,42 +228,41 @@
 
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label for="accountType" class="form-label">Type</label>
+                    <label for="accountType" class="form-label">Type <span class="text-danger">*</span></label>
                     <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
                         <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
                     </select>
                 </div>
-<!--                <div class="col-sm-4 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">-->
-<!--                    <label class="form-label" for="parentDealer">Parent Dealer</label>-->
-<!--                    <input type="text" class="form-control" id="parentDealer" [(ngModel)]="currentUser.parentDealer"-->
-<!--                           name="parentDealer" required placeholder="Enter Parent Dealer"/>-->
-<!--                </div>-->
+
                 <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
-                    <label class="form-label" for="dealerCode">Dealer Code</label>
+                    <label class="form-label" for="dealerCode">Dealer Code <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
                            name="dealerCode" required placeholder="Enter Dealer Code"/>
                 </div>
             </div>
+
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="primaryContactPerson">Primary Contact Person</label>
+                    <label class="form-label" for="primaryContactPerson">Primary Contact Person <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
                            name="primaryContactPerson" required placeholder="Enter Primary Contact Person"/>
                 </div>
                 <div class="col-sm-6 mb-3 form-group">
-                    <label class="form-label" for="primaryContactPersonMobile">Primary Contact Person Mobile</label>
+                    <label class="form-label" for="primaryContactPersonMobile">Primary Contact Person Mobile <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="primaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
                            maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
                 </div>
             </div>
+
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label for="address">Address</label>
+                    <label for="address">Address </label>
                     <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
                               required placeholder="Enter address"></textarea>
                 </div>
             </div>
+
             <div class="row">
                 <div class="col-12">
                     <ol>

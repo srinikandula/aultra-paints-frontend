@@ -56,14 +56,24 @@
         <h4 class="modal-title" id="modal-basic-title">{{ currentProduct._id ? 'Edit' : 'Add' }} Product</h4>
     </div>
     <div class="modal-body">
-        <div class="form-group mb-4">
-            <label for="productName">Product Name</label>
-            <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name"
-                   required placeholder="Enter product name"/>
-        </div>
+        <form #productForm="ngForm" class="modal-box shadow-sm">
+            <div class="form-group mb-4">
+                <label for="productName">Product Name <span class="text-danger">*</span></label>
+                <input type="text" class="form-control" id="productName" [(ngModel)]="currentProduct.name" name="name"
+                       required placeholder="Enter product name" #productName="ngModel"/>
+                <!-- Error message for invalid product name -->
+                <div *ngIf="productName.invalid && productName.touched" class="text-danger">
+                    Product name is required.
+                </div>
+            </div>
+        </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveProduct(); modal.close()">Save</button>
+        <!-- Save button is disabled if product name is invalid -->
+        <button type="button" class="btn btn-primary" (click)="saveProduct(); modal.close()" 
+                [disabled]="productForm.invalid">
+            Save
+        </button>
     </div>
 </ng-template>

@@ -11,17 +11,17 @@ import Swal from "sweetalert2";
 @Component({
   selector: 'app-create-batch',
   standalone: true,
-  imports: [FormsModule, CommonModule,NgbDatepickerModule, NgbAlertModule, NgSelectModule],
+  imports: [FormsModule, CommonModule,NgbDatepickerModule, NgbAlertModule, NgSelectModule,],
   templateUrl: './create-batch.component.html',
   styleUrl: './create-batch.component.css'
 })
 export class CreateBatchComponent {
     branchName: string = '';
-    ProductName: object = {};
+        ProductName: object = {};
     BatchNumber: string = '';
     couponSeriesList: string[] = ['Series A', 'Series B', 'Series C']; // Example data
-    creationDate = new Date();
-    expiryDate = new Date();
+    creationDate: NgbDateStruct = this.getTodayDate();  // Default value set to today's date
+    expiryDate: NgbDateStruct = this.getExpiryDate();   
 
     BatchNumbers: any[] = [
         // { BatchNumber: '', Brand: {, ProductName: '', Volume: 0, Quantity: 0 }
@@ -34,6 +34,7 @@ export class CreateBatchComponent {
     products: any = [];
     brandData: any = [];
     errorEmptyStr: any = '';
+
 
     constructor(private ApiUrls: ApiUrlsService, private ApiRequest: ApiRequestService, private router: Router,) {
     }
@@ -53,7 +54,23 @@ export class CreateBatchComponent {
             this.products = response;
         })
     }
-
+    getTodayDate(): NgbDateStruct {
+        const today = new Date();
+        return {
+          year: today.getFullYear(),
+          month: today.getMonth() + 1,  // months are 0-based, so add 1
+          day: today.getDate()
+        };
+      }
+    
+      getExpiryDate(): NgbDateStruct {
+        const expiry = new Date();
+        return {
+          year: expiry.getFullYear(),
+          month: expiry.getMonth() + 1,
+          day: expiry.getDate()
+        };
+      }
 
     submitForm() {
         const newBranch = {
@@ -98,8 +115,8 @@ export class CreateBatchComponent {
         this.branchName = '';
         this.ProductName = {};
         this.BatchNumber = '';
-        this.creationDate = new Date();
-        this.expiryDate = new Date();
+        this.creationDate = this.getTodayDate();  // Reset to today's date
+        this.expiryDate = this.getExpiryDate();   // Reset to 30 days after today
         this.BatchNumbers = [{Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0, CouponSeries: 0}];
     }
 
