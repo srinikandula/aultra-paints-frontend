@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { OrderService } from '../order.service';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import {Router} from '@angular/router';
 import {ApiUrlsService} from "../services/api-urls.service";
 import {ApiRequestService} from "../services/api-request.service";
@@ -111,8 +111,16 @@ branches: any[] = [];
 
     // In list.component.ts
 
-    onUpdateSubmit(): void {
-        // Pass the selectedBranch and its BatchNumber to the updateBranch method
+    onUpdateSubmit(form: NgForm): void {
+        if (form.invalid) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Validation Error',
+                text: 'Please fill in all required fields before submitting.',
+            });
+            return;
+        }
+    
         Swal.fire({
             title: 'Are you sure?',
             text: 'Do you want to update this batch?',
@@ -132,6 +140,7 @@ branches: any[] = [];
             }
         });
     }
+    
 
     onDelete(id: string): void {
         this.apiRequest.getCouponSeries(this.ApiUrls.branchDeletedAffectedCouponsCount + id).subscribe((response) => {

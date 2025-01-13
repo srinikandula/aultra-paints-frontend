@@ -57,28 +57,33 @@
         <h4 class="modal-title" id="modal-basic-title">{{ currentBrand._id ? 'Edit' : 'Add' }} Brand</h4>
     </div>
     <div class="modal-body">
-        <form>
+        <form #brandForm="ngForm" (ngSubmit)="saveBrand(brandModal)" novalidate class="modal-box shadow-sm">
             <!-- Product Dropdown with Placeholder -->
             <div class="form-group">
-                <label class="form-label" for="productId">Product</label>
-                <select class="form-select mb-3" id="productId" [(ngModel)]="currentBrand.proId" name="proId" required
-                        *ngIf="products.length > 0">
-                    <!-- Placeholder Option -->
+                <label class="form-label" for="productId">Product <span class="text-danger">*</span></label>
+                <select class="form-select mb-3" id="productId" [(ngModel)]="currentBrand.proId" name="proId" required #productName="ngModel">
                     <option value="" disabled selected>Select a product</option>
-                    <!-- Product options -->
                     <option *ngFor="let product of products" [value]="product._id">
                         {{ product.name }}
                     </option>
                 </select>
+                <!-- Error Message for Product -->
+                <div *ngIf="productName.invalid && productName.touched" class="text-danger">
+                    Product is required.
+                </div>
+                <!-- Loading message when no products are available -->
                 <div *ngIf="products.length === 0" class="text-muted">Loading products...</div>
             </div>
-
+            
             <!-- Brand Name Input with Placeholder -->
             <div class="form-group">
-                <label class="form-label" for="brandName">Brand Name</label>
-                <!-- Brand Name Input with Placeholder -->
+                <label class="form-label" for="brandName">Brand Name <span class="text-danger">*</span></label>
                 <input type="text" class="form-control mb-3" id="brandName" [(ngModel)]="currentBrand.brands"
-                       name="brands" required placeholder="Enter brand name"/>
+                       name="brands" required #brandName="ngModel" placeholder="Enter brand name"/>
+                <!-- Error Message for Brand Name -->
+                <div *ngIf="brandName.invalid && brandName.touched" class="text-danger">
+                    Brand name is required.
+                </div>
             </div>
 
             <div *ngIf="errorMessage" class="alert alert-danger mt-2">
@@ -88,7 +93,7 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <!-- Pass brandModal to saveBrand method -->
-        <button type="button" class="btn btn-primary" (click)="saveBrand(brandModal)">Save</button>
+        <!-- Disable the Save button until the form is valid -->
+        <button type="button" class="btn btn-primary" [disabled]="!brandForm.form.valid" (click)="saveBrand(brandModal)">Save</button>
     </div>
 </ng-template>
