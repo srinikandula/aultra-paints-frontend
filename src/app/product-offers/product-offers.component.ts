@@ -19,7 +19,7 @@ export class ProductOffersComponent implements OnInit {
     productOfferImageUrl: '',
     productOfferDescription: '',
     productOfferTitle: '',
-    productOfferValidation: new Date(),
+    validUntil: new Date(),
     productOfferStatus: ''
   };
 
@@ -54,6 +54,8 @@ export class ProductOffersComponent implements OnInit {
   addOrEditOffer(modal: any, offer: any) {
     if (offer._id) {
       this.currentOffer = { ...offer };
+    } else {
+      this.currentOffer = {};
     }
     // this.modalService.open(modal, { size: 'lg' });
     const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'lg' });
@@ -63,7 +65,7 @@ export class ProductOffersComponent implements OnInit {
   }
 
   saveOffer(modalRef: NgbModalRef) {
-    this.currentOffer.productOfferValidation = this.currentOffer.productOfferValidation.year + '-' + this.currentOffer.productOfferValidation.month + '-' + this.currentOffer.productOfferValidation.day;
+    this.currentOffer.validUntil = this.currentOffer.validUntil.year + '-' + this.currentOffer.validUntil.month + '-' + this.currentOffer.validUntil.day;
     const formData = new FormData();
     if (this.currentOffer.productOfferImage) {
       formData.append('productOfferImage', this.currentOffer.productOfferImage);
@@ -73,7 +75,7 @@ export class ProductOffersComponent implements OnInit {
     }
     formData.append('productOfferDescription', this.currentOffer.productOfferDescription);
     formData.append('productOfferTitle', this.currentOffer.productOfferTitle);
-    formData.append('productOfferValidation', this.currentOffer.productOfferValidation);
+    formData.append('validUntil', this.currentOffer.validUntil);
     formData.append('productOfferStatus', this.currentOffer.productOfferStatus);
     if (this.currentOffer._id) {
       this.apiRequestService.updateWithImage(this.apiUrls.updateProductOffer + this.currentOffer._id, formData).subscribe((response) => {

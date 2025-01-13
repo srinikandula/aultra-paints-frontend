@@ -22,7 +22,7 @@
             <div class="card-body" style="text-align: left">
                 <h6 class="card-title">{{ offer.productOfferTitle }}</h6>
                 <p class="card-text">{{ offer.productOfferDescription }}</p>
-                <p class="card-text">{{ offer.productOfferValidation | date }}</p>
+                <p class="card-text">{{ offer.validUntil | date }}</p>
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                     <span class="badge rounded-pill bg-success" [class.bg-danger]="offer.productOfferStatus === 'Inactive'">{{ offer.productOfferStatus }}</span>
                     <div class="form-check form-switch">
@@ -62,15 +62,15 @@
             <!-- Add/Edit Product Offer Name -->
             <div class="row">
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="addName">Name</label>
+                    <label class="form-label" for="addName">Offer Name</label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentOffer.productOfferTitle" name="addName"
                            required placeholder="Enter full name"/>
                 </div>
 
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="productOfferValidation">Product Offer Validation</label>
+                    <label class="form-label" for="validUntil">Valid Until</label>
                     <div class="input-group mb-3">
-                        <input id="productOfferValidation" class="form-control" readonly placeholder="yyyy-mm-dd" name="productOfferValidation" [(ngModel)]="currentOffer.productOfferValidation" required ngbDatepicker #d="ngbDatepicker"/>
+                        <input id="validUntil" class="form-control" readonly placeholder="yyyy-mm-dd" name="validUntil" [(ngModel)]="currentOffer.validUntil" required ngbDatepicker #d="ngbDatepicker"/>
                         <div class="input-group-append">
                             <button class="btn btn-light" type="button" (click)="d.toggle()">
                                 <i class="bx bx-calendar"></i>
@@ -79,19 +79,26 @@
                     </div>
                 </div>
                 <div class="col-sm-4 mb-3 form-group">
-                    <label for="productOfferStatus" class="form-label">Product Offer Status</label>
-                    <select id="productOfferStatus" [(ngModel)]="currentOffer.productOfferStatus" name="productOfferStatus" required class="form-select">
-                        <option value="" selected>Select a status</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
+                    <label class="form-label">Product Offer Status</label>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="productOfferStatus" id="statusActive" value="Active" [(ngModel)]="currentOffer.productOfferStatus" required>
+                        <label class="form-check-label" for="statusActive">
+                            Active
+                        </label>
+                    </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="productOfferStatus" id="statusInactive" value="Inactive" [(ngModel)]="currentOffer.productOfferStatus" required>
+                        <label class="form-check-label" for="statusInactive">
+                            Inactive
+                        </label>
+                    </div>
                 </div>
             </div>
 
             <!-- Add/Edit Product Offer Description -->
             <div class="row">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addDescription">Description</label>
+                    <label class="form-label" for="addDescription">Offer Text</label>
                     <textarea type="text" class="form-control" id="addDescription" [(ngModel)]="currentOffer.productOfferDescription" name="addDescription"
                            required placeholder="Enter description"></textarea>
                 </div>
@@ -100,8 +107,8 @@
             <!-- Add/Edit Product Offer Image -->
             <div class="row">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addImage">Image</label>
-                    <div class="input-group mb-3">
+                    <label class="form-label" for="addImage">Upload Image</label>
+                    <div class="input-group mb-2">
                         <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)" required accept=".png, .jpg, .jpeg">
                     </div>
                 </div>
