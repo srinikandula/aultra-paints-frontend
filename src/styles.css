@@ -120,3 +120,118 @@ body { margin: 0; background-color: #f6f9fa!important }
 /*.card .card-body {*/
 /*    display: flex;*/
 /*}*/
+
+/* toggle.component.css */
+.switch {
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+}
+
+.switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #ccc;
+    transition: 0.4s;
+    border-radius: 34px;
+}
+
+.slider:before {
+    position: absolute;
+    content: '';
+    height: 26px;
+    width: 26px;
+    left: 4px;
+    bottom: 4px;
+    background-color: white;
+    transition: 0.4s;
+    border-radius: 50%;
+}
+
+input:checked + .slider {
+    background-color: #2196f3;
+}
+
+input:checked + .slider:before {
+    transform: translateX(26px);
+}
+
+
+.image-card {
+    position: relative;
+}
+
+.image-card span {
+    position: absolute;
+    right: 0;
+    line-height: 24px;
+    transition: 0.3s;
+    cursor: pointer;
+    font-size: 25px;
+    background-color: #ddd;
+}
+
+.image-card span:hover {
+    font-size: 30px;
+}
+
+.product-offers-card {
+    width: 230px;
+    height: 420px;
+}
+
+.product-offers-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    border-top: 1px solid #ddd;
+}
+
+.product-offers-card img {
+    width: 100%;
+    height: auto;
+    padding: 1.5rem;
+}
+
+.product-offers-card .card-body .card-text {
+    font-size: .8rem!important;
+    margin-bottom: 0.5rem!important;
+
+}
+
+.reward-schemes-card {
+    width: 230px;
+    height: 300px;
+}
+
+.reward-schemes-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    border-top: 1px solid #ddd;
+}
+
+.reward-schemes-card img {
+    width: 100%;
+    height: auto;
+    padding: 1.5rem;
+}
+
+.reward-schemes-card .card-body .card-text {
+    font-size: .8rem!important;
+    margin-bottom: 0.5rem!important;
+
+}

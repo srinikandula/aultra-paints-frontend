@@ -53,4 +53,20 @@ export class ApiUrlsService {
     deleteBrand = 'brands';
     getAllBrandsForSelect = 'brands/getAllBrandsForSelect/'
     searchBrandsByName = 'brands/search'
+
+    // API Urls for Product Offers
+    createProductOffer = 'productOffers/create';
+    searchProductOffers = 'productOffers/searchProductOffers'
+    getProductOffers = 'productOffers/getProductOffers';
+    getProductOfferById = 'productOffers/getProductOfferById/';
+    updateProductOffer = 'productOffers/update/';
+    deleteProductOffer = 'productOffers/delete/';
+
+    // API Urls for Reward Schemes
+    createRewardScheme = 'rewardSchemes/create';
+    searchRewardSchemes = 'rewardSchemes/searchRewardSchemes'
+    getRewardSchemes = 'rewardSchemes/getRewardSchemes';
+    getRewardSchemeById = 'rewardSchemes/getRewardSchemeById/';
+    updateRewardScheme = 'rewardSchemes/update/';
+    deleteRewardScheme = 'rewardSchemes/delete/';
 }

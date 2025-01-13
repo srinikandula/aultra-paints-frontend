@@ -24,6 +24,14 @@ export class ApiRequestService {
         }));
     }
 
+    createWithImage(subUrl: any, formData: FormData): Observable<any> {
+        return this.http.post(this.ApiUrls.mainUrl + subUrl, formData);
+    }
+
+    updateWithImage(subUrl: any, formData: FormData): Observable<any> {
+        return this.http.put(this.ApiUrls.mainUrl + subUrl, formData);
+    }
+
     get(subUrl: any, data: any) {
         const params = new HttpParams()
             .set('page', data.page.toString())

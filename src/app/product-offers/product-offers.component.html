@@ -1,0 +1,146 @@
+<div class="container-fluid my-4">
+    <div class="row">
+        <div class="col-sm-2"><h4>Product Offers</h4></div>
+        <div class="col-sm-10">
+            <div class="d-flex justify-content-end align-items-center">
+                <div class="mx-3">
+                    <input type="text" [(ngModel)]="productOffersQuery.searchQuery" (input)="loadProductOffers()" placeholder="Search..."
+                           class="form-control "/>
+                </div>
+                <button (click)="addOrEditOffer(productModal, currentOffer)" class="btn btn-primary">Add Product Offer</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid my-4">
+    <div class="d-flex flex-wrap justify-content-evenly" style="height: 76vh; overflow: auto" *ngIf="productOffers.length > 0">
+        <div class="card shadow-sm product-offers-card mb-3"  *ngFor="let offer of productOffers; let i = index">
+    <!--        <img *ngIf="offer.productOfferImageUrl" [src]="offer.productOfferImageUrl" class="card-img-top" alt="Image" width="512" style="padding: 1rem">-->
+            <img *ngIf="offer.productOfferImageUrl" [src]="offer.productOfferImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
+            <img *ngIf="!offer.productOfferImageUrl" src="/assets/img/Product_Offers_c.png" class="card-img-top" alt="Image">
+            <div class="card-body" style="text-align: left">
+                <h6 class="card-title">{{ offer.productOfferTitle }}</h6>
+                <p class="card-text">{{ offer.productOfferDescription }}</p>
+                <p class="card-text">{{ offer.productOfferValidation | date }}</p>
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <span class="badge rounded-pill bg-success" [class.bg-danger]="offer.productOfferStatus === 'Inactive'">{{ offer.productOfferStatus }}</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" [checked]="offer.productOfferStatus === 'Active'" (change)="toggleOfferStatus(offer)">
+                    </div>
+                    <button (click)="addOrEditOffer(productModal, offer)" class="btn btn-light mx-2">
+                        <i class='bx bxs-edit-alt'></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="container-fluid container-mt shadow-sm mb-3" *ngIf="productOffers.length === 0">
+            <p>No Product Offers Found. Please add some.</p>
+        </div>
+    </div>
+</div>
+
+
+<div class="container-fluid my-4">
+<!-- Pagination Controls -->
+    <div class="d-flex justify-content-end">
+        <div class="pagination-controls">
+            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
+            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
+            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #productModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ currentOffer._id? 'Edit' : 'Add' }} Product Offer</h4>
+    </div>
+    <div class="modal-body">
+        <form #productOfferForm="ngForm" class="modal-box shadow-sm">
+            <!-- Add/Edit Product Offer Name -->
+            <div class="row">
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="addName">Name</label>
+                    <input type="text" class="form-control" id="addName" [(ngModel)]="currentOffer.productOfferTitle" name="addName"
+                           required placeholder="Enter full name"/>
+                </div>
+
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="productOfferValidation">Product Offer Validation</label>
+                    <div class="input-group mb-3">
+                        <input id="productOfferValidation" class="form-control" readonly placeholder="yyyy-mm-dd" name="productOfferValidation" [(ngModel)]="currentOffer.productOfferValidation" required ngbDatepicker #d="ngbDatepicker"/>
+                        <div class="input-group-append">
+                            <button class="btn btn-light" type="button" (click)="d.toggle()">
+                                <i class="bx bx-calendar"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-4 mb-3 form-group">
+                    <label for="productOfferStatus" class="form-label">Product Offer Status</label>
+                    <select id="productOfferStatus" [(ngModel)]="currentOffer.productOfferStatus" name="productOfferStatus" required class="form-select">
+                        <option value="" selected>Select a status</option>
+                        <option value="Active">Active</option>
+                        <option value="Inactive">Inactive</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Add/Edit Product Offer Description -->
+            <div class="row">
+                <div class="col-sm-12 mb-3 form-group">
+                    <label class="form-label" for="addDescription">Description</label>
+                    <textarea type="text" class="form-control" id="addDescription" [(ngModel)]="currentOffer.productOfferDescription" name="addDescription"
+                           required placeholder="Enter description"></textarea>
+                </div>
+            </div>
+
+            <!-- Add/Edit Product Offer Image -->
+            <div class="row">
+                <div class="col-sm-12 mb-3 form-group">
+                    <label class="form-label" for="addImage">Image</label>
+                    <div class="input-group mb-3">
+                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)" required accept=".png, .jpg, .jpeg">
+                    </div>
+                </div>
+            </div>
+            <!-- Add/Edit Product Offer Image Preview -->
+<!--            <div class="row">-->
+<!--                <div class="col-sm-12 mb-3">-->
+            <div class="d-flex flex-row bd-highlight mb-3">
+                <div class="image-card mx-3" *ngIf="currentOffer.productOfferImage" [style.max-width]="uploadImageWidth">
+                    <span *ngIf="uploadImageWidth === '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
+                    <span *ngIf="uploadImageWidth !== '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
+                    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
+                    <img *ngIf="currentOffer.productOfferImage" [src]="currentOffer.productOfferImage"
+                         alt="Product Offer Image" width="100%"
+                         (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"/>
+                </div>
+
+                <div class="image-card mx-3" *ngIf="currentOffer.productOfferImageUrl" [style.max-width]="imageWidth">
+                    <span *ngIf="imageWidth === '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
+                    <span *ngIf="imageWidth !== '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
+    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
+                    <img *ngIf="currentOffer.productOfferImageUrl" [src]="currentOffer.productOfferImageUrl"
+                         alt="Product Offer Image"  width="100%"
+                        (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"/>
+                </div>
+            </div>
+<!--                </div>-->
+<!--            </div>-->
+            <div class="row" *ngIf="errorArray.length > 0">
+                <div class="col-sm-12">
+                    <ol>
+                        <li *ngFor="let err of errorArray; let i = index" style="color: red">{{err}}</li>
+                    </ol>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+        <button type="button" class="btn btn-primary" (click)="saveOffer(modal)" [disabled]="!productOfferForm.valid">Save</button>
+    </div>
+</ng-template>
