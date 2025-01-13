@@ -10,8 +10,8 @@
 </div>
 
 <div class="container-fluid my-4">
-    <div class="d-flex flex-wrap justify-content-evenly" style="height: 76vh; overflow: auto" *ngIf="rewardSchemes.length > 0">
-        <div class="card shadow-sm reward-schemes-card mx-3 mb-3"  *ngFor="let rewardScheme of rewardSchemes; let i = index">
+    <div class="d-flex flex-wrap" style="height: 76vh; overflow: auto" *ngIf="rewardSchemes.length > 0">
+        <div class="card shadow-sm reward-schemes-card mx-2 mb-3"  *ngFor="let rewardScheme of rewardSchemes; let i = index">
             <img *ngIf="rewardScheme.rewardSchemeImageUrl" [src]="rewardScheme.rewardSchemeImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
             <img *ngIf="!rewardScheme.rewardSchemeImageUrl" src="/assets/img/Reward_Schemes_w.png" class="card-img-top" alt="Image">
             <div class="card-body">
@@ -52,18 +52,29 @@
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
                     <label for="rewardSchemeStatus" class="form-label">Product Offer Status</label>
-                    <select id="rewardSchemeStatus" [(ngModel)]="currentRewardScheme.rewardSchemeStatus" name="rewardSchemeStatus" required class="form-select">
-                        <option value="" selected>Select a status</option>
-                        <option value="Active">Active</option>
-                        <option value="Inactive">Inactive</option>
-                    </select>
+                    <div class="form-check form-switch form-check-lg form-switch-2x">
+                        <input class="form-check-input" id="rewardSchemeStatus" type="checkbox"
+                               [checked]="currentRewardScheme.rewardSchemeStatus === 'Active'" name="rewardSchemeStatus"
+                               (change)="formToggleRewardSchemeStatus($event)"
+                        />
+                    </div>
+<!--                    <select id="rewardSchemeStatus" [(ngModel)]="currentRewardScheme.rewardSchemeStatus" name="rewardSchemeStatus" required class="form-select">-->
+<!--                        <option value="" selected>Select a status</option>-->
+<!--                        <option value="Active">Active</option>-->
+<!--                        <option value="Inactive">Inactive</option>-->
+<!--                    </select>-->
                 </div>
             </div>
             <div class="row">
                 <div class="col-sm-12 mb-3 form-group">
                     <label class="form-label" for="addImage">Image</label>
                     <div class="input-group mb-3">
-                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)" required accept=".png, .jpg, .jpeg">
+<!--                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)" required accept=".png, .jpg, .jpeg">-->
+                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)"
+                               required accept=".png, .jpg, .jpeg" name="addImage" #addImageRef="ngModel" [(ngModel)]="currentRewardScheme.rewardSchemeImage"/>
+                    </div>
+                    <div *ngIf="addImageRef.invalid && (addImageRef.dirty || addImageRef.touched)" class="text-danger">
+                        <div *ngIf="addImageRef.errors?.['required']">Image is required.</div>
                     </div>
                 </div>
             </div>
@@ -87,10 +98,17 @@
                          (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"/>
                 </div>
             </div>
+            <div class="row" *ngIf="errorArray.length > 0">
+                <div class="col-sm-12">
+                    <ol>
+                        <li *ngFor="let err of errorArray; let i = index" style="color: red">{{err}}</li>
+                    </ol>
+                </div>
+            </div>
         </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveRewardScheme(modal)" [disabled]="!rewardSchemeForm.valid">Save</button>
+        <button type="button" class="btn btn-primary" (click)="saveRewardScheme(modal)">Save</button>
     </div>
 </ng-template>
