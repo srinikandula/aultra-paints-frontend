@@ -43,7 +43,7 @@ export class UserListComponent implements OnInit {
         {id: 'Painter', name: 'Painter'},
         {id: 'Contractor', name: 'Contractor'},
         {id: 'Dealer', name: 'Dealer'},
-        {id: 'Super User', name: 'Super User'},
+        {id: 'SuperUser', name: 'Super User'},
     ];
     errors: any;
 

@@ -4,7 +4,7 @@
             <h3>Welcome back, {{currentUser.fullName}}</h3>
         </div>
     </div>
-    <div class="row" *ngIf="currentUser.accountType === 'Super User'">
+    <div class="row" *ngIf="currentUser.accountType === 'SuperUser'">
         <div class="col-sm-3">
             <div class="card shadow-sm mb-3">
                 <div class="card-header">Reward Points Balance</div>
@@ -58,7 +58,7 @@
         </div>
     </div>
 
-    <div class="row" *ngIf="currentUser.accountType !== 'Super User'">
+    <div class="row" *ngIf="currentUser.accountType !== 'SuperUser'">
         <div class="col-sm-3 mb-4">
             <div class="row">
                 <div class="col-sm-12">
@@ -111,23 +111,17 @@
                                     <th>Batch</th>
                                     <th>Points</th>
                                     <th>Cash</th>
-                                    <th>Is Redeemed</th>
-                                    <th>Redeemed by</th>
-<!--                                    <th>Cash paid to</th>-->
-                                    <th>Created At</th>
+                                    <th>Redeemed On</th>
                                 </tr>
                                 </thead>
                                 <tbody>
                                 <tr *ngFor="let item of userDashboardData?.userTotalRedeemablePointsList; let i = index">
                                     <td>{{ i + 1 }}</td> <!-- Serial Number Calculation -->
                                     <td>{{ item.couponCode }}</td>
-                                    <td>{{ item.batchName }} - {{ item.batchNumber }}</td>
+                                    <td>{{ item.branchName }} - {{ item.batchNumber }}</td>
                                     <td>{{ item.redeemablePoints }}</td>
                                     <td>{{ item.value }}</td>
-                                    <td>{{ item.isProcessed ? 'Yes' : 'No' }}</td>
-                                    <td>{{ item.redeemedByName || 'NA'}}</td>
-<!--                                    <td>{{ item.redeemedByMobile || 'NA'}}</td>-->
-                                    <td>{{ item.createdAt | date }}</td>
+                                    <td>{{ item.updatedAt | date }}</td>
                                 </tr>
                                 <tr *ngIf="userDashboardData?.userTotalRedeemablePointsList === 0">
                                     <td class="text-center" colspan="9">No Records found</td>

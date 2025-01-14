@@ -31,7 +31,7 @@
                 <tr *ngFor="let item of transactions; let i = index">
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ item.couponCode }}</td>
-                    <td>{{ item.batchName }} - {{ item.batchNumber }}</td>
+                    <td>{{ item.branchName }} - {{ item.batchNumber }}</td>
                     <td>{{ item.redeemablePoints }}</td>
                     <td>{{ item.value }}</td>
                     <td>{{ item.isProcessed ? 'Yes' : 'No' }}</td>

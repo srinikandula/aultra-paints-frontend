@@ -21,7 +21,7 @@
 <div class="dashboard-container">
     <!-- Sidebar (above the navbar) -->
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
-        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType !== 'Super User'">
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType !== 'SuperUser'">
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('dashboard')">
                 <div class="menu">
@@ -30,7 +30,7 @@
                 </div>
             </li>
         </ul>
-        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'Super User'">
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'SuperUser'">
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('dashboard')">
                 <div class="menu">
