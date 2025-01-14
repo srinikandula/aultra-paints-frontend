@@ -112,15 +112,13 @@ branches: any[] = [];
     // In list.component.ts
 
     onUpdateSubmit(form: NgForm): void {
+        // Check if the form is invalid
         if (form.invalid) {
-            Swal.fire({
-                icon: 'error',
-                title: 'Validation Error',
-                text: 'Please fill in all required fields before submitting.',
-            });
+            // No need for Swal here, as Angular already shows validation errors inline below each field.
             return;
         }
     
+        // Form is valid, show the confirmation Swal for updating the batch
         Swal.fire({
             title: 'Are you sure?',
             text: 'Do you want to update this batch?',
@@ -130,13 +128,22 @@ branches: any[] = [];
             cancelButtonText: 'No, cancel'
         }).then((result) => {
             if (result.isConfirmed) {
-                this.apiRequest.update(this.ApiUrls.updateBatch + this.selectedBranch._id, this.selectedBranch).subscribe((response) => {
-                    this.loadBranches(); // Reload the branches list
-                    this.closeUpdateModal(); // Close the modal
-                    Swal.fire({icon: 'success', title: 'Success', text: 'Batches updated'});
-                }, (error) => {
-                    console.error('Error updating batch:', error);
-                });
+                // Proceed with updating the batch
+                this.apiRequest.update(this.ApiUrls.updateBatch + this.selectedBranch._id, this.selectedBranch).subscribe(
+                    (response) => {
+                        this.loadBranches(); // Reload the branches list
+                        this.closeUpdateModal(); // Close the modal
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Success',
+                            text: 'Batches updated'
+                        });
+                    },
+                    (error) => {
+                        console.error('Error updating batch:', error);
+                        // Optionally, you can handle errors here and show a message
+                    }
+                );
             }
         });
     }

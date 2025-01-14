@@ -81,7 +81,6 @@
 
     </div>
 </div>
-
 <!-- Update Branch Modal -->
 <div class="modal fade" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block;" *ngIf="showUpdateModal">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
@@ -95,7 +94,9 @@
                         <div class="col-sm-6 form-group mb-4">
                             <label for="branchName">Branch <span class="text-danger">*</span></label>
                             <input type="text" id="branchName" [(ngModel)]="selectedBranch.Branch" name="Branch" class="form-control" required #branchName="ngModel">
-                            <div *ngIf="branchName.invalid && branchName.touched" class="text-danger">Branch is required</div>
+                            <div *ngIf="branchName.invalid && (branchName.dirty || branchName.touched)" class="text-danger">
+                                <div *ngIf="branchName.errors?.['required']">Branch is required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-6 form-group mb-4">
                             <label for="productName">Product Name <span class="text-danger">*</span></label>
@@ -111,7 +112,9 @@
                                     [searchable]="true"
                                     required #productName="ngModel">
                             </ng-select>
-                            <div *ngIf="productName.invalid && productName.touched" class="text-danger">Product Name is required</div>
+                            <div *ngIf="productName.invalid && (productName.dirty || productName.touched)" class="text-danger">
+                                <div *ngIf="productName.errors?.['required']">Product Name is required.</div>
+                            </div>
                         </div>
                     </div>
 
@@ -120,13 +123,17 @@
                             <label for="creationDate">Creation Date <span class="text-danger">*</span></label>
                             <input type="date" id="creationDate" [(ngModel)]="selectedBranch.CreationDate"
                                    name="CreationDate" class="form-control" required #creationDate="ngModel">
-                            <div *ngIf="creationDate.invalid && creationDate.touched" class="text-danger">Creation Date is required</div>
+                            <div *ngIf="creationDate.invalid && (creationDate.dirty || creationDate.touched)" class="text-danger">
+                                <div *ngIf="creationDate.errors?.['required']">Creation Date is required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-6 form-group mb-4">
                             <label for="expiryDate">Expiry Date <span class="text-danger">*</span></label>
                             <input type="date" id="expiryDate" [(ngModel)]="selectedBranch.ExpiryDate"
                                    name="ExpiryDate" class="form-control" required #expiryDate="ngModel">
-                            <div *ngIf="expiryDate.invalid && expiryDate.touched" class="text-danger">Expiry Date is required</div>
+                            <div *ngIf="expiryDate.invalid && (expiryDate.dirty || expiryDate.touched)" class="text-danger">
+                                <div *ngIf="expiryDate.errors?.['required']">Expiry Date is required.</div>
+                            </div>
                         </div>
                     </div>
 
@@ -135,7 +142,9 @@
                             <label for="batchNumber">Batch Number <span class="text-danger">*</span></label>
                             <input type="text" id="batchNumber" [(ngModel)]="selectedBranch.BatchNumber"
                                    name="BatchNumber" class="form-control" required #batchNumber="ngModel">
-                            <div *ngIf="batchNumber.invalid && batchNumber.touched" class="text-danger">Batch Number is required</div>
+                            <div *ngIf="batchNumber.invalid && (batchNumber.dirty || batchNumber.touched)" class="text-danger">
+                                <div *ngIf="batchNumber.errors?.['required']">Batch Number is required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-6 form-group mb-4">
                             <label for="Brand">Brand <span class="text-danger">*</span></label>
@@ -150,7 +159,9 @@
                                     [searchable]="true"
                                     required #brand="ngModel">
                             </ng-select>
-                            <div *ngIf="brand.invalid && brand.touched" class="text-danger">Brand is required</div>
+                            <div *ngIf="brand.invalid && (brand.dirty || brand.touched)" class="text-danger">
+                                <div *ngIf="brand.errors?.['required']">Brand is required.</div>
+                            </div>
                         </div>
                     </div>
 
@@ -159,13 +170,17 @@
                             <label for="redeemablePoints">Points <span class="text-danger">*</span></label>
                             <input type="number" id="redeemablePoints" [(ngModel)]="selectedBranch.RedeemablePoints"
                                    name="redeemablePoints" required class="form-control" #redeemablePoints="ngModel">
-                            <div *ngIf="redeemablePoints.invalid && redeemablePoints.touched" class="text-danger">Points are required</div>
+                            <div *ngIf="redeemablePoints.invalid && (redeemablePoints.dirty || redeemablePoints.touched)" class="text-danger">
+                                <div *ngIf="redeemablePoints.errors?.['required']">Points are required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-2 form-group mb-4">
                             <label for="value">Value <span class="text-danger">*</span></label>
                             <input type="number" id="value" [(ngModel)]="selectedBranch.value" name="value"
                                    required class="form-control" #value="ngModel">
-                            <div *ngIf="value.invalid && value.touched" class="text-danger">Value is required</div>
+                            <div *ngIf="value.invalid && (value.dirty || value.touched)" class="text-danger">
+                                <div *ngIf="value.errors?.['required']">Value is required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-2 form-group mb-4">
                             <label for="volume">Volume <span class="text-danger">*</span></label>
@@ -174,25 +189,31 @@
                                 <option value="" selected>Select Volume</option>
                                 <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
                             </select>
-                            <div *ngIf="volume.invalid && volume.touched" class="text-danger">Volume is required</div>
+                            <div *ngIf="volume.invalid && (volume.dirty || volume.touched)" class="text-danger">
+                                <div *ngIf="volume.errors?.['required']">Volume is required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-3 form-group mb-4">
                             <label for="couponSeries">Coupon Series <span class="text-danger">*</span></label>
                             <input type="text" id="couponSeries" [(ngModel)]="selectedBranch.CouponSeries"
                                    name="couponSeries" placeholder="Enter Coupon Series" required class="form-control"
                                    #couponSeries="ngModel">
-                            <div *ngIf="couponSeries.invalid && couponSeries.touched" class="text-danger">Coupon Series is required</div>
+                            <div *ngIf="couponSeries.invalid && (couponSeries.dirty || couponSeries.touched)" class="text-danger">
+                                <div *ngIf="couponSeries.errors?.['required']">Coupon Series is required.</div>
+                            </div>
                         </div>
                         <div class="col-sm-2 form-group mb-4">
                             <label for="quantity">Quantity <span class="text-danger">*</span></label>
                             <input type="number" id="quantity" [(ngModel)]="selectedBranch.Quantity" name="Quantity"
                                    class="form-control" required #quantity="ngModel">
-                            <div *ngIf="quantity.invalid && quantity.touched" class="text-danger">Quantity is required</div>
+                            <div *ngIf="quantity.invalid && (quantity.dirty || quantity.touched)" class="text-danger">
+                                <div *ngIf="quantity.errors?.['required']">Quantity is required.</div>
+                            </div>
                         </div>
                     </div>
 
                     <div class="modal-footer">
-                        <button type="submit" class="btn btn-primary" [disabled]="updateForm.invalid">Save Changes</button>
+                        <button type="submit" class="btn btn-primary">Save Changes</button>
                         <button type="button" class="btn btn-secondary" (click)="closeUpdateModal()">Cancel</button>
                     </div>
                 </form>

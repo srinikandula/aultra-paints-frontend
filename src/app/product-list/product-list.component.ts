@@ -1,8 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { ApiRequestService } from '../services/api-request.service';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, NgForm } from '@angular/forms';
 import Swal from 'sweetalert2'; 
 
 @Component({
@@ -17,8 +17,8 @@ export class ProductListComponent implements OnInit {
   currentProduct: any = { name: '' };
   searchQuery: string = '';  
   isSearching: boolean = false;  
-
-  
+  submitted = false; 
+  errors: string[] = [];
 
   // Pagination variables
   currentPage: number = 1;
@@ -27,6 +27,7 @@ export class ProductListComponent implements OnInit {
   limit: number = 10;
 
   constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
+  @ViewChild('productForm', { static: false }) productForm!: NgForm;  // Reference to the form
 
   ngOnInit(): void {
     this.loadProducts();
@@ -72,72 +73,85 @@ export class ProductListComponent implements OnInit {
   }
 
 
-  // Open modal for adding a new product
+  // Method to open the modal for adding a new product
   addProduct(content: any): void {
-    this.currentProduct = { name: '' };  
-    this.modalService.open(content, { size: 'lg' });
+    this.currentProduct = { name: '' };  // Reset product details
+    this.submitted = false;  // Reset submission flag
+    this.errors = [];  // Clear previous errors
+    this.modalService.open(content, { size: 'lg' });  // Open modal
   }
 
-  saveProduct(): void {
+  // Method to save (add or update) the product
+  saveProduct(modal: any): void {
+    this.submitted = true;  // Mark the form as submitted
+    
+    // Show validation errors if form is invalid
+    if (this.productForm.invalid) {
+      return;  // If the form is invalid, do not proceed
+    }
+
+    // Show confirmation dialog using Swal
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to save this product?',
-      icon: 'question',
+      icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, save it!',
-      cancelButtonText: 'No, cancel'
+      cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.modalService.dismissAll();
-  
+        this.modalService.dismissAll();  // Close the modal
+
+        // Check if we are editing an existing product or adding a new one
         if (this.currentProduct._id) {
+          // Proceed with updating an existing product
           const successMessage = 'Product updated successfully!';
           const errorMessage = 'Error updating product!';
-  
-          // Proceed with the update API call
+          
           this.apiService.updateProduct(this.currentProduct._id, this.currentProduct).subscribe({
             next: () => {
-              this.loadProducts();
-              this.showSuccess(successMessage);
+              this.loadProducts();  // Reload product list
+              this.showSuccess(successMessage);  // Show success message
             },
             error: () => {
-              this.showError(errorMessage);
+              this.showError(errorMessage);  // Show error message
             }
           });
         } else {
-          // If there is no product ID, it's a new product, so we check for duplicates by name
+          // If it's a new product, check if it already exists
           const productExists = this.products.some(product => product.name.toLowerCase() === this.currentProduct.name.toLowerCase());
           if (productExists) {
             this.showError('Product with this name already exists!');
-            return;
+            return;  // Stop execution if product name exists
           }
-  
+
+          // Proceed with creating a new product
           const successMessage = 'Product added successfully!';
           const errorMessage = 'Error creating product!';
-  
-          // Proceed with the create API call
+
           this.apiService.createProduct(this.currentProduct).subscribe({
             next: () => {
-              this.loadProducts();
-              this.showSuccess(successMessage);
+              this.loadProducts();  // Reload product list
+              this.showSuccess(successMessage);  // Show success message
             },
             error: () => {
-              this.showError(errorMessage);
+              this.showError(errorMessage);  // Show error message
             }
           });
         }
-  
-        // Reset the current product after saving
+
+        // Reset current product after saving
         this.currentProduct = { name: '' };
       }
     });
   }
-  
-  
 
+  // Method to open modal for editing a product
   editProduct(product: any, content: any): void {
-    this.currentProduct = { ...product };  
-    this.modalService.open(content, { size: 'lg' });
+    this.currentProduct = { ...product };  // Copy selected product's data
+    this.submitted = false;  // Reset submission flag
+    this.errors = [];  // Clear previous errors
+    this.modalService.open(content, { size: 'lg' });  // Open modal
   }
 
   // Delete a product by ID

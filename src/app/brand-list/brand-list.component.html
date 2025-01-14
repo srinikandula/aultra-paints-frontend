@@ -51,7 +51,6 @@
     </div>
 </div>
 
-<!-- Modal for Add/Edit Brand -->
 <ng-template #brandModal let-modal>
     <div class="modal-header">
         <h4 class="modal-title" id="modal-basic-title">{{ currentBrand._id ? 'Edit' : 'Add' }} Brand</h4>
@@ -68,7 +67,7 @@
                     </option>
                 </select>
                 <!-- Error Message for Product -->
-                <div *ngIf="productName.invalid && productName.touched" class="text-danger">
+                <div *ngIf="productName.invalid && (productName.touched || submitted)" class="text-danger">
                     Product is required.
                 </div>
                 <!-- Loading message when no products are available -->
@@ -81,7 +80,7 @@
                 <input type="text" class="form-control mb-3" id="brandName" [(ngModel)]="currentBrand.brands"
                        name="brands" required #brandName="ngModel" placeholder="Enter brand name"/>
                 <!-- Error Message for Brand Name -->
-                <div *ngIf="brandName.invalid && brandName.touched" class="text-danger">
+                <div *ngIf="brandName.invalid && (brandName.touched || submitted)" class="text-danger">
                     Brand name is required.
                 </div>
             </div>
@@ -94,6 +93,6 @@
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
         <!-- Disable the Save button until the form is valid -->
-        <button type="button" class="btn btn-primary" [disabled]="!brandForm.form.valid" (click)="saveBrand(brandModal)">Save</button>
+        <button type="button" class="btn btn-primary" (click)="saveBrand(modal)">Save</button>
     </div>
 </ng-template>
