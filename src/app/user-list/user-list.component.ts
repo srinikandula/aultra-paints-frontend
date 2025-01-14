@@ -45,7 +45,7 @@ export class UserListComponent implements OnInit {
         {id: 'Painter', name: 'Painter'},
         {id: 'Contractor', name: 'Contractor'},
         {id: 'Dealer', name: 'Dealer'},
-        {id: 'SuperUser', name: 'Super User'},
+        {id: 'Super User', name: 'SuperUser'},
     ];
     errorsAddUser: string[] = [];  
     errorsEditUser: string[] = []; 
