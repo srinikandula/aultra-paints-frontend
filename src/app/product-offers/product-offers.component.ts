@@ -1,26 +1,35 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {ApiRequestService} from "../services/api-request.service";
-import {NgbAlertModule, NgbInputDatepicker, NgbModal, NgbModalRef, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
+import {
+  NgbAlertModule,
+  NgbDateStruct,
+  NgbInputDatepicker,
+  NgbModal,
+  NgbModalRef,
+  NgbPagination
+} from "@ng-bootstrap/ng-bootstrap";
 import Swal from "sweetalert2";
 import {ApiUrlsService} from "../services/api-urls.service";
-import {FormsModule} from "@angular/forms";
-import {CommonModule} from "@angular/common";
+import {FormsModule, NgForm} from "@angular/forms";
+import {CommonModule, DatePipe} from "@angular/common";
 
 @Component({
   selector: 'app-product-offers',
   standalone: true,
   imports: [CommonModule, FormsModule, NgbPagination, NgbAlertModule, NgbInputDatepicker],
   templateUrl: './product-offers.component.html',
-  styleUrl: './product-offers.component.css'
+  styleUrl: './product-offers.component.css',
+  providers: [DatePipe]
 })
 export class ProductOffersComponent implements OnInit {
+  @ViewChild('productOfferForm') productOfferForm!: NgForm;
   productOffers: any[] = [];
   currentOffer: any = {
     productOfferImageUrl: '',
     productOfferDescription: '',
     productOfferTitle: '',
-    validUntil: new Date(),
-    productOfferStatus: ''
+    validUntil: '',
+    productOfferStatus: 'Active'
   };
 
   productOffersQuery: any = {
@@ -36,8 +45,7 @@ export class ProductOffersComponent implements OnInit {
   errorArray: Array<any> = [];
   timestamp: number = new Date().getTime();
 
-  constructor(private apiRequestService: ApiRequestService, private modalService: NgbModal, public apiUrls: ApiUrlsService) {
-  }
+  constructor(private apiRequestService: ApiRequestService, private modalService: NgbModal, public apiUrls: ApiUrlsService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
     this.loadProductOffers();
@@ -54,57 +62,98 @@ export class ProductOffersComponent implements OnInit {
   addOrEditOffer(modal: any, offer: any) {
     if (offer._id) {
       this.currentOffer = { ...offer };
+      const defaultDate = new Date(offer.validUntil);
+      this.currentOffer.validUntil = {
+        year: defaultDate.getFullYear(),
+        month: defaultDate.getMonth() + 1, // getMonth() returns 0-based month
+        day: defaultDate.getDate(),
+      };
+      this.currentOffer.productOfferStatus = offer.productOfferStatus;
     } else {
       this.currentOffer = {};
+      const defaultDate = new Date();
+      this.currentOffer.validUntil = {
+        year: defaultDate.getFullYear(),
+        month: defaultDate.getMonth() + 1, // getMonth() returns 0-based month
+        day: defaultDate.getDate(),
+      };
+      this.currentOffer.productOfferStatus = 'Active';
     }
     // this.modalService.open(modal, { size: 'lg' });
     const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'lg' });
-    modalRef.result.then(
-        () => { /* Handle modal close result if necessary */ },
-        () => { /* Handle modal dismiss result if necessary */ });
+    modalRef.result.then(() => { this.currentOffer = {}; }, () => { this.currentOffer = {}; });
   }
 
   saveOffer(modalRef: NgbModalRef) {
-    this.currentOffer.validUntil = this.currentOffer.validUntil.year + '-' + this.currentOffer.validUntil.month + '-' + this.currentOffer.validUntil.day;
-    const formData = new FormData();
-    if (this.currentOffer.productOfferImage) {
-      formData.append('productOfferImage', this.currentOffer.productOfferImage);
-    }
-    if (this.currentOffer.productOfferImageUrl) {
-      formData.append('productOfferImageUrl', this.currentOffer.productOfferImageUrl);
-    }
-    formData.append('productOfferDescription', this.currentOffer.productOfferDescription);
-    formData.append('productOfferTitle', this.currentOffer.productOfferTitle);
-    formData.append('validUntil', this.currentOffer.validUntil);
-    formData.append('productOfferStatus', this.currentOffer.productOfferStatus);
-    if (this.currentOffer._id) {
-      this.apiRequestService.updateWithImage(this.apiUrls.updateProductOffer + this.currentOffer._id, formData).subscribe((response) => {
-        if (response) {
-          modalRef.close();
-          Swal.fire('Success', 'Product offer updated successfully', 'success');
-          this.timestamp = new Date().getTime();
-          this.currentOffer = {};
-          this.errorArray = [];
-          this.loadProductOffers();
+    if (this.productOfferForm.form) {
+      Object.keys(this.productOfferForm.form.controls).forEach(field => {
+        const control = this.productOfferForm.form.get(field);
+        if (control) {
+          control.markAsTouched({ onlySelf: true });
         }
-      }, (error) => {
-        console.error('Error updating product offer:', error);
-        this.errorArray.push(error.message);
       });
-    } else {
-      this.apiRequestService.createWithImage(this.apiUrls.createProductOffer, formData).subscribe((response) => {
-        if (response) {
-          modalRef.close();
-          Swal.fire('Success', 'Product offer added successfully', 'success');
-          this.currentOffer = {};
-          this.loadProductOffers();
+    }
+
+    const addImageControl = this.productOfferForm.form.get('addImage');
+    if (addImageControl) {
+      if (
+          (this.currentOffer.productOfferImageUrl && !this.currentOffer.productOfferImage) ||
+          (this.currentOffer.productOfferImageUrl && this.currentOffer.productOfferImage) ||
+          (!this.currentOffer.productOfferImageUrl && this.currentOffer.productOfferImage)
+      ) {
+        addImageControl.setErrors(null); // Valid state
+      } else {
+        addImageControl.setErrors({ invalid: true }); // Invalid state
+      }
+    }
+
+    if (this.productOfferForm.valid) {
+      let oldDate = this.currentOffer.validUntil;
+      this.currentOffer.validUntil = this.currentOffer.validUntil.year + '-' + this.currentOffer.validUntil.month + '-' + this.currentOffer.validUntil.day;
+      const formData = new FormData();
+      if (this.currentOffer.productOfferImage) {
+        formData.append('productOfferImage', this.currentOffer.productOfferImage);
+      }
+      if (this.currentOffer.productOfferImageUrl) {
+        formData.append('productOfferImageUrl', this.currentOffer.productOfferImageUrl);
+      }
+      formData.append('productOfferDescription', this.currentOffer.productOfferDescription);
+      formData.append('productOfferTitle', this.currentOffer.productOfferTitle);
+      formData.append('validUntil', this.currentOffer.validUntil);
+      formData.append('productOfferStatus', this.currentOffer.productOfferStatus);
+      if (this.currentOffer._id) {
+        this.apiRequestService.updateWithImage(this.apiUrls.updateProductOffer + this.currentOffer._id, formData).subscribe((response) => {
+          if (response) {
+            modalRef.close();
+            Swal.fire('Success', 'Product offer updated successfully', 'success');
+            this.timestamp = new Date().getTime();
+            this.currentOffer = {};
+            this.errorArray = [];
+            this.loadProductOffers();
+          }
+        }, (error) => {
+          console.error('Error updating product offer:', error);
           this.errorArray = [];
-          this.timestamp = new Date().getTime();
-        }
-      }, (error) => {
-        console.error('Error creating product offer:', error);
-        this.errorArray.push(error.message);
-      });
+          this.currentOffer.validUntil = oldDate;
+          this.errorArray.push(error.message);
+        });
+      } else {
+        this.apiRequestService.createWithImage(this.apiUrls.createProductOffer, formData).subscribe((response) => {
+          if (response) {
+            modalRef.close();
+            Swal.fire('Success', 'Product offer added successfully', 'success');
+            this.currentOffer = {};
+            this.loadProductOffers();
+            this.errorArray = [];
+            this.timestamp = new Date().getTime();
+          }
+        }, (error) => {
+          console.error('Error creating product offer:', error);
+          this.currentOffer.validUntil = oldDate;
+          this.errorArray = [];
+          this.errorArray.push(error.message);
+        });
+      }
     }
   }
 
@@ -156,6 +205,7 @@ export class ProductOffersComponent implements OnInit {
   }
 
   toggleOfferStatus(offer: any): void {
+    console.log('Toggle offer status', offer);
     offer.productOfferStatus = offer.productOfferStatus === 'Active' ? 'Inactive' : 'Active';
     Swal.fire({
       title: `Are you sure you want to mark this product offer as ${offer.productOfferStatus}?`,
@@ -177,5 +227,17 @@ export class ProductOffersComponent implements OnInit {
         offer.productOfferStatus = offer.productOfferStatus === 'Inactive'? 'Active' : 'Inactive';
       }
     });
+  }
+
+  statusChanged(offerStatus: any): void {
+    console.log('Status changed', offerStatus);
+    offerStatus = !offerStatus;
+    this.currentOffer.productOfferStatus = !offerStatus ? 'Active' : 'Inactive';
+    // console.log(this.currentOffer.productOfferStatus);
+  }
+
+  toggleProductOfferStatus(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.currentOffer.productOfferStatus = isChecked ? 'Active' : 'Inactive';
   }
 }

@@ -56,9 +56,7 @@ export class RewardSchemesComponent implements OnInit {
       this.currentRewardScheme = { ...rewardScheme };
     }
     const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'lg' });
-    modalRef.result.then(
-        () => { /* Handle modal close result if necessary */ },
-        () => { /* Handle modal dismiss result if necessary */ });
+    modalRef.result.then(() => { this.currentRewardScheme = {}; }, () => { this.currentRewardScheme = {}; });
   }
 
   saveRewardScheme(modalRef: NgbModalRef) {
@@ -77,10 +75,12 @@ export class RewardSchemesComponent implements OnInit {
           Swal.fire('Success', 'Reward scheme updated successfully', 'success');
           this.timestamp = new Date().getTime();
           this.currentRewardScheme = {};
+          this.errorArray = [];
           this.loadRewardSchemes();
         }
       }, error => {
         console.error('Error updating reward scheme:', error);
+        this.errorArray = [];
         this.errorArray.push(error);
       });
     } else {
@@ -90,10 +90,12 @@ export class RewardSchemesComponent implements OnInit {
           Swal.fire('Success', 'Reward scheme added successfully', 'success');
           this.timestamp = new Date().getTime();
           this.currentRewardScheme = {};
+          this.errorArray = [];
           this.loadRewardSchemes();
         }
       }, error => {
         console.error('Error creating reward scheme:', error);
+        this.errorArray = [];
         this.errorArray.push(error);
       });
     }
@@ -147,5 +149,11 @@ export class RewardSchemesComponent implements OnInit {
         rewardScheme.rewardSchemeStatus = rewardScheme.rewardSchemeStatus === 'Inactive'? 'Active' : 'Inactive';
       }
     });
+  }
+
+  formToggleRewardSchemeStatus(event: Event) {
+    const isChecked = (event.target as HTMLInputElement).checked;
+    this.currentRewardScheme.rewardSchemeStatus = isChecked ? 'Active' : 'Inactive';
+
   }
 }

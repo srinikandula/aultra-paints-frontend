@@ -200,8 +200,12 @@ input:checked + .slider:before {
 }
 
 .product-offers-card img {
+    /*min-height: 230px;*/
+    /*min-width: 250px;*/
+    max-height: 230px;
+    max-width: 250px;
     width: 100%;
-    height: auto;
+    /*height: auto;*/
     padding: 1.5rem;
 }
 
@@ -225,13 +229,21 @@ input:checked + .slider:before {
 }
 
 .reward-schemes-card img {
+    /*min-height: 230px;*/
+    /*min-width: 250px;*/
+    max-height: 230px;
+    max-width: 250px;
     width: 100%;
-    height: auto;
+    /*height: auto;*/
     padding: 1.5rem;
 }
 
 .reward-schemes-card .card-body .card-text {
     font-size: .8rem!important;
     margin-bottom: 0.5rem!important;
+}
 
+.form-check-lg .form-check-input {
+    width: 4em!important;
+    height: 2em!important;
 }

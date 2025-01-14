@@ -14,8 +14,8 @@
 </div>
 
 <div class="container-fluid my-4">
-    <div class="d-flex flex-wrap justify-content-evenly" style="height: 76vh; overflow: auto" *ngIf="productOffers.length > 0">
-        <div class="card shadow-sm product-offers-card mb-3"  *ngFor="let offer of productOffers; let i = index">
+    <div class="d-flex flex-wrap" style="height: 76vh; overflow: auto" *ngIf="productOffers.length > 0">
+        <div class="card shadow-sm product-offers-card mx-2 mb-3" *ngFor="let offer of productOffers; let i = index, let l = last">
     <!--        <img *ngIf="offer.productOfferImageUrl" [src]="offer.productOfferImageUrl" class="card-img-top" alt="Image" width="512" style="padding: 1rem">-->
             <img *ngIf="offer.productOfferImageUrl" [src]="offer.productOfferImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
             <img *ngIf="!offer.productOfferImageUrl" src="/assets/img/Product_Offers_c.png" class="card-img-top" alt="Image">
@@ -34,9 +34,9 @@
                 </div>
             </div>
         </div>
-        <div class="container-fluid container-mt shadow-sm mb-3" *ngIf="productOffers.length === 0">
-            <p>No Product Offers Found. Please add some.</p>
-        </div>
+    </div>
+    <div class="container-fluid container-mt shadow-sm mb-3" *ngIf="productOffers.length === 0">
+        <p>No Product Offers Found. Please add some.</p>
     </div>
 </div>
 
@@ -64,33 +64,30 @@
                 <div class="col-sm-4 mb-3 form-group">
                     <label class="form-label" for="addName">Offer Name</label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentOffer.productOfferTitle" name="addName"
-                           required placeholder="Enter full name"/>
+                           required placeholder="Enter full name" #addNameInput="ngModel"/>
+                    <div *ngIf="addNameInput.invalid && (addNameInput.dirty || addNameInput.touched)" class="text-danger">
+                        <div *ngIf="addNameInput.errors?.['required']">Offer Name is required.</div>
+                    </div>
                 </div>
 
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="validUntil">Valid Until</label>
+                    <label class="form-label" for="validUntil">Valid Untils</label>
                     <div class="input-group mb-3">
-                        <input id="validUntil" class="form-control" readonly placeholder="yyyy-mm-dd" name="validUntil" [(ngModel)]="currentOffer.validUntil" required ngbDatepicker #d="ngbDatepicker"/>
-                        <div class="input-group-append">
-                            <button class="btn btn-light" type="button" (click)="d.toggle()">
-                                <i class="bx bx-calendar"></i>
-                            </button>
-                        </div>
+                        <input id="validUntil" class="form-control" readonly placeholder="yyyy-mm-dd" name="validUntil"
+                               [(ngModel)]="currentOffer.validUntil" required ngbDatepicker #validUntil="ngbDatepicker" #validUntilInput="ngModel"/>
+                        <button class="btn btn-outline-secondary bx bx-calendar" type="button" (click)="validUntil.toggle()"></button>
+                    </div>
+                    <div *ngIf="validUntilInput.invalid && (validUntilInput.dirty || validUntilInput.touched)" class="text-danger">
+                        <div *ngIf="validUntilInput.errors?.['required']">Valid Until is required.</div>
                     </div>
                 </div>
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label">Product Offer Status</label>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="productOfferStatus" id="statusActive" value="Active" [(ngModel)]="currentOffer.productOfferStatus" required>
-                        <label class="form-check-label" for="statusActive">
-                            Active
-                        </label>
-                    </div>
-                    <div class="form-check">
-                        <input class="form-check-input" type="radio" name="productOfferStatus" id="statusInactive" value="Inactive" [(ngModel)]="currentOffer.productOfferStatus" required>
-                        <label class="form-check-label" for="statusInactive">
-                            Inactive
-                        </label>
+                    <label class="form-label" for="productOfferStatus">Product Offer Status</label>
+                    <div class="form-check form-switch form-check-lg form-switch-2x">
+                        <input class="form-check-input" id="productOfferStatus" type="checkbox"
+                               [checked]="currentOffer.productOfferStatus === 'Active'" name="productOfferStatus"
+                               (change)="toggleProductOfferStatus($event)"
+                               />
                     </div>
                 </div>
             </div>
@@ -100,7 +97,10 @@
                 <div class="col-sm-12 mb-3 form-group">
                     <label class="form-label" for="addDescription">Offer Text</label>
                     <textarea type="text" class="form-control" id="addDescription" [(ngModel)]="currentOffer.productOfferDescription" name="addDescription"
-                           required placeholder="Enter description"></textarea>
+                           required placeholder="Enter description" #addDescriptionInput="ngModel"></textarea>
+                    <div *ngIf="addDescriptionInput.invalid && (addDescriptionInput.dirty || addDescriptionInput.touched)" class="text-danger">
+                        <div *ngIf="addDescriptionInput.errors?.['required']">Offer Text is required.</div>
+                    </div>
                 </div>
             </div>
 
@@ -109,18 +109,19 @@
                 <div class="col-sm-12 mb-3 form-group">
                     <label class="form-label" for="addImage">Upload Image</label>
                     <div class="input-group mb-2">
-                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)" required accept=".png, .jpg, .jpeg">
+                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)"
+                               required accept=".png, .jpg, .jpeg" name="addImage" #addImageRef="ngModel" [(ngModel)]="currentOffer.productOfferImage"/>
+                    </div>
+                    <div *ngIf="addImageRef.invalid && (addImageRef.dirty || addImageRef.touched)" class="text-danger">
+                        <div>Image is required.</div>
                     </div>
                 </div>
             </div>
-            <!-- Add/Edit Product Offer Image Preview -->
-<!--            <div class="row">-->
-<!--                <div class="col-sm-12 mb-3">-->
             <div class="d-flex flex-row bd-highlight mb-3">
                 <div class="image-card mx-3" *ngIf="currentOffer.productOfferImage" [style.max-width]="uploadImageWidth">
                     <span *ngIf="uploadImageWidth === '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
                     <span *ngIf="uploadImageWidth !== '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
-                    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
+    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
                     <img *ngIf="currentOffer.productOfferImage" [src]="currentOffer.productOfferImage"
                          alt="Product Offer Image" width="100%"
                          (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"/>
@@ -135,12 +136,10 @@
                         (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"/>
                 </div>
             </div>
-<!--                </div>-->
-<!--            </div>-->
             <div class="row" *ngIf="errorArray.length > 0">
                 <div class="col-sm-12">
                     <ol>
-                        <li *ngFor="let err of errorArray; let i = index" style="color: red">{{err}}</li>
+                        <li *ngFor="let err of errorArray; let i = index" class="text-danger">{{err}}</li>
                     </ol>
                 </div>
             </div>
@@ -148,6 +147,6 @@
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="saveOffer(modal)" [disabled]="!productOfferForm.valid">Save</button>
+        <button type="button" class="btn btn-primary" (click)="saveOffer(modal)" >Save</button>
     </div>
 </ng-template>
