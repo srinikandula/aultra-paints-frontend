@@ -10,7 +10,7 @@
                     <option value="" disabled selected>Select a branch</option>
                     <option *ngFor="let branch of branchNames" [value]="branch">{{ branch }}</option>
                 </select>
-                <div *ngIf="branchNameCtrl.invalid && branchNameCtrl.touched" class="text-danger">
+                <div *ngIf="branchNameCtrl.invalid && (branchNameCtrl.touched || orderForm.submitted)" class="text-danger">
                     Branch Name is required.
                 </div>
             </div>
@@ -22,8 +22,7 @@
                            bindLabel="name" bindValue="_id" placeholder="Select options" (ngModelChange)="getBrandes()"
                            [searchable]="true" #productNameCtrl="ngModel" required>
                 </ng-select>
-                <!-- Validation error for Product Name -->
-                <div *ngIf="productNameCtrl.touched && productNameCtrl.invalid" class="text-danger">
+                <div *ngIf="productNameCtrl.invalid && (productNameCtrl.touched || orderForm.submitted)" class="text-danger">
                     Product Name is required.
                 </div>
             </div>
@@ -33,7 +32,7 @@
                 <label class="form-label" for="batchNumber">Batch Number <span class="text-danger">*</span></label>
                 <input type="text" id="batchNumber" maxlength="4" placeholder="Enter Batch Number"
                        [(ngModel)]="BatchNumber" name="BatchNumber" required class="form-control" #batchNumberCtrl="ngModel"/>
-                <div *ngIf="batchNumberCtrl.invalid && batchNumberCtrl.touched" class="text-danger">
+                <div *ngIf="batchNumberCtrl.invalid && (batchNumberCtrl.touched || orderForm.submitted)" class="text-danger">
                     Batch Number is required.
                 </div>
             </div>
@@ -44,25 +43,51 @@
             <div class="col-sm-3 mb-3">
                 <label class="form-label" for="creationDate">Creation Date <span class="text-danger">*</span></label>
                 <div class="input-group mb-3">
-                    <input id="creationDate" class="form-control" placeholder="yyyy-mm-dd" name="creationDate" [(ngModel)]="creationDate" required ngbDatepicker #cd="ngbDatepicker" />
+                    <input 
+                        id="creationDate" 
+                        class="form-control" 
+                        placeholder="yyyy-mm-dd" 
+                        name="creationDate" 
+                        [(ngModel)]="creationDate" 
+                        ngbDatepicker 
+                        #cd="ngbDatepicker" 
+                        required
+                        #creationDateField="ngModel"
+                    />
                     <div class="input-group-append">
                         <button class="btn btn-light" (click)="cd.toggle()" type="button">
                             <i class="bx bx-calendar"></i>
                         </button>
                     </div>
                 </div>
+                <div *ngIf="creationDateField.invalid && (creationDateField.dirty || creationDateField.touched || orderForm.submitted)" class="text-danger">
+                    Creation Date is required.
+                </div>
             </div>
 
-            <!-- Expiry Date -->
-            <div class="col-sm-3 mb-3">
+             <!-- Expiry Date -->
+             <div class="col-sm-3 mb-3">
                 <label class="form-label" for="expiryDate">Expiry Date <span class="text-danger">*</span></label>
                 <div class="input-group mb-3">
-                    <input id="expiryDate" class="form-control" placeholder="yyyy-mm-dd" name="expiryDate" [(ngModel)]="expiryDate" ngbDatepicker #e="ngbDatepicker" required />
+                    <input 
+                        id="expiryDate" 
+                        class="form-control" 
+                        placeholder="yyyy-mm-dd" 
+                        name="expiryDate" 
+                        [(ngModel)]="expiryDate" 
+                        ngbDatepicker 
+                        #e="ngbDatepicker" 
+                        required
+                        #expiryDateField="ngModel"
+                    />
                     <div class="input-group-append">
                         <button class="btn btn-light" (click)="e.toggle()" type="button">
                             <i class="bx bx-calendar"></i>
                         </button>
                     </div>
+                </div>
+                <div *ngIf="expiryDateField.invalid && (expiryDateField.dirty || expiryDateField.touched || orderForm.submitted)" class="text-danger">
+                    Expiry Date is required.
                 </div>
             </div>
         </div>
@@ -76,7 +101,7 @@
                 <ng-select name="Brand{{i}}" [items]="brandData" [(ngModel)]="BatchNumber.Brand" [multiple]="false"
                            bindLabel="brands" bindValue="_id" placeholder="Select options"  #brandCtrl="ngModel">
                 </ng-select>
-                <div *ngIf="brandCtrl.invalid && brandCtrl.touched" class="text-danger">
+                <div *ngIf="brandCtrl.invalid && (brandCtrl.touched || orderForm.submitted)" class="text-danger">
                     Brand is required.
                 </div>
             </div>
@@ -85,7 +110,7 @@
             <div class="col-sm-2">
                 <label class="form-label" for="redeemablePoints{{i}}">Reward Points <span class="text-danger">*</span></label>
                 <input type="number" id="redeemablePoints{{i}}" maxlength="4" oninput="this.BatchNumber.redeemablePoints = this.BatchNumber.redeemablePoints.replace(/[^0-9]/g, '').slice(0, 4);" [(ngModel)]="BatchNumber.redeemablePoints" name="redeemablePoints{{i}}" placeholder="Enter Points" required class="form-control" #redeemablePointsCtrl="ngModel"/>
-                <div *ngIf="redeemablePointsCtrl.invalid && redeemablePointsCtrl.touched" class="text-danger">
+                <div *ngIf="redeemablePointsCtrl.invalid && (redeemablePointsCtrl.touched || orderForm.submitted)" class="text-danger">
                     Reward Points are required.
                 </div>
             </div>
@@ -94,7 +119,7 @@
             <div class="col-sm-1">
                 <label class="form-label" for="value{{i}}">Value <span class="text-danger">*</span></label>
                 <input type="number" id="value{{i}}" [(ngModel)]="BatchNumber.value" maxlength="4" oninput="this.BatchNumber.value = this.BatchNumber.value.replace(/[^0-9]/g, '').slice(0, 4);" name="value{{i}}" required class="form-control" #valueCtrl="ngModel"/>
-                <div *ngIf="valueCtrl.invalid && valueCtrl.touched" class="text-danger">
+                <div *ngIf="valueCtrl.invalid && (valueCtrl.touched || orderForm.submitted)" class="text-danger">
                     Value is required.
                 </div>
             </div>
@@ -106,7 +131,7 @@
                     <option value="" selected>Select Volume</option>
                     <option *ngFor="let volume of volumes" [value]="volume">{{ volume }}</option>
                 </select>
-                <div *ngIf="volumeCtrl.invalid && volumeCtrl.touched" class="text-danger">
+                <div *ngIf="volumeCtrl.invalid && (volumeCtrl.touched || orderForm.submitted)" class="text-danger">
                     Volume is required.
                 </div>
             </div>
@@ -115,7 +140,7 @@
             <div class="field col-sm-2">
                 <label class="form-label" for="CouponSeries{{i}}">Coupon Series <span class="text-danger">*</span></label>
                 <input type="number" id="CouponSeries{{i}}" [(ngModel)]="BatchNumber.CouponSeries" name="CouponSeries{{i}}" required class="form-control" #couponSeriesCtrl="ngModel"/>
-                <div *ngIf="couponSeriesCtrl.invalid && couponSeriesCtrl.touched" class="text-danger">
+                <div *ngIf="couponSeriesCtrl.invalid && (couponSeriesCtrl.touched || orderForm.submitted)" class="text-danger">
                     Coupon Series is required.
                 </div>
             </div>
@@ -124,7 +149,7 @@
             <div class="col-sm-1">
                 <label class="form-label" for="quantity{{i}}">Quantity <span class="text-danger">*</span></label>
                 <input type="number" id="quantity{{i}}" [(ngModel)]="BatchNumber.Quantity" name="Quantity{{i}}" maxlength="4" oninput="this.BatchNumber.Quantity = this.BatchNumber.Quantity.replace(/[^0-9]/g, '').slice(0, 4);" required class="form-control" #quantityCtrl="ngModel"/>
-                <div *ngIf="quantityCtrl.invalid && quantityCtrl.touched" class="text-danger">
+                <div *ngIf="quantityCtrl.invalid && (quantityCtrl.touched || orderForm.submitted)" class="text-danger">
                     Quantity is required.
                 </div>
             </div>
@@ -139,15 +164,14 @@
                 </button>
             </div>
         </div>
-
-        <!-- Error Message -->
-        <span *ngIf="errorEmptyStr" style="color: red">{{errorEmptyStr}}</span>
+ <!-- Error Message -->
+ <span *ngIf="errorEmptyStr" style="color: red">{{errorEmptyStr}}</span>
 
         <!-- Submit and Reset Buttons -->
         <div class="d-flex flex-row-reverse mt-4">
             <button class="bd-highlight btn btn-light mx-2" (click)="cancel()">Cancel</button>
             <button type="reset" class="bd-highlight btn btn-danger mx-2" (click)="resetForm()">Reset</button>
-            <button type="submit" class="bd-highlight btn btn-primary mx-2" [disabled]="!orderForm.valid">Submit</button>
+            <button type="submit" class="bd-highlight btn btn-primary mx-2">Submit</button>
         </div>
     </form>
 </div>

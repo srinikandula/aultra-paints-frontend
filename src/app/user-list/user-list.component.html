@@ -105,14 +105,14 @@
         <h4 class="modal-title">Add User</h4>
     </div>
     <div class="modal-body">
-        <form #userForm="ngForm" class="modal-box shadow-sm">
+        <form #userForm="ngForm" class="modal-box shadow-sm" (ngSubmit)="submitForm(modal)">
             <!-- Add Name and Mobile Number in One Row -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="addName">Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentUser.name" name="addName"
                            required placeholder="Enter full name" #name="ngModel"/>
-                    <div *ngIf="name.invalid && name.touched" class="text-danger">
+                    <div *ngIf="name.invalid && (name.touched || submitted)" class="text-danger">
                         Name is required.
                     </div>
                 </div>
@@ -122,7 +122,7 @@
                     <input type="text" class="form-control" id="addMobile" [(ngModel)]="currentUser.mobile" name="addMobile"
                            maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
-                    <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
+                    <div *ngIf="mobile.invalid && (mobile.touched || submitted)" class="text-danger">
                         Mobile number must be exactly 10 digits.
                     </div>
                 </div>
@@ -135,7 +135,7 @@
                     <select id="addAccountType" [(ngModel)]="currentUser.accountType" name="addAccountType" class="form-select" #accountType="ngModel">
                         <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
                     </select>
-                    <div *ngIf="accountType.invalid && accountType.touched" class="text-danger">
+                    <div *ngIf="accountType.invalid && (accountType.touched || submitted)" class="text-danger">
                         Account Type is required.
                     </div>
                 </div>
@@ -144,7 +144,7 @@
                     <label class="form-label" for="addDealerCode">Dealer Code <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addDealerCode" [(ngModel)]="currentUser.dealerCode"
                            name="addDealerCode" required placeholder="Enter Dealer Code" #dealerCode="ngModel"/>
-                    <div *ngIf="dealerCode.invalid && dealerCode.touched" class="text-danger">
+                    <div *ngIf="dealerCode.invalid && (dealerCode.touched || submitted)" class="text-danger">
                         Dealer Code is required.
                     </div>
                 </div>
@@ -156,7 +156,7 @@
                     <label class="form-label" for="addPrimaryContactPerson">Primary Contact Person <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addPrimaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
                            name="addPrimaryContactPerson" required placeholder="Enter Primary Contact Person" #primaryContactPerson="ngModel"/>
-                    <div *ngIf="primaryContactPerson.invalid && primaryContactPerson.touched" class="text-danger">
+                    <div *ngIf="primaryContactPerson.invalid && (primaryContactPerson.touched || submitted)" class="text-danger">
                         Primary Contact Person is required.
                     </div>
                 </div>
@@ -166,7 +166,7 @@
                     <input type="text" class="form-control" id="addPrimaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
                            maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" name="addPrimaryContactPersonMobile" required #primaryMobile="ngModel" placeholder="Enter Primary Contact Person Mobile"/>
-                    <div *ngIf="primaryMobile.invalid && primaryMobile.touched" class="text-danger">
+                    <div *ngIf="primaryMobile.invalid && (primaryMobile.touched || submitted)" class="text-danger">
                         Mobile number must be exactly 10 digits.
                     </div>
                 </div>
@@ -182,18 +182,16 @@
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <ol>
-                        <li *ngFor="let err of errors; let i = index" style="color: red">{{err}}</li>
-                    </ol>
-                </div>
+            <div *ngIf="errors?.length > 0" class="alert alert-danger">
+                <ul>
+                    <li *ngFor="let error of errors">{{ error }}</li>
+                </ul>
             </div>
         </form>
     </div>
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" (click)="addNewUser(modal)" [disabled]="userForm.invalid">
+        <button type="button" class="btn btn-primary" (click)="submitForm(modal)">
             Save
         </button>
     </div>
@@ -206,80 +204,98 @@
     </div>
     <div class="modal-body">
         <form #userForm="ngForm" class="modal-box shadow-sm" (ngSubmit)="updateUser(modal, userForm)">
-            <!-- Edit Name -->
+            <!-- Edit Name and Mobile Number in One Row -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="name">Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="name" [(ngModel)]="currentUser.name" name="name"
-                           required placeholder="Enter full name"/>
+                           required placeholder="Enter full name" #name="ngModel"/>
+                    <div *ngIf="name.invalid && (name.touched || submitted)" class="text-danger">
+                        Name is required.
+                    </div>
                 </div>
 
-                <!-- Add Mobile Number (10 digits) -->
+                <!-- Edit Mobile Number (10 digits) -->
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="mobile">Mobile Number <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
                            maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
                            pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
-                    <div *ngIf="mobile.invalid && mobile.touched" class="text-danger">
+                    <div *ngIf="mobile.invalid && (mobile.touched || submitted)" class="text-danger">
                         Mobile number must be exactly 10 digits.
                     </div>
                 </div>
             </div>
 
+            <!-- Edit Account Type and Dealer Code in One Row -->
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
                     <label for="accountType" class="form-label">Type <span class="text-danger">*</span></label>
-                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select">
+                    <select id="accountType" [(ngModel)]="currentUser.accountType" name="accountType" class="form-select" #accountType="ngModel">
                         <option *ngFor="let type of accountTypes" [value]="type.name">{{ type.id }}</option>
                     </select>
+                    <div *ngIf="accountType.invalid && (accountType.touched || submitted)" class="text-danger">
+                        Account Type is required.
+                    </div>
                 </div>
 
                 <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">
                     <label class="form-label" for="dealerCode">Dealer Code <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="dealerCode" [(ngModel)]="currentUser.dealerCode"
-                           name="dealerCode" required placeholder="Enter Dealer Code"/>
+                           name="dealerCode" required placeholder="Enter Dealer Code" #dealerCode="ngModel"/>
+                    <div *ngIf="dealerCode.invalid && (dealerCode.touched || submitted)" class="text-danger">
+                        Dealer Code is required.
+                    </div>
                 </div>
             </div>
 
+            <!-- Primary Contact Person and Primary Contact Mobile in One Row (for Dealers) -->
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="primaryContactPerson">Primary Contact Person <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="primaryContactPerson" [(ngModel)]="currentUser.primaryContactPerson"
-                           name="primaryContactPerson" required placeholder="Enter Primary Contact Person"/>
+                           name="primaryContactPerson" required placeholder="Enter Primary Contact Person" #primaryContactPerson="ngModel"/>
+                    <div *ngIf="primaryContactPerson.invalid && (primaryContactPerson.touched || submitted)" class="text-danger">
+                        Primary Contact Person is required.
+                    </div>
                 </div>
+
                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="primaryContactPersonMobile">Primary Contact Person Mobile <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="primaryContactPersonMobile" [(ngModel)]="currentUser.primaryContactPersonMobile"
                            maxlength="10" oninput="this.currentUser.primaryContactPersonMobile = this.currentUser.primaryContactPersonMobile.replace(/[^0-9]/g, '').slice(0, 10);"
-                           pattern="^\d{10}$" name="primaryContactPersonMobile" required placeholder="Enter Primary Contact Person Mobile"/>
+                           pattern="^\d{10}$" name="primaryContactPersonMobile" required #primaryMobile="ngModel" placeholder="Enter Primary Contact Person Mobile"/>
+                    <div *ngIf="primaryMobile.invalid && (primaryMobile.touched || submitted)" class="text-danger">
+                        Mobile number must be exactly 10 digits.
+                    </div>
                 </div>
             </div>
 
+            <!-- Address in One Row (if Dealer) -->
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
                     <label for="address">Address </label>
                     <textarea class="form-control" id="address" [(ngModel)]="currentUser.address" name="address" rows="3"
-                              required placeholder="Enter address"></textarea>
+                              placeholder="Enter address" #address="ngModel"></textarea>
                 </div>
             </div>
 
-            <div class="row">
-                <div class="col-12">
-                    <ol>
-                        <li *ngFor="let err of errors; let i = index" style="color: red">{{err}}</li>
-                    </ol>
-                </div>
+            <!-- Error Display -->
+            <div *ngIf="errors?.length > 0" class="alert alert-danger">
+                <ul>
+                    <li *ngFor="let error of errors">{{ error }}</li>
+                </ul>
             </div>
-
         </form>
     </div>
+
+    <!-- Modal Footer -->
     <div class="modal-footer">
         <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="button" class="btn btn-primary" [disabled]="userForm.invalid"
-                (click)="updateUser(modal, userForm)">Save
-        </button>
+        <button type="button" class="btn btn-primary" (click)="updateUser(modal, userForm)">Save</button>
     </div>
 </ng-template>
+
 
 <!-- Modal for Password Reset -->
 <ng-template #resetPasswordModal let-modal>

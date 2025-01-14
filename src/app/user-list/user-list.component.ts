@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import Swal from 'sweetalert2';
 import {NgbModal, NgbPagination} from '@ng-bootstrap/ng-bootstrap';
 import {ApiRequestService} from '../services/api-request.service';
 import {CommonModule} from '@angular/common';
-import {FormsModule} from '@angular/forms';
+import {FormsModule, NgForm} from '@angular/forms';
 import {Router} from "@angular/router";
 import {ApiUrlsService} from "../services/api-urls.service";
 import {isArray} from "node:util";
@@ -17,6 +17,8 @@ import {AuthService} from "../services/auth.service";
     styleUrls: ['./user-list.component.css']
 })
 export class UserListComponent implements OnInit {
+    @ViewChild('userForm', { static: false }) userForm!: NgForm;
+
     users: any[] = [];
     loginUser: any = {};
     currentUser: any = {
@@ -30,6 +32,7 @@ export class UserListComponent implements OnInit {
     searchQuery: string = '';
     currentPage: number = 1;
     totalPages: number = 1;
+    submitted = false; // To track the form submission
 
     // Mobile number validation pattern (10 digits)
     mobilePattern = '^[0-9]{10}$';
@@ -105,9 +108,15 @@ export class UserListComponent implements OnInit {
     }
 
     addUser(userModal: any): void {
-        this.currentUser = {name: '', mobile: '', password: '',};
-        this.currentUser.accountType = 'Painter';
-        this.modalService.open(userModal, {size: 'lg'});
+        // Reset the currentUser object to a fresh, empty form state
+        this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' };
+    
+        // Clear any previous errors and submitted flag
+        this.errors = [];
+        this.submitted = false; // Reset the submitted flag so the form can show validation errors when it's opened
+    
+        // Open the modal
+        this.modalService.open(userModal, { size: 'lg' });
     }
 
     editUser(user: any, content: any): void {
@@ -115,91 +124,111 @@ export class UserListComponent implements OnInit {
         this.modalService.open(content, {size: 'lg'});
     }
 
-    addNewUser(modal: any): void {
-        this.apiService.addUser(this.currentUser).subscribe(
-            (data) => {
-                this.loadUsers();
-                this.showSuccess('User added successfully!');
-                this.currentUser = {};
-                this.errors = [];
-                modal.close();
-            }, (error) => {
-                // this.errors = [];
-                // if (error?.errors) {
-                //   this.errors = error.errors;
-                // } else {
-                //   this.errors.push(error.message);
-                // }
-                if (error?.errors && error.errors.length > 0) {
-                    this.errors = error.errors;
-                } else {
-                    this.showError('Error updating user!');
+    submitForm(modal: any): void {
+        this.submitted = true; // Mark the form as submitted
+        
+        // Check if the form is valid
+        if (this.userForm.valid) {
+            // Show confirmation dialog using Swal
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to save this user?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, save it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Proceed with the user addition
+                    this.apiService.addUser(this.currentUser).subscribe(
+                        (data) => {
+                            this.loadUsers();
+                            this.showSuccess('User added successfully!');
+                            this.currentUser = {}; 
+                            this.errors = [];
+                            modal.close();
+                        },
+                        (error) => {
+                            if (error?.errors && error.errors.length > 0) {
+                                this.errors = error.errors;
+                            } else {
+                                this.showError('Error adding user!');
+                            }
+                        }
+                    );
                 }
-            }
-        );
+            });
+        } 
     }
 
     updateUser(modal: any, userForm: any): void {
-        if (userForm.invalid) {
-            this.showError('Please fill in all the required fields correctly.');
-            return;
-        }
-
-        if (this.currentUser._id) {
-            this.apiService.updateUser(this.currentUser._id, this.currentUser).subscribe((data) => {
-                    this.loadUsers();
-                    this.showSuccess('User updated successfully!');
-                    this.errors = [];
-                    modal.close();
-                    if (this.loginUser.id === this.currentUser._id) {
-                        let timerInterval: any;
-                        let countdown = 5;
-                        Swal.fire({
-                            title: 'Success',
-                            html: `Your changing account type, so need logout..!<br>You will be logged out in <b>${countdown}</b> seconds.`,
-                            icon: 'success',
-                            timer: countdown * 1000,
-                            timerProgressBar: true,
-                            showConfirmButton: false,
-                            didOpen: () => {
-                                timerInterval = setInterval(() => {
-                                    countdown--;
-                                    const bElement = Swal.getHtmlContainer()?.querySelector('b');
-                                    if (bElement) {
-                                        bElement.textContent = countdown.toString();
-                                    }
-                                }, 1000);
-                            },
-                            willClose: () => {
-                                clearInterval(timerInterval);
-                            },
-                        }).then(() => {
-                            this.currentUser = {};
-                            this.AuthService.logOut();
-                            window.location.reload();
-                            this.router.navigate(['/login']);
-                        });
-                    }
-                }, (error) => {
-                    if (error?.errors && error.errors.length > 0) {
-                        this.errors = error.errors;
-                    } else {
-                        this.showError('Error updating user!');
-                    }
-                    // Check if the error response contains the 'Mobile already exists' message
-                    // if (error.error && error.error[0] === 'Mobile already exists') {
-                    //   Swal.fire({
-                    //     icon: 'error',
-                    //     title: 'Duplicate Mobile Number',
-                    //     text: 'This mobile number is already registered. Please enter a different number.',
-                    //   });
-                    // } else {
-                    //   this.showError('Error updating user!');
-                    // }
+        this.submitted = true; // Mark the form as submitted
+        
+        // Check if the form is valid
+        if (userForm.valid) {
+            // Show confirmation dialog using Swal
+            Swal.fire({
+                title: 'Are you sure?',
+                text: 'Do you want to save these changes?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Yes, save it!',
+                cancelButtonText: 'Cancel'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Proceed with updating the user
+                    this.apiService.updateUser(this.currentUser._id, this.currentUser).subscribe(
+                        (data) => {
+                            this.loadUsers();
+                            this.showSuccess('User updated successfully!');
+                            this.errors = [];
+                            modal.close(); 
+    
+                            // Optional: If the logged-in user updates their own account type
+                            if (this.loginUser.id === this.currentUser._id) {
+                                let timerInterval: any;
+                                let countdown = 5;
+                                Swal.fire({
+                                    title: 'Success',
+                                    html: `Your account type has changed. You will be logged out in <b>${countdown}</b> seconds.`,
+                                    icon: 'success',
+                                    timer: countdown * 1000,
+                                    timerProgressBar: true,
+                                    showConfirmButton: false,
+                                    didOpen: () => {
+                                        // Update countdown every second
+                                        timerInterval = setInterval(() => {
+                                            countdown--;
+                                            const bElement = Swal.getHtmlContainer()?.querySelector('b');
+                                            if (bElement) {
+                                                bElement.textContent = countdown.toString();
+                                            }
+                                        }, 1000);
+                                    },
+                                    willClose: () => {
+                                        clearInterval(timerInterval);
+                                    },
+                                }).then(() => {
+                                    // Log the user out after successful update and refresh the page
+                                    this.currentUser = {};
+                                    this.AuthService.logOut();
+                                    window.location.reload();
+                                    this.router.navigate(['/login']);
+                                });
+                            }
+                        },
+                        (error) => {
+                            if (error?.errors && error.errors.length > 0) {
+                                this.errors = error.errors;
+                            } else {
+                                this.showError('Error updating user!');
+                            }
+                        }
+                    );
                 }
-            );
-        }
-    }
+            });
+        } 
+    }    
 
 
     deleteUser(id: string): void {
