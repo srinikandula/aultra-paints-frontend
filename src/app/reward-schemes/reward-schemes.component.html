@@ -51,7 +51,7 @@
         <form #rewardSchemeForm="ngForm" class="modal-box shadow-sm">
             <div class="row">
                 <div class="col-sm-6 mb-3 form-group">
-                    <label for="rewardSchemeStatus" class="form-label">Product Offer Status</label>
+                    <label for="rewardSchemeStatus" class="form-label">Product Offer Status <span class="text-danger">*</span></label>
                     <div class="form-check form-switch form-check-lg form-switch-2x">
                         <input class="form-check-input" id="rewardSchemeStatus" type="checkbox"
                                [checked]="currentRewardScheme.rewardSchemeStatus === 'Active'" name="rewardSchemeStatus"
@@ -67,7 +67,7 @@
             </div>
             <div class="row">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addImage">Image</label>
+                    <label class="form-label" for="addImage">Image <span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
 <!--                        <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)" required accept=".png, .jpg, .jpeg">-->
                         <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)"
