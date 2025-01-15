@@ -47,8 +47,15 @@ export class LoginComponent {
                 }, error: (error) => {
                     this.loading = false;
                     this.otpSuccessMessage = '';
-                    this.errorMessage = 'Mobile Number not found';
-                    console.error('API error:', error);
+                    console.log(error);
+                    if (error && error.error === 'MOBILE_NOT_FOUND') {
+                        this.errorMessage = 'Mobile Number not found';
+                    } else if (error && error.error === 'ACCOUNT_SUSPENDED') {
+                        this.errorMessage = 'Account suspended';
+                    } else {
+                        this.errorMessage = 'Mobile Number not found';
+                    }
+                    console.error('API error:', this.errorMessage);
                 },
             });
         } else {
