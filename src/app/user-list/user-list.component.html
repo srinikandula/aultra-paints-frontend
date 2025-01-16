@@ -35,8 +35,8 @@
                 <td>{{ user.mobile }}</td>
                 <td>{{ user.accountType }}</td>
                 <!--                    <td>{{ user.email }}</td>-->
-                <td class="text-primary cursor-pointer text-center"
-                    (click)="showRedeemedPoints(user._id)">{{ user.redeemablePoints }}
+                <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
+                    {{ user.rewardPoints }}
                 </td>
                 <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)"
                     style="cursor: pointer">{{ user.cash }}
