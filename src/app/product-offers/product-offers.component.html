@@ -62,7 +62,7 @@
             <!-- Add/Edit Product Offer Name -->
             <div class="row">
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="addName">Offer Name</label>
+                    <label class="form-label" for="addName">Offer Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentOffer.productOfferTitle" name="addName"
                            required placeholder="Enter full name" #addNameInput="ngModel"/>
                     <div *ngIf="addNameInput.invalid && (addNameInput.dirty || addNameInput.touched)" class="text-danger">
@@ -71,7 +71,7 @@
                 </div>
 
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="validUntil">Valid Untils</label>
+                    <label class="form-label" for="validUntil">Valid Until <span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
                         <input id="validUntil" class="form-control" readonly placeholder="yyyy-mm-dd" name="validUntil"
                                [(ngModel)]="currentOffer.validUntil" required ngbDatepicker #validUntil="ngbDatepicker" #validUntilInput="ngModel"/>
@@ -82,7 +82,7 @@
                     </div>
                 </div>
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="productOfferStatus">Product Offer Status</label>
+                    <label class="form-label" for="productOfferStatus">Product Offer Status <span class="text-danger">*</span> </label>
                     <div class="form-check form-switch form-check-lg form-switch-2x">
                         <input class="form-check-input" id="productOfferStatus" type="checkbox"
                                [checked]="currentOffer.productOfferStatus === 'Active'" name="productOfferStatus"
@@ -95,7 +95,7 @@
             <!-- Add/Edit Product Offer Description -->
             <div class="row">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addDescription">Offer Text</label>
+                    <label class="form-label" for="addDescription">Offer Text <span class="text-danger">*</span></label>
                     <textarea type="text" class="form-control" id="addDescription" [(ngModel)]="currentOffer.productOfferDescription" name="addDescription"
                            required placeholder="Enter description" #addDescriptionInput="ngModel"></textarea>
                     <div *ngIf="addDescriptionInput.invalid && (addDescriptionInput.dirty || addDescriptionInput.touched)" class="text-danger">
@@ -107,7 +107,7 @@
             <!-- Add/Edit Product Offer Image -->
             <div class="row">
                 <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addImage">Upload Image</label>
+                    <label class="form-label" for="addImage">Upload Image <span class="text-danger">*</span></label>
                     <div class="input-group mb-2">
                         <input type="file" class="form-control" id="addImage" (change)="handleImageChange($event)"
                                required accept=".png, .jpg, .jpeg" name="addImage" #addImageRef="ngModel" [(ngModel)]="currentOffer.productOfferImage"/>
