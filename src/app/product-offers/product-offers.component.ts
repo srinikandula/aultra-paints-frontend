@@ -135,7 +135,11 @@ export class ProductOffersComponent implements OnInit {
           console.error('Error updating product offer:', error);
           this.errorArray = [];
           this.currentOffer.validUntil = oldDate;
-          this.errorArray.push(error.message);
+          if (error && error.message === "Field value too long") {
+            this.errorArray.push('File size exceeds 4 MB!');
+          } else {
+            this.errorArray.push(error);
+          }
         });
       } else {
         this.apiRequestService.createWithImage(this.apiUrls.createProductOffer, formData).subscribe((response) => {
@@ -151,7 +155,11 @@ export class ProductOffersComponent implements OnInit {
           console.error('Error creating product offer:', error);
           this.currentOffer.validUntil = oldDate;
           this.errorArray = [];
-          this.errorArray.push(error.message);
+          if (error && error.message === "Field value too long") {
+            this.errorArray.push('File size exceeds 4 MB!');
+          } else {
+            this.errorArray.push(error);
+          }
         });
       }
     }

@@ -79,12 +79,16 @@ export class RewardSchemesComponent implements OnInit {
           this.loadRewardSchemes();
         }
       }, error => {
-        console.error('Error updating reward scheme:', error);
+        console.error('Error updating reward scheme:', error.message);
         this.errorArray = [];
-        this.errorArray.push(error);
+        if (error && error.message === "Field value too long") {
+          this.errorArray.push('File size exceeds 4 MB!');
+        } else {
+          this.errorArray.push(error);
+        }
       });
     } else {
-      this.apiRequestService.createWithImage(this.apiUrls.createRewardScheme, this.currentRewardScheme).subscribe((response) => {
+      this.apiRequestService.createWithImage(this.apiUrls.createRewardScheme, formData).subscribe((response) => {
         if (response) {
           modalRef.close();
           Swal.fire('Success', 'Reward scheme added successfully', 'success');
@@ -96,7 +100,11 @@ export class RewardSchemesComponent implements OnInit {
       }, error => {
         console.error('Error creating reward scheme:', error);
         this.errorArray = [];
-        this.errorArray.push(error);
+        if (error && error.message === "Field value too long") {
+          this.errorArray.push('File size exceeds 4 MB!');
+        } else {
+          this.errorArray.push(error);
+        }
       });
     }
   }
