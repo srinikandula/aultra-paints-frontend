@@ -5,14 +5,16 @@ import {ApiRequestService} from '../services/api-request.service';
 import {CommonModule} from '@angular/common';
 import {FormsModule, NgForm} from '@angular/forms';
 import {Router} from "@angular/router";
+import { RouterModule } from '@angular/router';
 import {ApiUrlsService} from "../services/api-urls.service";
 import {isArray} from "node:util";
 import {AuthService} from "../services/auth.service";
+import { UnverifiedUsersComponent } from '../unverified-users/unverified-users.component';
 
 @Component({
     selector: 'app-user-list',
     standalone: true,
-    imports: [CommonModule, FormsModule, NgbPagination],
+    imports: [CommonModule, FormsModule, NgbPagination,RouterModule, UnverifiedUsersComponent],
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.css']
 })
@@ -46,6 +48,7 @@ export class UserListComponent implements OnInit {
         {id: 'SuperUser', name: 'Super User'},
     ];
     errors: any;
+    currentTab: string = 'users'; 
 
     constructor(private apiService: ApiRequestService, private modalService: NgbModal,
                 private router: Router, private apiUrls: ApiUrlsService, private AuthService: AuthService) {
@@ -67,6 +70,14 @@ export class UserListComponent implements OnInit {
                 console.error('Error fetching users:', error);
             }
         );
+    }
+
+     // Switch between 'users' and 'unverified' tabs
+     switchTab(tab: string): void {
+        this.currentTab = tab;
+        if (tab === 'users') {
+            this.loadUsers();
+        }
     }
 
     toggleUserStatus(userId: string, currentStatus: string, event: any): void {
@@ -129,7 +140,6 @@ export class UserListComponent implements OnInit {
         
         // Check if the form is valid
         if (this.userForm.valid) {
-            // Show confirmation dialog using Swal
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'Do you want to save this user?',
@@ -166,7 +176,6 @@ export class UserListComponent implements OnInit {
         
         // Check if the form is valid
         if (userForm.valid) {
-            // Show confirmation dialog using Swal
             Swal.fire({
                 title: 'Are you sure?',
                 text: 'Do you want to save these changes?',

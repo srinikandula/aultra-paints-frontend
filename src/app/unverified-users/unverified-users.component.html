@@ -1,0 +1,77 @@
+
+  <div class="row mb-4">
+    <div class="col-sm-2">
+      <h4>Unverified Users</h4>
+    </div>
+    <div class="col-sm-10">
+      <div class="d-flex justify-content-end align-items-center">
+        <div class="mx-3">
+          <input [(ngModel)]="searchQuery" (input)="searchUnverifiedUsers()" placeholder="Search by Mobile Number" class="form-control" />
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Table for Unverified Users -->
+  <div class="table-wrapper">
+    <table class="table table-hover">
+      <thead>
+        <tr>
+          <th scope="col">S.NO</th>
+          <th scope="col">Name</th>
+          <th scope="col">Mobile</th>
+          <th scope="col">Type</th>
+          <th class="text-center">Reward Points</th>
+          <th class="text-center">Total Cash Reward</th>
+          <th class="text-center">Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let user of unverifiedUsers; let i = index">
+          <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
+          <td>{{ user.name }}</td>
+          <td>{{ user.mobile }}</td>
+          <td>{{ user.accountType }}</td>
+          <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
+              {{ user.rewardPoints }}
+          </td>
+          <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
+              {{ user.cash }}
+          </td>
+          <td class="text-center">
+              <label class="switch">
+                  <input type="checkbox" [checked]="user.status === 'active'"
+                         (change)="toggleUserStatus(user._id, user.status, $event)">
+                  <span class="slider round"></span>
+              </label>
+          </td>
+        </tr>
+        <tr *ngIf="unverifiedUsers.length === 0">
+          <td class="text-center" colspan="7">No Records found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="row">
+      <div class="col-sm-12 text-right">
+          <div class="d-flex justify-content-end">
+              <!-- Page Size Selector -->
+              <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
+                  <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
+              </select>
+
+              <!-- Pagination Controls -->
+              <ngb-pagination class="mx-2"
+                              [(page)]="currentPage"
+                              [pageSize]="limit"
+                              [collectionSize]="totalUsers"
+                              [boundaryLinks]="true"
+                              (pageChange)="handlePageChange($event)"
+                              [maxSize]="5">
+              </ngb-pagination>
+          </div>
+      </div>
+  </div>
+

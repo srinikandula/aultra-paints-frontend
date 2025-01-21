@@ -1,95 +1,117 @@
+<div class="row mb-4" style=" margin-left: 10px;">
+    <div class="col-sm-12">
+        <div class="card-body">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="nav-link" 
+                       [class.active]="currentTab === 'users'" 
+                       (click)="switchTab('users')" 
+                       aria-current="page">Users</a>
+                </li>
+                <li class="nav-item" style="margin-left: 10px;">
+                    <a class="nav-link" 
+                       [class.active]="currentTab === 'unverified'" 
+                       (click)="switchTab('unverified')">Unverified Users</a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 <div class="container-fluid container-mt shadow-sm">
-    <div class="row mb-4">
-        <div class="col-sm-2"><h4>Users</h4></div>
-        <div class="col-sm-10">
-            <div class="d-flex justify-content-end align-items-center">
-                <div class="mx-3">
-                    <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..."
-                           class="form-control "/>
+    <div *ngIf="currentTab === 'users'">
+        <!-- User List Content -->
+        <div class="row mb-4">
+            <div class="col-sm-2">
+                <h4>Users</h4>
+            </div>
+            <div class="col-sm-10">
+                <div class="d-flex justify-content-end align-items-center">
+                    <div class="mx-3">
+                        <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..." class="form-control"/>
+                    </div>
+                    <button (click)="addUser(userModal)" class="btn btn-primary">Add User</button>
                 </div>
-                <button (click)="addUser(userModal)" class="btn btn-primary">Add User</button>
+            </div>
+        </div>
+        
+        <!-- Table to display users -->
+        <div class="table-wrapper">
+            <table class="table table-hover">
+                <thead>
+                <tr>
+                    <th>S.NO</th>
+                    <th>Name</th>
+                    <th>Mobile Number</th>
+                    <th>Type</th>
+                    <th class="text-center">Reward Points</th>
+                    <th class="text-center">Total Cash Reward</th>
+                    <th class="text-center">Status</th>
+                    <th class="text-center">Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr *ngFor="let user of users; let i = index">
+                    <td>{{ (currentPage - 1) * limit + (i + 1) }}</td>
+                    <td>{{ user.name }}</td>
+                    <td>{{ user.mobile }}</td>
+                    <td>{{ user.accountType }}</td>
+                    <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
+                        {{ user.rewardPoints }}
+                    </td>
+                    <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
+                        {{ user.cash }}
+                    </td>
+                    <td class="text-center">
+                        <label class="switch">
+                            <input type="checkbox" [checked]="user.status === 'active'"
+                                   (change)="toggleUserStatus(user._id, user.status, $event)">
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                    <td class="text-center">
+                        <button (click)="editUser(user, editUserModal)" class="btn btn-warning mx-2" title="Update">
+                            <i class="bx bx-edit"></i>
+                        </button>
+                        <button (click)="deleteUser(user._id)" class="btn btn-danger mx-2" title="Delete">
+                            <i class="bx bx-trash"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr *ngIf="users.length === 0">
+                    <td class="text-center" colspan="8">No Records found</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Pagination Controls -->
+        <div class="row">
+            <div class="col-sm-12 text-right">
+                <div class="d-flex justify-content-end">
+                    <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
+                        <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
+                    </select>
+                    <ngb-pagination class="mx-2"
+                                    [(page)]="currentPage"
+                                    [pageSize]="limit"
+                                    [collectionSize]="totalPages"
+                                    [boundaryLinks]="true"
+                                    (pageChange)="handlePageChange($event)"
+                                    [maxSize]="5">
+                    </ngb-pagination>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Table to display users -->
-    <div class="table-wrapper">
-        <table class="table table-hover">
-            <thead>
-            <tr>
-                <th>S.NO</th>
-                <th>Name</th>
-                <th>Mobile Number</th>
-                <th>Type</th>
-                <!--                    <th>Email</th>-->
-                <th class="text-center">Reward Points</th>
-                <th class="text-center">Total Cash Reward</th>
-                <th class="text-center">Status</th>
-                <th class="text-center">Actions</th>
-            </tr>
-            </thead>
-            <tbody>
-            <tr *ngFor="let user of users; let i = index">
-                <td>{{ (currentPage - 1) * limit + (i + 1) }}</td>
-                <td>{{ user.name }}</td>
-                <td>{{ user.mobile }}</td>
-                <td>{{ user.accountType }}</td>
-                <!--                    <td>{{ user.email }}</td>-->
-                <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
-                    {{ user.rewardPoints }}
-                </td>
-                <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)"
-                    style="cursor: pointer">{{ user.cash }}
-                </td>
-                <td class="text-center">
-                    <label class="switch">
-                        <input type="checkbox" [checked]="user.status === 'active'"
-                               (change)="toggleUserStatus(user._id, user.status, $event)">
-                        <span class="slider round"></span>
-                    </label>
-                </td>
-
-
-                <!-- Actions Column: Edit and Delete Buttons -->
-                <td class="text-center">
-<!--                    <button (click)="resetPasswordModalOpen(user, resetPasswordModal)" class="btn btn-primary mx-2"-->
-<!--                            title="Reset password">-->
-<!--                        <i class='bx bxs-key'></i>-->
-<!--                    </button>-->
-                    <button (click)="editUser(user, editUserModal)" class="btn btn-warning mx-2" title="Update">
-                        <i class="bx bx-edit"></i>
-                    </button>
-                    <button (click)="deleteUser(user._id)" class="btn btn-danger mx-2" title="Delete">
-                        <i class="bx bx-trash"></i>
-                    </button>
-                </td>
-            </tr>
-            <tr *ngIf="users.length === 0">
-                <td class="text-center" colspan="8">No Records found</td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
-
-   <!-- Pagination Controls -->
-<div class="row">
-    <div class="col-sm-12 text-right">
-        <div class="d-flex justify-content-end">
-            <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
-                <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
-            </select>
-            <ngb-pagination class="mx-2"
-                            [(page)]="currentPage"
-                            [pageSize]="limit"
-                            [collectionSize]="totalPages"
-                            [boundaryLinks]="true"
-                            (pageChange)="handlePageChange($event)"
-                            [maxSize]="5">
-            </ngb-pagination>
-        </div>
+    <!-- Unverified User Content -->
+    <div *ngIf="currentTab === 'unverified'">
+        <app-unverified-users></app-unverified-users>
     </div>
 </div>
+
+
 
     <!-- <div class="d-flex justify-content-end">
         <div class="pagination-controls">
