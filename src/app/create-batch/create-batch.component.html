@@ -139,7 +139,7 @@
             <!-- Coupon Series -->
             <div class="field col-sm-2">
                 <label class="form-label" for="CouponSeries{{i}}">Coupon Series <span class="text-danger">*</span></label>
-                <input type="number" id="CouponSeries{{i}}" [(ngModel)]="BatchNumber.CouponSeries" name="CouponSeries{{i}}" required class="form-control" #couponSeriesCtrl="ngModel"/>
+                <input type="text" id="CouponSeries{{i}}" [(ngModel)]="BatchNumber.CouponSeries" name="CouponSeries{{i}}" required class="form-control" #couponSeriesCtrl="ngModel" placeholder="Enter Coupon Series "/>
                 <div *ngIf="couponSeriesCtrl.invalid && (couponSeriesCtrl.touched || orderForm.submitted)" class="text-danger">
                     Coupon Series is required.
                 </div>

@@ -21,6 +21,9 @@ export class ApiUrlsService {
   resetPassword = 'users/resetPassword';
   userDashboard = 'users/userDashboard';
 
+   //api urls for unverifed users
+   getUnverifiedUsers = 'users/unverified-users';
+
   // API Urls
   register = 'auth/register';
 

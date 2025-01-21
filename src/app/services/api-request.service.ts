@@ -212,6 +212,16 @@ export class ApiRequestService {
     delete(subUrl: string) {
         return this.http.delete(this.ApiUrls.mainUrl + subUrl).pipe(map((res: any) => res));
     }
-}
+
+    getUnverifiedUsers(page: number = 1, limit: number = 10, searchQuery: string = ''): Observable<any> {
+        const body = {
+          page: page,
+          limit: limit,
+          searchQuery: searchQuery
+        };
+    
+        return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.getUnverifiedUsers, body);
+      }
+}   
 
 

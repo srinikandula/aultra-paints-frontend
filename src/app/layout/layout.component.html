@@ -69,7 +69,15 @@
                         <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Users</span>
                     </li>
 
-                    <!-- Product List (new item) -->
+                    <!-- Unverified Users (Font Awesome Icon) -->
+                    <!-- <li class="nav-item" (click)="navigateTo('unverified-users')">
+                        <div style="display: flex">
+                            <img class="px-2" src="\assets\user.png" alt="Unverified User" style="height: 20px; filter: brightness(0) invert(1);">
+                            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid" class="px-2">Unverified Users</span>
+                        </div>
+                    </li>                      -->
+                        
+                        <!-- Product List (new item) -->
                     <li class="nav-item" (click)="navigateTo('product-list')">
 <!--                        <i class="bx px-2 bxl-product-hunt" style="font-size: 20px;"></i> &lt;!&ndash; Product icon &ndash;&gt;-->
                         <img class="px-2" src="/assets/img/product_w.png" alt="Logo" style="height: 20px;">
