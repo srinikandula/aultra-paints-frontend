@@ -23,7 +23,6 @@
           <th scope="col">Type</th>
           <th class="text-center">Reward Points</th>
           <th class="text-center">Total Cash Reward</th>
-          <th class="text-center">Status</th>
         </tr>
       </thead>
       <tbody>
@@ -37,13 +36,6 @@
           </td>
           <td class="text-primary cursor-pointer text-center" (click)="showRedeemedPoints(user._id)">
               {{ user.cash }}
-          </td>
-          <td class="text-center">
-              <label class="switch">
-                  <input type="checkbox" [checked]="user.status === 'active'"
-                         (change)="toggleUserStatus(user._id, user.status, $event)">
-                  <span class="slider round"></span>
-              </label>
           </td>
         </tr>
         <tr *ngIf="unverifiedUsers.length === 0">

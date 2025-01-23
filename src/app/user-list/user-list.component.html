@@ -1,17 +1,18 @@
-<div class="row mb-4" style=" margin-left: 10px;">
+<div class="row mb-4" style="margin-left: 10px;">
     <div class="col-sm-12">
         <div class="card-body">
-            <ul class="nav nav-pills">
+            <ul class="nav nav-tabs">
                 <li class="nav-item">
                     <a class="nav-link" 
                        [class.active]="currentTab === 'users'" 
-                       (click)="switchTab('users')" 
+                       (click)="switchTab('users')"  
                        aria-current="page">Users</a>
                 </li>
                 <li class="nav-item" style="margin-left: 10px;">
                     <a class="nav-link" 
                        [class.active]="currentTab === 'unverified'" 
-                       (click)="switchTab('unverified')">Unverified Users</a>
+                       (click)="switchTab('unverified')" 
+                       >Unverified Users</a>
                 </li>
             </ul>
         </div>
@@ -135,7 +136,7 @@
                     <label class="form-label" for="addName">Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentUser.name" name="addName"
                            required placeholder="Enter full name" #name="ngModel"/>
-                    <div *ngIf="name.invalid && (name.touched || submitted)" class="text-danger">
+                    <div *ngIf=" submitted &&  name.invalid" class="text-danger">
                         Name is required.
                     </div>
                 </div>
@@ -205,11 +206,11 @@
                 </div>
             </div>
 
-            <div *ngIf="errors?.length > 0" class="alert alert-danger">
+            <div *ngIf="errorsAddUser.length > 0" class="alert alert-danger">
                 <ul>
-                    <li *ngFor="let error of errors">{{ error }}</li>
+                  <li *ngFor="let error of errorsAddUser">{{ error }}</li>
                 </ul>
-            </div>
+              </div>                         
         </form>
     </div>
     <div class="modal-footer">
@@ -303,12 +304,11 @@
                 </div>
             </div>
 
-            <!-- Error Display -->
-            <div *ngIf="errors?.length > 0" class="alert alert-danger">
+            <div *ngIf="errorsEditUser.length > 0" class="alert alert-danger">
                 <ul>
-                    <li *ngFor="let error of errors">{{ error }}</li>
+                  <li *ngFor="let error of errorsEditUser">{{ error }}</li>
                 </ul>
-            </div>
+              </div>              
         </form>
     </div>
 

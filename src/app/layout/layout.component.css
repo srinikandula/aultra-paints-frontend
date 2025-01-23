@@ -2,7 +2,7 @@
 .sidebar {
     width: 250px;
     position: fixed; /* Position sidebar fixed at the left */
-    top: 56px;
+    top: 67px;
     left: 0;
     bottom: 0;
     background-color:#2C3E50;
@@ -88,15 +88,14 @@
 .content {
     /*overflow: auto;*/
     /*max-height: 100vh;*/
-    margin-left: 280px;
-    margin-top: 85px;
+    margin-left: 290px;
+    margin-top: 100px;
     margin-right: 20px;
-    margin-bottom: auto;
     transition: margin-left 0.3s ease-in-out, margin-top 0.3s ease-in-out;
 }
 
 .content.collapsed {
-    margin-left: 75px;
+    margin-left: 85px;
 }
 
 /* Navbar styles */
@@ -105,7 +104,8 @@
     z-index: 50;
     margin-top: 0;
     position: fixed;
-    background-color: #2C3E50;
+    background-color: 
+    #f7f6fb;
     box-shadow: 0 0.5rem 1rem rgba(0, 0, 0, .15) !important
     /*border: 2px solid #19232c;*/
 }
@@ -134,3 +134,4 @@
 .sub-menu-active-height {
     height: auto;
 }
+

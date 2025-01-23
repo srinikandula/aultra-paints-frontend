@@ -67,7 +67,7 @@
                     </option>
                 </select>
                 <!-- Error Message for Product -->
-                <div *ngIf="productName.invalid && (productName.touched || submitted)" class="text-danger">
+                <div *ngIf="submitted && productName.invalid" class="text-danger">
                     Product is required.
                 </div>
                 <!-- Loading message when no products are available -->
@@ -85,9 +85,12 @@
                 </div>
             </div>
 
-            <div *ngIf="errorMessage" class="alert alert-danger mt-2">
-                {{ "Brand already exists for this product" }}
-            </div>
+            <div *ngIf="errors.length > 0" class="alert alert-danger mt-2">
+                <ul>
+                  <li *ngFor="let error of errors">{{ error }}</li>
+                </ul>
+              </div>              
+                   
         </form>
     </div>
     <div class="modal-footer">

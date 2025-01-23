@@ -75,22 +75,25 @@ export class ProductListComponent implements OnInit {
 
   // Method to open the modal for adding a new product
   addProduct(content: any): void {
-    this.currentProduct = { name: '' };  // Reset product details
-    this.submitted = false;  // Reset submission flag
-    this.errors = [];  // Clear previous errors
-    this.modalService.open(content, { size: 'lg' });  // Open modal
+    this.currentProduct = { name: '' };  
+    this.submitted = false; 
+    this.errors = [];  
+    this.modalService.open(content, { size: 'lg' });  
   }
 
-  // Method to save (add or update) the product
   saveProduct(modal: any): void {
-    this.submitted = true;  // Mark the form as submitted
-    
-    // Show validation errors if form is invalid
+    this.submitted = true; 
+  
+    // Clear previous errors before validating
+    this.errors = [];
+  
+    // If the form is invalid, stop here
     if (this.productForm.invalid) {
-      return;  // If the form is invalid, do not proceed
+      this.errors.push('Please fill in all required fields.');
+      return;  
     }
-
-    // Show confirmation dialog using Swal
+  
+    // Show confirmation dialog before proceeding with save
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to save this product?',
@@ -100,58 +103,34 @@ export class ProductListComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.modalService.dismissAll();  // Close the modal
-
         // Check if we are editing an existing product or adding a new one
-        if (this.currentProduct._id) {
-          // Proceed with updating an existing product
-          const successMessage = 'Product updated successfully!';
-          const errorMessage = 'Error updating product!';
-          
-          this.apiService.updateProduct(this.currentProduct._id, this.currentProduct).subscribe({
-            next: () => {
-              this.loadProducts();  // Reload product list
-              this.showSuccess(successMessage);  // Show success message
-            },
-            error: () => {
-              this.showError(errorMessage);  // Show error message
-            }
-          });
-        } else {
-          // If it's a new product, check if it already exists
-          const productExists = this.products.some(product => product.name.toLowerCase() === this.currentProduct.name.toLowerCase());
-          if (productExists) {
-            this.showError('Product with this name already exists!');
-            return;  // Stop execution if product name exists
+        const saveRequest = this.currentProduct._id
+          ? this.apiService.updateProduct(this.currentProduct._id, this.currentProduct)
+          : this.apiService.createProduct(this.currentProduct);
+  
+        // Call the API to save the product
+        saveRequest.subscribe({
+          next: () => {
+            this.loadProducts();  
+            this.showSuccess(this.currentProduct._id ? 'Product updated successfully!' : 'Product added successfully!');  // Show success message
+            this.modalService.dismissAll();  
+          },
+          error: (error) => {
+            console.error('Error:', error);
+            const errorMessage = error?.error || 'Something error occurred while saving the product';
+            this.errors.push(errorMessage);
           }
-
-          // Proceed with creating a new product
-          const successMessage = 'Product added successfully!';
-          const errorMessage = 'Error creating product!';
-
-          this.apiService.createProduct(this.currentProduct).subscribe({
-            next: () => {
-              this.loadProducts();  // Reload product list
-              this.showSuccess(successMessage);  // Show success message
-            },
-            error: () => {
-              this.showError(errorMessage);  // Show error message
-            }
-          });
-        }
-
-        // Reset current product after saving
-        this.currentProduct = { name: '' };
+        });
       }
     });
   }
-
+  
   // Method to open modal for editing a product
   editProduct(product: any, content: any): void {
-    this.currentProduct = { ...product };  // Copy selected product's data
-    this.submitted = false;  // Reset submission flag
-    this.errors = [];  // Clear previous errors
-    this.modalService.open(content, { size: 'lg' });  // Open modal
+    this.currentProduct = { ...product };  
+    this.submitted = false;  
+    this.errors = [];  
+    this.modalService.open(content, { size: 'lg' });  
   }
 
   // Delete a product by ID
