@@ -47,7 +47,8 @@ export class UserListComponent implements OnInit {
         {id: 'Dealer', name: 'Dealer'},
         {id: 'SuperUser', name: 'Super User'},
     ];
-    errors: any;
+    errorsAddUser: string[] = [];  
+    errorsEditUser: string[] = []; 
     currentTab: string = 'users'; 
 
     constructor(private apiService: ApiRequestService, private modalService: NgbModal,
@@ -83,7 +84,7 @@ export class UserListComponent implements OnInit {
     toggleUserStatus(userId: string, currentStatus: string, event: any): void {
         const currentSwitchState = event.target.checked;
         const action = currentSwitchState ? 'active' : 'inactive';
-
+    
         Swal.fire({
             title: `Are you sure you want to mark this user as ${action}?`,
             text: `You are about to mark this user as ${action}.`,
@@ -98,9 +99,9 @@ export class UserListComponent implements OnInit {
                         const user = response.user;
                         const userName = user ? user.name : 'User';
                         Swal.fire('Success', `${userName} has been successfully marked as ${action}.`, 'success');
-
+    
                         event.target.checked = action === 'active';
-
+    
                         const updatedUser = this.users.find(u => u._id === userId);
                         if (updatedUser) {
                             updatedUser.status = action;
@@ -113,17 +114,19 @@ export class UserListComponent implements OnInit {
                     }
                 );
             } else {
-                event.target.checked = currentSwitchState;
+                // Refresh users' data when the user clicks "No, keep it"
+                this.loadUsers();
             }
         });
     }
+    
 
     addUser(userModal: any): void {
         // Reset the currentUser object to a fresh, empty form state
         this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' };
     
         // Clear any previous errors and submitted flag
-        this.errors = [];
+        this.errorsAddUser = [];
         this.submitted = false; // Reset the submitted flag so the form can show validation errors when it's opened
     
         // Open the modal
@@ -131,6 +134,7 @@ export class UserListComponent implements OnInit {
     }
 
     editUser(user: any, content: any): void {
+        this.errorsEditUser = [];
         this.currentUser = {...user};
         this.modalService.open(content, {size: 'lg'});
     }
@@ -155,12 +159,12 @@ export class UserListComponent implements OnInit {
                             this.loadUsers();
                             this.showSuccess('User added successfully!');
                             this.currentUser = {}; 
-                            this.errors = [];
+                            this.errorsAddUser = [];
                             modal.close();
                         },
                         (error) => {
                             if (error?.errors && error.errors.length > 0) {
-                                this.errors = error.errors;
+                                this.errorsAddUser = error.errors;
                             } else {
                                 this.showError('Error adding user!');
                             }
@@ -190,7 +194,7 @@ export class UserListComponent implements OnInit {
                         (data) => {
                             this.loadUsers();
                             this.showSuccess('User updated successfully!');
-                            this.errors = [];
+                            this.errorsEditUser = [];
                             modal.close(); 
     
                             // Optional: If the logged-in user updates their own account type
@@ -228,7 +232,7 @@ export class UserListComponent implements OnInit {
                         },
                         (error) => {
                             if (error?.errors && error.errors.length > 0) {
-                                this.errors = error.errors;
+                                this.errorsEditUser = error.errors;
                             } else {
                                 this.showError('Error updating user!');
                             }

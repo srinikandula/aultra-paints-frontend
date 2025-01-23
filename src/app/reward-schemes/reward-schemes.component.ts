@@ -53,8 +53,13 @@ export class RewardSchemesComponent implements OnInit {
 
   openAddEditModal(modal: any, rewardScheme: any) {
     if (rewardScheme._id) {
+      // Editing an existing reward scheme
       this.currentRewardScheme = { ...rewardScheme };
+    } else {
+      // Adding a new reward scheme, reset rewardSchemeStatus to 'Active'
+      this.currentRewardScheme = { rewardSchemeStatus: 'Active', rewardSchemeImageUrl: '', rewardSchemeImage: '' };
     }
+    
     const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'lg' });
     modalRef.result.then(() => { this.currentRewardScheme = {}; }, () => { this.currentRewardScheme = {}; });
   }

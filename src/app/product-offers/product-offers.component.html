@@ -65,7 +65,7 @@
                     <label class="form-label" for="addName">Offer Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentOffer.productOfferTitle" name="addName"
                            required placeholder="Enter full name" #addNameInput="ngModel"/>
-                    <div *ngIf="addNameInput.invalid && (addNameInput.dirty || addNameInput.touched)" class="text-danger">
+                    <div *ngIf="submitted && addNameInput.invalid" class="text-danger">
                         <div *ngIf="addNameInput.errors?.['required']">Offer Name is required.</div>
                     </div>
                 </div>

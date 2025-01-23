@@ -62,44 +62,6 @@ export class UnverifiedUsersComponent {
     this.fetchUnverifiedUsers(this.currentPage, this.limit, this.searchQuery);
   }
 
-  toggleUserStatus(userId: string, currentStatus: string, event: any): void {
-    const currentSwitchState = event.target.checked;
-    const action = currentSwitchState ? 'active' : 'inactive';
-
-    Swal.fire({
-        title: `Are you sure you want to mark this user as ${action}?`,
-        text: `You are about to mark this user as ${action}.`,
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: `Yes, mark as ${action}`,
-        cancelButtonText: 'No, keep it',
-    }).then((result) => {
-        if (result.isConfirmed) {
-            this.apiRequestService.toggleUserStatus(userId, action).subscribe(
-                (response) => {
-                    const user = response.user;
-                    const userName = user ? user.name : 'User';
-                    Swal.fire('Success', `${userName} has been successfully marked as ${action}.`, 'success');
-
-                    event.target.checked = action === 'active';
-
-                    const updatedUser = this.unverifiedUsers.find(u => u._id === userId);
-                    if (updatedUser) {
-                        updatedUser.status = action;
-                    }
-                },
-                (error) => {
-                    Swal.fire('Error', 'Failed to toggle user status', 'error');
-                    event.target.checked = !currentSwitchState;
-                    console.error('Error toggling user status:', error);
-                }
-            );
-        } else {
-            event.target.checked = currentSwitchState;
-        }
-    });
-  }
-
   showRedeemedPoints(_id: any) {
     this.router.navigate(['/transactions'], { queryParams: { userId: _id } });
   }

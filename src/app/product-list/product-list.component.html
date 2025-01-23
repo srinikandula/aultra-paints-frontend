@@ -65,6 +65,13 @@
           <div *ngIf="submitted && productName.invalid" class="text-danger">
             Product name is required.
           </div>
+
+          <div *ngIf="errors.length > 0" class="text-danger mt-2">
+            <ul>
+              <li *ngFor="let error of errors">{{ error }}</li>
+            </ul>
+          </div>
+          
         </div>
       </form>
     </div>

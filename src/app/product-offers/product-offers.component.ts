@@ -44,7 +44,7 @@ export class ProductOffersComponent implements OnInit {
   imageWidth: string = '20%';
   errorArray: Array<any> = [];
   timestamp: number = new Date().getTime();
-
+  submitted = false;
   constructor(private apiRequestService: ApiRequestService, private modalService: NgbModal, public apiUrls: ApiUrlsService, private datePipe: DatePipe) {}
 
   ngOnInit(): void {
@@ -68,7 +68,9 @@ export class ProductOffersComponent implements OnInit {
         month: defaultDate.getMonth() + 1, // getMonth() returns 0-based month
         day: defaultDate.getDate(),
       };
+      this.submitted = false;
       this.currentOffer.productOfferStatus = offer.productOfferStatus;
+      
     } else {
       this.currentOffer = {};
       const defaultDate = new Date();
@@ -85,6 +87,7 @@ export class ProductOffersComponent implements OnInit {
   }
 
   saveOffer(modalRef: NgbModalRef) {
+    this.submitted = true;
     if (this.productOfferForm.form) {
       Object.keys(this.productOfferForm.form.controls).forEach(field => {
         const control = this.productOfferForm.form.get(field);
