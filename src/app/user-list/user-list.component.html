@@ -238,18 +238,17 @@
                         Name is required.
                     </div>
                 </div>
-
+                
                 <!-- Edit Mobile Number (10 digits) -->
-                <div class="col-sm-6 mb-3 form-group">
+                 <div class="col-sm-6 mb-3 form-group">
                     <label class="form-label" for="mobile">Mobile Number <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="mobile" [(ngModel)]="currentUser.mobile" name="mobile"
-                           maxlength="10" oninput="this.currentUser.mobile = this.currentUser.mobile.replace(/[^0-9]/g, '').slice(0, 10);"
-                           pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number"/>
-                    <div *ngIf="mobile.invalid && (mobile.touched || submitted)" class="text-danger">
-                        Mobile number must be exactly 10 digits.
-                    </div>
-                </div>
-            </div>
+                      maxlength="10" pattern="^\d{10}$" required #mobile="ngModel" placeholder="Enter 10-digit mobile number" readonly />
+                         <div *ngIf="mobile.invalid && (mobile.touched || submitted)" class="text-danger">
+                             Mobile number must be exactly 10 digits.
+                             </div>
+                            </div>
+                        </div>
 
             <!-- Edit Account Type and Dealer Code in One Row -->
             <div class="row">
@@ -261,6 +260,16 @@
                     <div *ngIf="accountType.invalid && (accountType.touched || submitted)" class="text-danger">
                         Account Type is required.
                     </div>
+                </div>
+
+                 <!-- Display Parent Dealer Code if User is Painter and has parentDealerCode -->
+                <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Painter'">
+                    <label for="parentDealerCode" class="form-label">Parent Dealer Code</label>
+                    <input type="text" class="form-control" id="parentDealerCode" [(ngModel)]="currentUser.parentDealerCode"
+                           name="parentDealerCode"  placeholder="Parent Dealer Code" #parentDealercode="ngModel" />
+                           <div *ngIf="parentDealercode.invalid && (parentDealercode.touched || submitted)" class="text-danger">
+                            Dealer Code is required.
+                        </div>
                 </div>
 
                 <div class="col-sm-6 mb-3 form-group" *ngIf="currentUser.accountType === 'Dealer'">

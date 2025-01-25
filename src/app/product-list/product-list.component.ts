@@ -4,11 +4,12 @@ import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { CommonModule } from '@angular/common';
 import { FormsModule, NgForm } from '@angular/forms';
 import Swal from 'sweetalert2'; 
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-product-list',
   standalone: true,
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule, NgbPagination],
   templateUrl: './product-list.component.html',
   styleUrls: ['./product-list.component.css']
 })
@@ -25,6 +26,7 @@ export class ProductListComponent implements OnInit {
   totalPages: number = 1;
   totalProducts: number = 0;
   limit: number = 10;
+  limitOptions: number[] = [10, 20, 50, 100]; 
 
   constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
   @ViewChild('productForm', { static: false }) productForm!: NgForm;  // Reference to the form
@@ -37,10 +39,12 @@ export class ProductListComponent implements OnInit {
     this.apiService.getProducts({ page: this.currentPage, limit: this.limit }).subscribe(
       (data) => {
         this.products = data.products;  
-        this.totalPages = data.pagination.totalPages;  
         this.totalProducts = data.pagination.totalProducts; 
+        // Calculate totalPages based on the totalProducts and limit
+        this.totalPages = Math.ceil(this.totalProducts / this.limit);  
       },
       (error) => {
+        console.error('Error loading products', error);
       }
     );
   }
@@ -157,18 +161,14 @@ export class ProductListComponent implements OnInit {
     });
   }
 
-  
-   nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.loadProducts(); 
-    }
+  handlePageChange(page: number): void {
+    this.currentPage = page;
+    this.loadProducts();
   }
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadProducts();  
-    }
+
+  handleLimitChange(): void {
+    this.currentPage = 1; // Reset to the first page when the page size changes
+    this.loadProducts();
   }
 
   showSuccess(message: string): void {

@@ -45,31 +45,19 @@ export class TransactionsComponent implements OnInit {
 
     getAllTransactions(page: number = this.currentPage) {
         this.apiRequest.create(this.ApiUrls.getTransactions, {page: page, limit: this.limit, userId: this.userId}).subscribe(
-            (response: any) => {
-                this.transactions = response.transactionsData;
-                this.totalPages = response.pages;
-                // this.limitOptions = Array.from({length: Math.ceil(this.totalPages / this.limit)}, (_, i) => (i + 1) * this.limit);
-                // this.currentPage = response.currentPage;
-            },
-            (error: any) => {
-                console.error('Error loading branches:', error);
-            }
+          (response: any) => {
+            this.transactions = response.transactionsData;
+            // Ensure totalPages is calculated correctly
+            this.totalPages = Math.ceil(response.total / this.limit);
+            console.log('Fetched transactions:', response);
+          },
+          (error: any) => {
+            console.error('Error loading transactions:', error);
+          }
         );
-    }
+      }
+      
 
-    prevPage(): void {
-        if (this.currentPage > 1) {
-            this.currentPage = this.currentPage - 1
-            this.getAllTransactions(this.currentPage);
-        }
-    }
-
-    nextPage(): void {
-        if (this.currentPage < this.totalPages) {
-            this.currentPage = this.currentPage + 1
-            this.getAllTransactions(this.currentPage);
-        }
-    }
 
     setQrUrl(qr_code: any) {
         this.showUpdateModal = true;

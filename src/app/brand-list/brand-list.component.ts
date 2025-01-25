@@ -4,11 +4,12 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import Swal from 'sweetalert2'; 
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-brand-list',
   standalone: true,
-  imports: [FormsModule, CommonModule],
+  imports: [FormsModule, CommonModule, NgbPagination],
   templateUrl: './brand-list.component.html',
   styleUrls: ['./brand-list.component.css']
 })
@@ -28,6 +29,7 @@ export class BrandListComponent {
   totalProducts: number = 0;
   limit: number = 10;
   totalBrands:number = 0;
+  limitOptions: number[] = [10, 20, 50, 100]; 
 
   constructor(
     private apiRequestService: ApiRequestService,
@@ -184,17 +186,14 @@ export class BrandListComponent {
     });
   }
 
-  nextPage(): void {
-    if (this.currentPage < this.totalPages) {
-      this.currentPage++;
-      this.loadBrands(); 
-    }
+  handlePageChange(page: number): void {
+    this.currentPage = page;
+    this.loadBrands();
   }
-  prevPage(): void {
-    if (this.currentPage > 1) {
-      this.currentPage--;
-      this.loadBrands();  
-    }
+
+  handleLimitChange(): void {
+    this.currentPage = 1; 
+    this.loadBrands();
   }
 
   // Show success alert

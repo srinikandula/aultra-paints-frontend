@@ -38,6 +38,9 @@ export class ProductOffersComponent implements OnInit {
     searchQuery: ''
   };
 
+  limitOptions: number[] = [10, 20, 30, 50];  
+  limit: number = 10;  
+  totalUsers: number = 0;  
   currentPage: number = 1;
   totalPages: number = 1;
   uploadImageWidth: string = '20%';
@@ -52,14 +55,17 @@ export class ProductOffersComponent implements OnInit {
   }
 
   loadProductOffers() {
-    this.productOffers = [];
+    this.productOffers = []; 
     this.apiRequestService.create(this.apiUrls.searchProductOffers, this.productOffersQuery).subscribe((response: any) => {
       this.productOffers = response.data;
-      this.totalPages = response.total;
+      this.totalUsers = response.total;  
+      this.totalPages = Math.ceil(this.totalUsers / this.productOffersQuery.limit); 
     });
   }
+  
 
   addOrEditOffer(modal: any, offer: any) {
+    this.errorArray = [];
     if (offer._id) {
       this.currentOffer = { ...offer };
       const defaultDate = new Date(offer.validUntil);
@@ -138,11 +144,11 @@ export class ProductOffersComponent implements OnInit {
           console.error('Error updating product offer:', error);
           this.errorArray = [];
           this.currentOffer.validUntil = oldDate;
-          if (error && error.message === "Field value too long") {
-            this.errorArray.push('File size exceeds 4 MB!');
-          } else {
+          if (error && error.message) {
+            this.errorArray.push(error.message); 
+        } else {
             this.errorArray.push(error);
-          }
+        }
         });
       } else {
         this.apiRequestService.createWithImage(this.apiUrls.createProductOffer, formData).subscribe((response) => {
@@ -158,12 +164,12 @@ export class ProductOffersComponent implements OnInit {
           console.error('Error creating product offer:', error);
           this.currentOffer.validUntil = oldDate;
           this.errorArray = [];
-          if (error && error.message === "Field value too long") {
-            this.errorArray.push('File size exceeds 4 MB!');
+          if (error && error.message) {
+              this.errorArray.push(error.message); 
           } else {
-            this.errorArray.push(error);
+              this.errorArray.push(error);
           }
-        });
+      });
       }
     }
   }
@@ -186,19 +192,17 @@ export class ProductOffersComponent implements OnInit {
     });
   }
 
-  prevPage() {
-    if (this.productOffersQuery.page > 1) {
-      this.productOffersQuery.page--;
-      this.loadProductOffers();
-    }
+  handlePageChange(page: number) {
+    this.productOffersQuery.page = page; // Update page number in the query
+    this.loadProductOffers(); // Reload product offers with updated page number
   }
-
-  nextPage() {
-    if (this.productOffersQuery.page < this.totalPages) {
-      this.productOffersQuery.page++;
-      this.loadProductOffers();
-    }
+  
+  handleLimitChange() {
+    this.productOffersQuery.limit = this.limit; // Update limit in the query
+    this.productOffersQuery.page = 1; // Reset to first page when limit changes
+    this.loadProductOffers(); // Reload product offers with updated limit
   }
+  
 
   editOffer(offer: any, productModal: any) {
     this.addOrEditOffer(productModal, offer);
