@@ -17,7 +17,6 @@
                     <th>Batch</th>
                     <th>Points</th>
                     <th>Value</th>
-                    <th>Is Redeemed</th>
                     <th>QR Code</th>
                     <th>Redeemed by</th>
                     <th>Cash paid to</th>
@@ -34,7 +33,6 @@
                     <td>{{ item.branchName }} - {{ item.batchNumber }}</td>
                     <td>{{ item.redeemablePoints }}</td>
                     <td>{{ item.value }}</td>
-                    <td>{{ item.isProcessed ? 'Yes' : 'No' }}</td>
                     <td>
                         <button class="btn btn-light btn-lg" (click)="setQrUrl(item.qr_code)">
                             <i class="bx bx-qr" [ngStyle]="{ 'color': item.isProcessed ? 'red' : ''}"></i>
