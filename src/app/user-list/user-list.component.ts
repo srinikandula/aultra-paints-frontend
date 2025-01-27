@@ -283,20 +283,6 @@ export class UserListComponent implements OnInit {
         });
     }
 
-    prevPage(): void {
-        if (this.currentPage > 1) {
-            this.currentPage = this.currentPage - 1;
-            this.loadUsers();
-        }
-    }
-
-    nextPage(): void {
-        if (this.currentPage < this.totalPages) {
-            this.currentPage = this.currentPage + 1;
-            this.loadUsers();
-        }
-    }
-
     showRedeemedPoints(_id: any) {
         this.router.navigate(['/transactions'], {queryParams: {userId: _id}});
     }

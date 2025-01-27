@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import Swal from 'sweetalert2';
-import { NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModal, NgbPaginationModule } from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-unverified-users',
@@ -21,8 +21,11 @@ export class UnverifiedUsersComponent {
   limit: number = 10;  
   searchQuery: string = '';
   limitOptions: number[] = [10, 20, 50, 100]; 
+  currentUser: any = {};  // To store the current user being edited
+  errorsEditUser: any[] = [];  // To store errors for the edit form
+  submitted: boolean = false;  // To track form submission status
 
-  constructor(private apiRequestService: ApiRequestService, private router: Router) {}
+  constructor(private apiRequestService: ApiRequestService, private router: Router,  private modalService: NgbModal) {}
 
   ngOnInit(): void {
     this.fetchUnverifiedUsers(); 
@@ -43,6 +46,47 @@ export class UnverifiedUsersComponent {
         console.error('Error fetching unverified users', error);
       }
     });
+  }
+
+   // Open the modal to edit a user
+   openEditModal(user: any, content: any): void {
+    this.errorsEditUser = [];
+    this.currentUser = { ...user };  // Populate currentUser with the selected user's details
+    this.modalService.open(content, { size: 'lg' });  // Open the modal
+  }
+
+  // Update user method (similar to the one in your original code)
+  updateUser(modal: any, userForm: any): void {
+    this.submitted = true;
+
+    if (userForm.valid) {
+      Swal.fire({
+        title: 'Are you sure?',
+        text: 'Do you want to save these changes?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, save it!',
+        cancelButtonText: 'Cancel'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          // Update user via API
+          this.apiRequestService.updateUser(this.currentUser._id, this.currentUser).subscribe(
+            () => {
+              this.fetchUnverifiedUsers(this.currentPage, this.limit, this.searchQuery);
+              Swal.fire('User updated successfully!', '', 'success');
+              modal.close();  // Close modal
+            },
+            (error) => {
+              if (error?.errors && error.errors.length > 0) {
+                this.errorsEditUser = error.errors;
+              } else {
+                Swal.fire('Error', 'Error updating user!', 'error');
+              }
+            }
+          );
+        }
+      });
+    }
   }
 
   // Method triggered when page size is changed

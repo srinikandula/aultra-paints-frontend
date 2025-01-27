@@ -40,17 +40,29 @@
     </div>
 </div>
 
-
 <div class="container-fluid my-4">
-<!-- Pagination Controls -->
-    <div class="d-flex justify-content-end">
-        <div class="pagination-controls">
-            <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
-            <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
-            <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
+    <!-- Pagination Controls -->
+    <div class="row">
+      <div class="col-sm-12 text-right">
+        <div class="d-flex justify-content-end">
+          <!-- Page Size Selector -->
+          <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
+            <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
+          </select>
+  
+          <ngb-pagination class="mx-2"
+          [(page)]="productOffersQuery.page"
+          [pageSize]="productOffersQuery.limit"
+          [collectionSize]="totalUsers"
+          [boundaryLinks]="true"
+          (pageChange)="handlePageChange($event)"
+          [maxSize]="5">
+</ngb-pagination>
         </div>
+      </div>
     </div>
-</div>
+  </div>
+  
 
 
 <ng-template #productModal let-modal>
@@ -138,9 +150,9 @@
             </div>
             <div class="row" *ngIf="errorArray.length > 0">
                 <div class="col-sm-12">
-                    <ol>
+                    <ul>
                         <li *ngFor="let err of errorArray; let i = index" class="text-danger">{{err}}</li>
-                    </ol>
+                    </ul>
                 </div>
             </div>
         </form>

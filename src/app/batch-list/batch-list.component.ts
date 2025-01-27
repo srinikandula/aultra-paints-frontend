@@ -7,21 +7,22 @@ import {ApiUrlsService} from "../services/api-urls.service";
 import {ApiRequestService} from "../services/api-request.service";
 import { NgSelectComponent } from '@ng-select/ng-select';
 import Swal from "sweetalert2";
+import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
 
 
 @Component({
   selector: 'app-batch-list',
   standalone: true,
-  imports: [FormsModule, CommonModule, NgSelectComponent],
+  imports: [FormsModule, CommonModule, NgSelectComponent, NgbPagination],
   templateUrl: './batch-list.component.html',
   styleUrl: './batch-list.component.css'
 })
 export class BatchListComponent {
 branches: any[] = [];
-    currentPage = 1;
-    totalPages = 1;
-    totalBranches = 0;
-    limit = 10;
+currentPage = 1;
+totalBranches = 0;
+limit = 10;  // Default page size
+limitOptions = [10, 20, 50, 100];  // Available page size options
     searchQuery: string = '';
     showUpdateModal = false;
     selectedBranch: any = {
@@ -50,56 +51,51 @@ branches: any[] = [];
         })
     }
 
-    loadBranches(page: number = this.currentPage): void {
-        this.apiRequest.post(this.ApiUrls.getBatches, {page: page, limit: this.limit, searchQuery: this.searchQuery}).subscribe((response) => {
-            this.branches = response.branches;
-            this.totalBranches = response.total;
-            this.totalPages = response.pages;
-            this.currentPage = response.currentPage;
-        }, (error) => {
-            console.error('Error loading branches:', error);
-        });
-    }
+    // Method to load branches with pagination
+  loadBranches(page: number = this.currentPage, limit: number = this.limit): void {
+    this.apiRequest.post(this.ApiUrls.getBatches, { page, limit, searchQuery: this.searchQuery }).subscribe((response: any) => {
+      this.branches = response.branches;
+      this.totalBranches = response.total; 
+    }, (error) => {
+      console.error('Error loading branches:', error);
+    });
+  }
 
-    // Search branches by BatchNumber when the user types in the search box
-    onSearch(): void {
+      onSearch(): void {
         if (this.searchQuery.trim() !== '') {
-            // Call search API if there is a search query
-            this.apiRequest.searchBranch(this.ApiUrls.searchBranch, this.searchQuery).subscribe(
-                (response) => {
-                    this.branches = [response];  // If only one branch is found, it will return a single branch
-                    this.totalBranches = 1;  // Only one branch will be found
-                    this.totalPages = 1;  // One page only
-                },
-                (error) => {
-                    console.error('Error searching branch:', error);
-                    this.branches = [];  // Clear the branches if no match is found
-                    this.totalBranches = 0;  // No results
-                }
-            );
+          this.apiRequest.searchBranch(this.ApiUrls.searchBranch, this.searchQuery).subscribe(
+            (response) => {
+              this.branches = [response];
+              this.totalBranches = 1;
+              this.currentPage = 1;
+            },
+            (error) => {
+              console.error('Error searching branch:', error);
+              this.branches = [];
+              this.totalBranches = 0;
+              this.currentPage = 1;
+            }
+          );
         } else {
-            // If search query is empty, load all branches
-            this.loadBranches();
+          this.loadBranches();
         }
-    }
+      }
 
     onCreateBatch(): void {
         this.router.navigate(['/create-batch']);
     }
 
-    prevPage(): void {
-        if (this.currentPage > 1) {
-            this.currentPage = this.currentPage - 1
-            this.loadBranches(this.currentPage);
-        }
-    }
+    // Handle page size change
+  handleLimitChange(): void {
+    this.currentPage = 1; 
+    this.loadBranches(this.currentPage, this.limit); 
+  }
 
-    nextPage(): void {
-        if (this.currentPage < this.totalPages) {
-            this.currentPage = this.currentPage + 1
-            this.loadBranches(this.currentPage);
-        }
-    }
+  // Handle page change (when user clicks on a different page)
+  handlePageChange(page: number): void {
+    this.currentPage = page; 
+    this.loadBranches(page, this.limit); 
+  }
 
     onUpdate(branch: any): void {
         this.selectedBranch = {...branch};
