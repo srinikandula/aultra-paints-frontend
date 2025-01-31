@@ -222,6 +222,19 @@ export class ApiRequestService {
     
         return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.getUnverifiedUsers, body);
       }
+      
+   // ** CashFree API Method **
+   getCashFreeTransactions(page: number = 1, limit: number = 10): Observable<any> {
+    const params = new HttpParams()
+        .set('page', page.toString())
+        .set('limit', limit.toString());
+
+    return this.http.get(this.ApiUrls.mainUrl + 'cashFree/getTransactions', { params }).pipe(
+        map((res: any) => res)
+    );
+}
+      
 }   
+
 
 

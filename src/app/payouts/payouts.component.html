@@ -1,0 +1,61 @@
+<div class="container-fluid container-mt shadow-sm">
+  <!-- Payouts Header Section -->
+  <div class="row mb-4">
+    <div class="col-sm-2">
+      <h4>Payouts</h4>
+    </div>
+  </div>
+
+<div class="table-wrapper">
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">S.NO</th>
+        <th scope="col">Transfer ID</th>
+        <th scope="col">Status</th>
+        <th scope="col">Status Code</th>
+        <th scope="col">Transfer Mode</th>
+        <th scope="col">Transfer Amount</th>
+        <th scope="col">Added On</th>
+        <th scope="col">Updated On</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let transaction of cashFreeTransactions; let i = index">
+        <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
+        <td>{{ transaction.transfer_id }}</td>
+        <td>{{ transaction.status }}</td>
+        <td>{{ transaction.status_code }}</td>
+        <td>{{ transaction.transfer_mode }}</td>
+        <td>{{ transaction.transfer_amount }}</td>
+        <td>{{ transaction.added_on | date: 'short' }}</td>
+        <td>{{ transaction.updated_on | date: 'short' }}</td>
+      </tr>
+      <tr *ngIf="cashFreeTransactions.length === 0">
+        <td class="text-center" colspan="9">No Records found</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+  
+  <!-- Pagination Controls -->
+  <div class="row">
+    <div class="col-sm-12 text-right">
+      <div class="d-flex justify-content-end">
+        <!-- Page Size Selector -->
+        <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px;">
+          <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
+        </select>
+  
+        <!-- Pagination Controls -->
+        <ngb-pagination class="mx-2"
+                        [(page)]="currentPage"
+                        [pageSize]="limit"
+                        [collectionSize]="totalTransactions"
+                        [boundaryLinks]="true"
+                        (pageChange)="handlePageChange($event)"
+                        [maxSize]="5">
+        </ngb-pagination>
+      </div>
+    </div>
+  </div>

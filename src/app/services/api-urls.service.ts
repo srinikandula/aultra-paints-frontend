@@ -39,6 +39,10 @@ export class ApiUrlsService {
   // Transactions
   getTransactions = 'transaction';
 
+
+//cashFree
+getcashfreetransaction = 'cashFree/getTransactions';
+
   // Product URLs
   createProduct = 'products';
   getProducts = 'products';
