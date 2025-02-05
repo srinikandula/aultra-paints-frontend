@@ -174,19 +174,19 @@ export class ApiRequestService {
     }
 
     // Get all users
-    getUsers(page: number, limit: number, searchQuery: any) {
-        // const params = new HttpParams()
-        //     .set('page', page.toString())
-        //     .set('limit', limit.toString());
+    getUsers(page: number, limit: number, searchQuery: any, accountType: string) {
         let query = {
             page: page,
             limit: limit,
-            searchQuery: searchQuery
-        }
+            searchQuery: searchQuery,
+            accountType: accountType // Include accountType in the query
+        };
+        
         return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.searchUser, query).pipe(
             map((res: any) => res)
         );
     }
+    
 
     // Add a new user
     addUser(user: any) {

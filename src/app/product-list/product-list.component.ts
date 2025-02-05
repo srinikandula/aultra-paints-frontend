@@ -82,7 +82,7 @@ export class ProductListComponent implements OnInit {
     this.currentProduct = { name: '' };  
     this.submitted = false; 
     this.errors = [];  
-    this.modalService.open(content, { size: 'lg' });  
+    this.modalService.open(content, { size: 'md' });  
   }
 
   saveProduct(modal: any): void {
@@ -134,7 +134,7 @@ export class ProductListComponent implements OnInit {
     this.currentProduct = { ...product };  
     this.submitted = false;  
     this.errors = [];  
-    this.modalService.open(content, { size: 'lg' });  
+    this.modalService.open(content, { size: 'md' });  
   }
 
   // Delete a product by ID

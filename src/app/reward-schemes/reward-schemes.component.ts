@@ -52,6 +52,7 @@ export class RewardSchemesComponent implements OnInit {
   }
 
   openAddEditModal(modal: any, rewardScheme: any) {
+    this.errorArray = []; 
     if (rewardScheme._id) {
       // Editing an existing reward scheme
       this.currentRewardScheme = { ...rewardScheme };
@@ -60,7 +61,7 @@ export class RewardSchemesComponent implements OnInit {
       this.currentRewardScheme = { rewardSchemeStatus: 'Active', rewardSchemeImageUrl: '', rewardSchemeImage: '' };
     }
     
-    const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'lg' });
+    const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'md' });
     modalRef.result.then(() => { this.currentRewardScheme = {}; }, () => { this.currentRewardScheme = {}; });
   }
 
@@ -73,46 +74,51 @@ export class RewardSchemesComponent implements OnInit {
       formData.append('rewardSchemeImageUrl', this.currentRewardScheme.rewardSchemeImageUrl);
     }
     formData.append('rewardSchemeStatus', this.currentRewardScheme.rewardSchemeStatus);
+  
+    const handleError = (error: { error: string; message: string; }) => {
+      console.error('Error:', error);
+      this.errorArray = [];
+
+      // Check if error message is available and accessible
+      if (error && error.error) {
+        this.errorArray.push(error.error);
+
+      } else if (error) {
+        this.errorArray.push(error);
+      }
+    };
+  
     if (this.currentRewardScheme._id) {
-      this.apiRequestService.updateWithImage(this.apiUrls.updateRewardScheme + this.currentRewardScheme._id, formData).subscribe((response) => {
-        if (response) {
-          modalRef.close();
-          Swal.fire('Success', 'Reward scheme updated successfully', 'success');
-          this.timestamp = new Date().getTime();
-          this.currentRewardScheme = {};
-          this.errorArray = [];
-          this.loadRewardSchemes();
-        }
-      }, error => {
-        console.error('Error updating reward scheme:', error.message);
-        this.errorArray = [];
-        if (error && error.message === "Field value too long") {
-          this.errorArray.push('File size exceeds 4 MB!');
-        } else {
-          this.errorArray.push(error);
-        }
-      });
+      this.apiRequestService.updateWithImage(this.apiUrls.updateRewardScheme + this.currentRewardScheme._id, formData).subscribe(
+        (response) => {
+          if (response) {
+            modalRef.close();
+            Swal.fire('Success', 'Reward scheme updated successfully', 'success');
+            this.timestamp = new Date().getTime();
+            this.currentRewardScheme = {};
+            this.errorArray = [];
+            this.loadRewardSchemes();
+          }
+        },
+        (error) => handleError(error) // Use the error handler
+      );
     } else {
-      this.apiRequestService.createWithImage(this.apiUrls.createRewardScheme, formData).subscribe((response) => {
-        if (response) {
-          modalRef.close();
-          Swal.fire('Success', 'Reward scheme added successfully', 'success');
-          this.timestamp = new Date().getTime();
-          this.currentRewardScheme = {};
-          this.errorArray = [];
-          this.loadRewardSchemes();
-        }
-      }, error => {
-        console.error('Error creating reward scheme:', error);
-        this.errorArray = [];
-        if (error && error.message === "Field value too long") {
-          this.errorArray.push('File size exceeds 4 MB!');
-        } else {
-          this.errorArray.push(error);
-        }
-      });
+      this.apiRequestService.createWithImage(this.apiUrls.createRewardScheme, formData).subscribe(
+        (response) => {
+          if (response) {
+            modalRef.close();
+            Swal.fire('Success', 'Reward scheme added successfully', 'success');
+            this.timestamp = new Date().getTime();
+            this.currentRewardScheme = {};
+            this.errorArray = [];
+            this.loadRewardSchemes();
+          }
+        },
+        (error) => handleError(error) // Use the error handler
+      );
     }
   }
+  
 
   prevPage() {
     if (this.rewardSchemesQuery.page > 1) {

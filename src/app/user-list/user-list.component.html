@@ -29,6 +29,17 @@
             <div class="col-sm-10">
                 <div class="d-flex justify-content-end align-items-center">
                     <div class="mx-3">
+                        <!-- User Type Dropdown -->
+                        <select id="accountType" [(ngModel)]="selectedAccountType" (change)="loadUsers()" name="accountType" required class="form-select" #accountTypeCtrl="ngModel" style="width: 200px;">
+                            <option value="All">Select All Users</option>
+                            <option value="Painter">Painter</option>
+                            <option value="Contractor">Contractor</option>
+                            <option value="Dealer">Dealer</option>
+                            <option value="SuperUser">Super User</option>
+                        </select>
+                    </div>
+                    
+                    <div class="mx-3">
                         <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..." class="form-control"/>
                     </div>
                     <button (click)="addUser(userModal)" class="btn btn-primary">Add User</button>

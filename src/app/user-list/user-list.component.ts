@@ -35,6 +35,7 @@ export class UserListComponent implements OnInit {
     currentPage: number = 1;
     totalPages: number = 1;
     submitted = false; // To track the form submission
+    selectedAccountType: string = 'All';
 
     // Mobile number validation pattern (10 digits)
     mobilePattern = '^[0-9]{10}$';
@@ -62,16 +63,19 @@ export class UserListComponent implements OnInit {
 
     // Load users
     loadUsers(): void {
-        this.page = this.currentPage
-        this.apiService.getUsers(this.page, this.limit, this.searchQuery).subscribe((response) => {
-                this.users = response.data;
-                this.totalPages = response.total;
-             },
-            (error) => {
-                console.error('Error fetching users:', error);
-            }
+        this.page = this.currentPage;
+        // Call API with selected account type and search query
+        this.apiService.getUsers(this.page, this.limit, this.searchQuery, this.selectedAccountType).subscribe(
+          (response) => {
+            this.users = response.data;
+            this.totalPages = response.pages; // Assuming response returns pages
+          },
+          (error) => {
+            console.error('Error fetching users:', error);
+          }
         );
     }
+    
 
      // Switch between 'users' and 'unverified' tabs
      switchTab(tab: string): void {
@@ -130,13 +134,13 @@ export class UserListComponent implements OnInit {
         this.submitted = false; // Reset the submitted flag so the form can show validation errors when it's opened
     
         // Open the modal
-        this.modalService.open(userModal, { size: 'lg' });
+        this.modalService.open(userModal, { size: 'md' });
     }
 
     editUser(user: any, content: any): void {
         this.errorsEditUser = [];
         this.currentUser = {...user};
-        this.modalService.open(content, {size: 'lg'});
+        this.modalService.open(content, {size: 'md'});
     }
 
     submitForm(modal: any): void {
