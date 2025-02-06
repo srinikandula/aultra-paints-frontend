@@ -35,7 +35,7 @@ export const routes: Routes = [
             {path: 'unverified-users', component: UnverifiedUsersComponent, canActivate: [AuthGuard]},
             {path: 'product-offers', component: ProductOffersComponent, canActivate: [AuthGuard]},
             {path: 'reward-schemes', component: RewardSchemesComponent, canActivate: [AuthGuard]},
-            {path: 'cash-free', component: PayoutsComponent, canActivate: [AuthGuard]},
+            {path: 'payouts', component: PayoutsComponent, canActivate: [AuthGuard]},
         ]
 
     },
