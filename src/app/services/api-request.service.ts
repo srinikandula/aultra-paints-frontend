@@ -174,19 +174,19 @@ export class ApiRequestService {
     }
 
     // Get all users
-    getUsers(page: number, limit: number, searchQuery: any) {
-        // const params = new HttpParams()
-        //     .set('page', page.toString())
-        //     .set('limit', limit.toString());
+    getUsers(page: number, limit: number, searchQuery: any, accountType: string) {
         let query = {
             page: page,
             limit: limit,
-            searchQuery: searchQuery
-        }
+            searchQuery: searchQuery,
+            accountType: accountType // Include accountType in the query
+        };
+        
         return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.searchUser, query).pipe(
             map((res: any) => res)
         );
     }
+    
 
     // Add a new user
     addUser(user: any) {
@@ -222,6 +222,19 @@ export class ApiRequestService {
     
         return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.getUnverifiedUsers, body);
       }
+      
+   // ** CashFree API Method **
+   getCashFreeTransactions(page: number = 1, limit: number = 10): Observable<any> {
+    const params = new HttpParams()
+        .set('page', page.toString())
+        .set('limit', limit.toString());
+
+    return this.http.get(this.ApiUrls.mainUrl + 'cashFree/getTransactions', { params }).pipe(
+        map((res: any) => res)
+    );
+}
+      
 }   
+
 
 

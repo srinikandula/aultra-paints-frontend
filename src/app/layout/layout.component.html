@@ -8,11 +8,11 @@
 
         <!-- Sidebar Toggle Button -->
         <button class="sidebar-toggle-btn navbar-toggler" (click)="toggleSidebar()" style="border: none; background: transparent;">
-            <i class="bx px-2" [ngClass]="isSidebarCollapsed ? 'bx-menu' : 'bx-x'" style="font-size: 20px; color: #2C3E50"></i>
+            <i class="bx px-2" [ngClass]="isSidebarCollapsed ? 'bx-menu' : 'bx-x'" style="font-size: 20px; color:#ffff"></i>
         </button>
     </div>
    <div class="d-flex">
-    <div style="color:#000000; padding: 0 30px">
+    <div style="color:#ffff; padding: 0 30px">
         {{ currentUser.fullName | uppercase }}
     </div>
 </div>
@@ -55,11 +55,19 @@
                     <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Coupons</span>
                 </div>
             </li>
+            <!-- CashFree Transactions -->
+             <li class="nav-item" (click)="navigateTo('payouts')">
+                <div class="menu">
+                    <i class= "bx px-2 bx-money" style="font-size: 20px;" title="Payouts"></i>  <!-- Icon for Cash Free -->
+                     <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Payouts</span>
+                    </div>
+                </li>
 
             
             <li class="nav-item treeview">
                 <div class="menu" (click)="toggle()">
-                    <i class="bx px-2 bxs-cog" style="font-size: 20px;" title="Masters"></i>
+                    <i class="bx px-2 bx-list-ul" style="font-size: 22px;" title="Masters"></i>
+                     <!-- <img class="px-2" src="assets/mastericon.png" alt="Logo" style="height: 20px; filter: brightness(0) saturate(100%) invert(1);" title="Masters"> -->
                     <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Masters</span>
                     <span style="position: relative;">
                         <i class="bx px-2 bxs-chevron-down custom-menu-arrow" *ngIf="active" style="font-size: 20px;"></i>
@@ -111,7 +119,7 @@
         <div class="sidebar-footer" (click)="logout()">
             <div class="sidebar-link">
                 <i class="bx px-2 bx-log-out" title="Logout"></i><span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc"
-                                                        class="px-2">Logout</span>
+                  class="px-2">Logout</span>
             </div>
         </div>
     </div>

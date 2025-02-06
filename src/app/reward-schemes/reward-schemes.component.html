@@ -98,13 +98,12 @@
                          (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"/>
                 </div>
             </div>
-            <div class="row" *ngIf="errorArray.length > 0">
-                <div class="col-sm-12">
-                    <ol>
-                        <li *ngFor="let err of errorArray; let i = index" class="text-danger">{{err}}</li>
-                    </ol>
-                </div>
-            </div>
+            <div *ngIf="errorArray.length > 0" class="alert alert-danger">
+                <ul>
+                  <li *ngFor="let error of errorArray">{{ error }}</li>
+                </ul>
+              </div>
+              
         </form>
     </div>
     <div class="modal-footer">

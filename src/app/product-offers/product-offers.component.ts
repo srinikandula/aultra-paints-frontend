@@ -27,9 +27,10 @@ export class ProductOffersComponent implements OnInit {
   currentOffer: any = {
     productOfferImageUrl: '',
     productOfferDescription: '',
-    productOfferTitle: '',
     validUntil: '',
-    productOfferStatus: 'Active'
+    productOfferStatus: 'Active',
+    cashback: 0,        
+  redeemPoints: 0      
   };
 
   productOffersQuery: any = {
@@ -87,10 +88,12 @@ export class ProductOffersComponent implements OnInit {
       };
       this.currentOffer.productOfferStatus = 'Active';
     }
-    // this.modalService.open(modal, { size: 'lg' });
-    const modalRef: NgbModalRef = this.modalService.open(modal, { size: 'lg' });
+    const modalRef: NgbModalRef = this.modalService.open(modal, { 
+      size: 'md', 
+      windowClass: 'custom-modal-size' 
+    });
     modalRef.result.then(() => { this.currentOffer = {}; }, () => { this.currentOffer = {}; });
-  }
+  }    
 
   saveOffer(modalRef: NgbModalRef) {
     this.submitted = true;
@@ -102,23 +105,24 @@ export class ProductOffersComponent implements OnInit {
         }
       });
     }
-
+  
     const addImageControl = this.productOfferForm.form.get('addImage');
     if (addImageControl) {
       if (
-          (this.currentOffer.productOfferImageUrl && !this.currentOffer.productOfferImage) ||
-          (this.currentOffer.productOfferImageUrl && this.currentOffer.productOfferImage) ||
-          (!this.currentOffer.productOfferImageUrl && this.currentOffer.productOfferImage)
+        (this.currentOffer.productOfferImageUrl && !this.currentOffer.productOfferImage) ||
+        (this.currentOffer.productOfferImageUrl && this.currentOffer.productOfferImage) ||
+        (!this.currentOffer.productOfferImageUrl && this.currentOffer.productOfferImage)
       ) {
         addImageControl.setErrors(null); // Valid state
       } else {
         addImageControl.setErrors({ invalid: true }); // Invalid state
       }
     }
-
+  
     if (this.productOfferForm.valid) {
       let oldDate = this.currentOffer.validUntil;
-      this.currentOffer.validUntil = this.currentOffer.validUntil.year + '-' + this.currentOffer.validUntil.month + '-' + this.currentOffer.validUntil.day;
+      this.currentOffer.validUntil = `${this.currentOffer.validUntil.year}-${this.currentOffer.validUntil.month}-${this.currentOffer.validUntil.day}`;
+      
       const formData = new FormData();
       if (this.currentOffer.productOfferImage) {
         formData.append('productOfferImage', this.currentOffer.productOfferImage);
@@ -127,9 +131,12 @@ export class ProductOffersComponent implements OnInit {
         formData.append('productOfferImageUrl', this.currentOffer.productOfferImageUrl);
       }
       formData.append('productOfferDescription', this.currentOffer.productOfferDescription);
-      formData.append('productOfferTitle', this.currentOffer.productOfferTitle);
+      // formData.append('productOfferTitle', this.currentOffer.productOfferTitle); 
       formData.append('validUntil', this.currentOffer.validUntil);
       formData.append('productOfferStatus', this.currentOffer.productOfferStatus);
+      formData.append('cashback', this.currentOffer.cashback.toString()); // Added cashback
+      formData.append('redeemPoints', this.currentOffer.redeemPoints.toString()); // Added redeemPoints
+  
       if (this.currentOffer._id) {
         this.apiRequestService.updateWithImage(this.apiUrls.updateProductOffer + this.currentOffer._id, formData).subscribe((response) => {
           if (response) {
@@ -145,10 +152,10 @@ export class ProductOffersComponent implements OnInit {
           this.errorArray = [];
           this.currentOffer.validUntil = oldDate;
           if (error && error.message) {
-            this.errorArray.push(error.message); 
-        } else {
+            this.errorArray.push(error.message);
+          } else {
             this.errorArray.push(error);
-        }
+          }
         });
       } else {
         this.apiRequestService.createWithImage(this.apiUrls.createProductOffer, formData).subscribe((response) => {
@@ -165,14 +172,15 @@ export class ProductOffersComponent implements OnInit {
           this.currentOffer.validUntil = oldDate;
           this.errorArray = [];
           if (error && error.message) {
-              this.errorArray.push(error.message); 
+            this.errorArray.push(error.message);
           } else {
-              this.errorArray.push(error);
+            this.errorArray.push(error);
           }
-      });
+        });
       }
     }
   }
+  
 
   deleteOffer(offerId: string) {
     Swal.fire({

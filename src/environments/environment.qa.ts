@@ -1,5 +1,5 @@
 export const environment = {
     production: false,
-    apiUrl: 'https://qaapi.aultrapaints.com/api/'
+    apiUrl: 'https://mapp.aultrapaints.com/api/'
   };
   

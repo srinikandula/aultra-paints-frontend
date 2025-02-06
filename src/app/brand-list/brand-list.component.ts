@@ -98,19 +98,19 @@ export class BrandListComponent {
   
 
   // Add brand: Open the modal
-  addBrand(brandModal: any): void {
+  addBrand(content: any): void {
     this.currentBrand = { proId: '', brands: '' };  // Reset the brand form
     this.submitted = false;  // Reset submission flag
     this.errors = [];  // Clear any previous errors
-    this.modalService.open(brandModal);  // Open the modal
+    this.modalService.open(content, { size: 'md' });  
   }
 
   // Edit brand: Open the modal with the current brand data
-  editBrand(brand: any, brandModal: any): void {
+  editBrand(brand: any, content: any): void {
     this.currentBrand = { ...brand };  // Copy the selected brand's data
     this.submitted = false;  // Reset submission flag
     this.errors = [];  // Clear any previous errors
-    this.modalService.open(brandModal);  // Open the modal
+    this.modalService.open(content, { size: 'md' });  
   }
 
   // Check if the brand already exists for the selected product

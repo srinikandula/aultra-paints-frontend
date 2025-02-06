@@ -20,9 +20,12 @@
             <img *ngIf="offer.productOfferImageUrl" [src]="offer.productOfferImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
             <img *ngIf="!offer.productOfferImageUrl" src="/assets/img/Product_Offers_c.png" class="card-img-top" alt="Image">
             <div class="card-body" style="text-align: left">
-                <h6 class="card-title">{{ offer.productOfferTitle }}</h6>
-                <p class="card-text">{{ offer.productOfferDescription }}</p>
+                <!-- <h6 class="card-title">{{ offer.productOfferTitle }}</h6> -->
+                <h6 class="card-title">{{ offer.productOfferDescription }}</h6>
                 <p class="card-text">{{ offer.validUntil | date }}</p>
+                <p class="card-text" *ngIf="offer.cashback">Cashback: {{ offer.cashback}}</p>
+                <p class="card-text" *ngIf="offer.redeemPoints">Redeem Points: {{ offer.redeemPoints }}</p>
+
                 <div class="mt-auto d-flex justify-content-between align-items-center">
                     <span class="badge rounded-pill bg-success" [class.bg-danger]="offer.productOfferStatus === 'Inactive'">{{ offer.productOfferStatus }}</span>
                     <div class="form-check form-switch">
@@ -73,16 +76,16 @@
         <form #productOfferForm="ngForm" class="modal-box shadow-sm">
             <!-- Add/Edit Product Offer Name -->
             <div class="row">
-                <div class="col-sm-4 mb-3 form-group">
+                <!-- <div class="col-sm-4 mb-3 form-group">
                     <label class="form-label" for="addName">Offer Name <span class="text-danger">*</span></label>
                     <input type="text" class="form-control" id="addName" [(ngModel)]="currentOffer.productOfferTitle" name="addName"
                            required placeholder="Enter full name" #addNameInput="ngModel"/>
                     <div *ngIf="submitted && addNameInput.invalid" class="text-danger">
                         <div *ngIf="addNameInput.errors?.['required']">Offer Name is required.</div>
                     </div>
-                </div>
+                </div> -->
 
-                <div class="col-sm-4 mb-3 form-group">
+                <div class="col-sm-5 mb-3 form-group">
                     <label class="form-label" for="validUntil">Valid Until <span class="text-danger">*</span></label>
                     <div class="input-group mb-3">
                         <input id="validUntil" class="form-control" readonly placeholder="yyyy-mm-dd" name="validUntil"
@@ -93,8 +96,8 @@
                         <div *ngIf="validUntilInput.errors?.['required']">Valid Until is required.</div>
                     </div>
                 </div>
-                <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="productOfferStatus">Product Offer Status <span class="text-danger">*</span> </label>
+                <div class="col-sm-4 mb-3 form-group" style="margin-left: 50px;">
+                    <label class="form-label" for="productOfferStatus"> Status <span class="text-danger">*</span> </label>
                     <div class="form-check form-switch form-check-lg form-switch-2x">
                         <input class="form-check-input" id="productOfferStatus" type="checkbox"
                                [checked]="currentOffer.productOfferStatus === 'Active'" name="productOfferStatus"
@@ -112,6 +115,28 @@
                            required placeholder="Enter description" #addDescriptionInput="ngModel"></textarea>
                     <div *ngIf="addDescriptionInput.invalid && (addDescriptionInput.dirty || addDescriptionInput.touched)" class="text-danger">
                         <div *ngIf="addDescriptionInput.errors?.['required']">Offer Text is required.</div>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Cashback -->
+             <div class="row">
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="addCashback">Cashback<span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="addCashback" [(ngModel)]="currentOffer.cashback" name="addCashback"
+                           required placeholder="Enter cashback" #cashbackInput="ngModel"/>
+                           <div *ngIf="cashbackInput.invalid && (cashbackInput.dirty || cashbackInput.touched)" class="text-danger">
+                            <div *ngIf="cashbackInput.errors?.['required']">Cashback is required.</div>
+                    </div>
+                </div>
+
+                <!-- Redeem Points -->
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="addRedeemPoints">Redeem Points <span class="text-danger">*</span></label>
+                    <input type="number" class="form-control" id="addRedeemPoints" [(ngModel)]="currentOffer.redeemPoints" name="addRedeemPoints"
+                           required placeholder="Enter redeem points" #redeemPointsInput="ngModel"/>
+                           <div *ngIf="redeemPointsInput.invalid && (redeemPointsInput.dirty || redeemPointsInput.touched)" class="text-danger">
+                            <div *ngIf="redeemPointsInput.errors?.['required']">Redeem Points is required.</div>
                     </div>
                 </div>
             </div>

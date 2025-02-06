@@ -1,11 +1,25 @@
 <!-- Main content -->
-                                                                                                                                                    <div class="container-fluid container-mt shadow-sm">
-    <div class="row mb-4">
-        <div class="col-sm-11"><h4>Coupons</h4></div>
-        <div class="col-sm-1">
+<div class="container-fluid container-mt shadow-sm">
+   <div class="row mb-4">
+    <div class="col-sm-12 d-flex justify-content-end align-items-center">
+        <div class="col-sm-9"><h4>Coupons</h4></div>
+        <div class="search-container">
+            <input [(ngModel)]="searchQuery" (input)="getAllTransactions()" placeholder="Search" class="form-control" style="width: 200px;" />
+        </div>        
+        
+        <div style="margin-left: 15px;">
             <button (click)="onReset()" class="btn btn-primary">Reset</button>
         </div>
+        <div style="margin-left: 15px;">
+            <!-- Button with Filter Icon -->
+            <button class="btn btn-light" (click)="openFilterModal()" style="background-color:#c1c1c1;">
+                <i class="bx bx-filter px-2"></i> 
+            </button>
+        </div>
+        
     </div>
+</div>
+
     <div class="row">
         <!-- Table Wrapper -->
         <div class="col-12 table-wrapper">
@@ -17,8 +31,8 @@
                     <th>Batch</th>
                     <th>Points</th>
                     <th>Value</th>
-                    <th>PointsRedeemed</th>
-                    <th>CashRedeemed</th>
+                    <th>PointsRedeemedBy</th>
+                    <th>CashRedeemedBy</th>
                     <th>QR Code</th>
                     <th>Cash paid to</th>
                     <th>Created At</th>
@@ -38,7 +52,9 @@
                     <td>{{ item.cashRedeemedBy || 'NA'}}</td>
                     <td>
                         <button class="btn btn-light btn-lg" (click)="setQrUrl(item.qr_code)">
-                            <i class="bx bx-qr" [ngStyle]="{ 'color': item.isProcessed ? 'red' : ''}"></i>
+                            <i class="bx bx-qr" 
+                               [ngStyle]="{ 'color': (item.pointsRedeemedBy && item.cashRedeemedBy) ? 'red' : '' }">
+                            </i>
                         </button>
                     </td>
                     <td>{{ item.redeemedByMobile || 'NA'}}</td>
@@ -77,7 +93,7 @@
           </div>
           
 <!-- Update Branch Modal -->
-<div class="modal" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block; margin-top: 120px;"
+<div class="modal" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block; margin-top: 100px;"
      *ngIf="showUpdateModal">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -89,6 +105,40 @@
             </div>
             <div class="modal-body text-center">
                 <img ngSrc="{{qrUrl}}" width="400" height="400">
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Modal -->
+<div class="modal fade" tabindex="-1" [ngClass]="{ 'show': showFilterModal }" style="display: block; margin-top: 120px;" *ngIf="showFilterModal">
+    <div class="modal-dialog modal-dialog-end modal-dialog-right">
+        <div class="modal-content" style="height: 370px;"> <!-- Increased height -->
+            <div class="modal-header justify-content-between">
+                <h5 class="modal-title" id="exampleModalLabel">Apply Filters</h5>
+                <button type="button" class="btn-close" (click)="closeFilterModal()" aria-label="Close"></button>
+            </div>
+            <div class="modal-body" style="background-color: #ffff;"> <!-- Custom background color -->
+                <form>
+                    <div class="form-group mb-3">
+                        <!-- <label for="couponCode"></label> -->
+                        <input type="text" id="couponCode" class="form-control" [(ngModel)]="filterCouponCode" name="couponCode" placeholder="Coupon Code">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <!-- <label for="pointsRedeemedBy"></label> -->
+                        <input type="text" id="pointsRedeemedBy" class="form-control" [(ngModel)]="filterPointsRedeemedBy" name="pointsRedeemedBy" placeholder="Points Redeemed By">
+                    </div>
+
+                    <div class="form-group mb-3">
+                        <!-- <label for="cashRedeemedBy"></label> -->
+                        <input type="text" id="cashRedeemedBy" class="form-control" [(ngModel)]="filterCashRedeemedBy" name="cashRedeemedBy" placeholder="Cash Redeemed By">
+                    </div>
+                </form>
+                <!-- Button 2 (Apply Filters Button) in another row -->
+                <button type="button" class="btn btn-primary w-100 mt-3" (click)="applyFilters()">Apply Filters</button>
+                <!-- Button 1 (Close Button) in one row -->
+                <button type="button" class="btn btn-secondary w-100 mt-3" (click)="closeFilterModal()">Close</button>
             </div>
         </div>
     </div>

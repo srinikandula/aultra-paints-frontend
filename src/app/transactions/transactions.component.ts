@@ -5,8 +5,8 @@ import { OrderService } from "../order.service";
 import { Router } from "@angular/router";
 import { ApiUrlsService } from "../services/api-urls.service";
 import { ApiRequestService } from "../services/api-request.service";
-import {NgbPagination} from "@ng-bootstrap/ng-bootstrap";
-
+import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
+import { ChangeDetectorRef } from '@angular/core';
 @Component({
     selector: 'app-transactions',
     standalone: true,
@@ -31,23 +31,45 @@ export class TransactionsComponent implements OnInit {
     transactions: any = [];
     qrUrl: any;
     showUpdateModal: boolean = false;
+    showFilterModal: boolean = false;
     userId: string | null = '';
     limitOptions: Array<any> = [10, 20, 50, 100];
+    searchQuery: string = ''; 
+      // Filter variables
+  filterPointsRedeemedBy: string = '';
+  filterCashRedeemedBy: string = '';
+  filterCouponCode: string = '';
 
     constructor(private orderService: OrderService,
                 private router: Router,
                 private ApiUrls: ApiUrlsService,
+                private modalService: NgbModal,
+                private cdr: ChangeDetectorRef,
                 private apiRequest: ApiRequestService) { }
 
     ngOnInit(): void {
         this.filterBasedOnUser();
     }
 
+
+    applyFilters() {
+        this.getAllTransactions(); // Apply the filter and get the filtered data
+        this.cdr.detectChanges();
+        this.closeFilterModal(); // Close the modal
+      }
+
     getAllTransactions(page: number = this.currentPage) {
-        this.apiRequest.create(this.ApiUrls.getTransactions, {page: page, limit: this.limit, userId: this.userId}).subscribe(
+        this.apiRequest.create(this.ApiUrls.getTransactions, {
+          page: page,
+          limit: this.limit,
+          userId: this.userId,
+          search: this.searchQuery,
+          pointsRedeemedBy: this.filterPointsRedeemedBy,
+          cashRedeemedBy: this.filterCashRedeemedBy,
+          couponCode: this.filterCouponCode
+        }).subscribe(
           (response: any) => {
             this.transactions = response.transactionsData;
-            // Ensure totalPages is calculated correctly
             this.totalPages = Math.ceil(response.total / this.limit);
             console.log('Fetched transactions:', response);
           },
@@ -56,8 +78,22 @@ export class TransactionsComponent implements OnInit {
           }
         );
       }
-      
 
+       // Function to reset the filter form fields
+  resetFilterForm() {
+    this.filterPointsRedeemedBy = '';
+    this.filterCashRedeemedBy = '';
+    this.filterCouponCode = '';
+  }
+    
+      openFilterModal() {
+        this.resetFilterForm();
+        this.showFilterModal = true;  // Open the modal
+      }
+    
+      closeFilterModal() {
+        this.showFilterModal = false;  // Close the modal
+      }
 
     setQrUrl(qr_code: any) {
         this.showUpdateModal = true;
@@ -75,10 +111,17 @@ export class TransactionsComponent implements OnInit {
     }
 
     onReset() {
-        this.userId = null;
-        this.getAllTransactions();
-        this.router.navigate(['/transactions']);
-    }
+      this.userId = null;  
+      this.searchQuery = ''; 
+      this.filterPointsRedeemedBy = '';  
+      this.filterCashRedeemedBy = '';  
+      this.filterCouponCode = '';  
+  
+      // Call getAllTransactions to fetch all transactions without filters
+      this.getAllTransactions();
+      this.router.navigate(['/transactions']); 
+  }
+  
 
     handlePageChange($event: number) {
         this.currentPage = $event;
