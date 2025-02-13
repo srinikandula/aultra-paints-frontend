@@ -170,26 +170,17 @@ export class CreateBatchComponent {
                     },
                     (error: any) => {
                         console.error('Error creating branch:', error);
-                        
-                        // If the error is related to the coupon series being in use, display the error message from backend
-                        if (error && error.error && error.error.includes('Given coupon series')) {
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: error.error, 
-                            });
-                        } else {
-                            // Otherwise, display a generic error message
-                            Swal.fire({
-                                icon: 'error',
-                                title: 'Error',
-                                text: 'An error occurred while creating the batch.',
-                            });
-                        }
-    
+                        const errorMessage = error && error.error ? error.error : 'An error occurred while creating the batch.';
+                
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: errorMessage,  
+                        });
+                
                         this.errorEmptyStr = error.message;
                     }
-                );
+                );                
             }
         });
     }
