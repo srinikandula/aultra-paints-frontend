@@ -41,7 +41,7 @@ export class ProductOffersComponent implements OnInit {
 
   limitOptions: number[] = [10, 20, 30, 50];  
   limit: number = 10;  
-  totalUsers: number = 0;  
+  totalProductOffers: number = 0;  
   currentPage: number = 1;
   totalPages: number = 1;
   uploadImageWidth: string = '20%';
@@ -59,8 +59,8 @@ export class ProductOffersComponent implements OnInit {
     this.productOffers = []; 
     this.apiRequestService.create(this.apiUrls.searchProductOffers, this.productOffersQuery).subscribe((response: any) => {
       this.productOffers = response.data;
-      this.totalUsers = response.total;  
-      this.totalPages = Math.ceil(this.totalUsers / this.productOffersQuery.limit); 
+      this.totalProductOffers = response.total;  
+      this.totalPages = Math.ceil(this.totalProductOffers / this.productOffersQuery.limit); 
     });
   }
   
@@ -182,23 +182,28 @@ export class ProductOffersComponent implements OnInit {
   }
   
 
-  deleteOffer(offerId: string) {
+  deleteOffer(offerId: string, productOfferDescription: string) {
     Swal.fire({
-      title: 'Are you sure?',
-      text: 'You will not be able to recover this offer!',
+      title: 'Confirm Deletion',
+      text: `You want to delete the offer: "${productOfferDescription}".`,
       icon: 'warning',
       showCancelButton: true,
       confirmButtonText: 'Yes, delete it!',
       cancelButtonText: 'No, keep it'
     }).then((result) => {
       if (result.isConfirmed) {
-        this.apiRequestService.delete(this.apiUrls.deleteProductOffer + offerId).subscribe(() => {
-          this.loadProductOffers();
-          Swal.fire('Deleted!', 'Your offer has been deleted.', 'success');
+        this.apiRequestService.delete(this.apiUrls.deleteProductOffer + offerId).subscribe({
+          next: () => {
+            this.loadProductOffers();
+            Swal.fire('Offer Deleted!', 'The offer has been successfully removed.', 'success');
+          },
+          error: (error) => Swal.fire('Error', error?.error?.message || 'Failed to delete offer', 'error')
         });
       }
     });
   }
+  
+  
 
   handlePageChange(page: number) {
     this.productOffersQuery.page = page; // Update page number in the query
@@ -221,7 +226,7 @@ export class ProductOffersComponent implements OnInit {
     if (file) {
       const reader = new FileReader();
       reader.onload = (e: any) => {
-        this.currentOffer.productOfferImage = e.target.result;
+        this.currentOffer.productOfferImage = reader.result as string; 
       };
       reader.readAsDataURL(file);
     }

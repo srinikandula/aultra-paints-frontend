@@ -26,9 +26,11 @@ export class RewardSchemesComponent implements OnInit {
     searchQuery: ''
   };
 
+  limitOptions: number[] = [10, 20, 30, 50];  
+  limit: number = 10;  
+  totalRewardSchemes: number = 0;  
   currentPage: number = 1;
   totalPages: number = 1;
-
   errorArray: Array<any> = [];
   timestamp: number = new Date().getTime();
   imageWidth: string = '20%';
@@ -44,12 +46,14 @@ export class RewardSchemesComponent implements OnInit {
   loadRewardSchemes() {
     this.rewardSchemes = [];
     this.apiRequestService.create(this.apiUrls.searchRewardSchemes, this.rewardSchemesQuery).subscribe((response: any) => {
-      if (response.data) {
-        this.rewardSchemes = response.data;
-        this.totalPages = response.total;
-      }
+      this.rewardSchemes = response.data;
+      this.totalRewardSchemes = response.pagination.totalSchemes;
+      this.totalPages = response.pagination.totalPages;  // Ensure totalPages is set correctly
+    }, (error) => {
+      console.error('Error loading reward schemes', error);
     });
   }
+  
 
   openAddEditModal(modal: any, rewardScheme: any) {
     this.errorArray = []; 
@@ -118,20 +122,37 @@ export class RewardSchemesComponent implements OnInit {
       );
     }
   }
+
+  deleteRewardScheme(rewardSchemeId: string) {
+    Swal.fire({
+      title: 'Confirm Deletion',
+      text: 'Are you sure you want to delete this reward scheme?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.apiRequestService.delete(this.apiUrls.deleteRewardScheme + rewardSchemeId).subscribe({
+          next: () => {
+            this.loadRewardSchemes();
+            Swal.fire('Deleted!', 'The reward scheme has been successfully removed.', 'success');
+          },
+          error: (error) => Swal.fire('Error', error?.error?.message || 'Failed to delete reward scheme', 'error')
+        });
+      }
+    });
+  }
   
 
-  prevPage() {
-    if (this.rewardSchemesQuery.page > 1) {
-      this.rewardSchemesQuery.page--;
-      this.loadRewardSchemes();
-    }
+  handlePageChange(page: number) {
+    this.rewardSchemesQuery.page = page;
+    this.loadRewardSchemes();
   }
 
-  nextPage() {
-    if (this.rewardSchemesQuery.page < this.totalPages) {
-      this.rewardSchemesQuery.page++;
-      this.loadRewardSchemes();
-    }
+  handleLimitChange() {
+    this.rewardSchemesQuery.page = 1; // Reset to page 1 when limit is changed
+    this.loadRewardSchemes();
   }
 
   handleImageChange($event: Event) {

@@ -47,10 +47,10 @@
                     <td>{{ branch.CreationDate | date:'shortDate' }}</td>
                     <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
                     <td>
-                        <button (click)="onUpdate(branch)" class="btn btn-warning mx-2" title="Update">
+                        <button (click)="onUpdate(branch)" class="btn btn-warning mx-2" title="Update Batch">
                             <i class="bx bx-edit"></i>  <!-- Edit icon -->
                         </button>
-                        <button (click)="onDelete(branch._id)" class="btn btn-danger mx-2" title="Delete">
+                        <button (click)="onDelete(branch._id)" class="btn btn-danger mx-2" title="Delete Batch">
                             <i class="bx bx-trash"></i>
                         </button>
                     </td>
