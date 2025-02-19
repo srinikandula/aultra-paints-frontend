@@ -8,6 +8,7 @@
                            class="form-control "/>
                 </div>
                 <button (click)="addOrEditOffer(productModal, currentOffer)" class="btn btn-primary">Add Product Offer</button>
+
             </div>
         </div>
     </div>
@@ -27,12 +28,15 @@
                 <p class="card-text" *ngIf="offer.redeemPoints">Redeem Points: {{ offer.redeemPoints }}</p>
 
                 <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <span class="badge rounded-pill bg-success" [class.bg-danger]="offer.productOfferStatus === 'Inactive'">{{ offer.productOfferStatus }}</span>
+                    <span class="badge rounded-pill bg-success me-2" [class.bg-danger]="offer.productOfferStatus === 'Inactive'">{{ offer.productOfferStatus }}</span>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" [checked]="offer.productOfferStatus === 'Active'" (change)="toggleOfferStatus(offer)">
                     </div>
-                    <button (click)="addOrEditOffer(productModal, offer)" class="btn btn-light mx-2">
+                    <button (click)="addOrEditOffer(productModal, offer)" class="btn btn-light mx-2"  title="Edit Product Offer">
                         <i class='bx bxs-edit-alt'></i>
+                    </button>
+                    <button (click)="deleteOffer(offer._id, offer.productOfferDescription)" class="btn btn-danger btn-sm" title="Delete Product Offer">
+                        <i class="bx bx-trash"></i>
                     </button>
                 </div>
             </div>
@@ -56,7 +60,7 @@
           <ngb-pagination class="mx-2"
           [(page)]="productOffersQuery.page"
           [pageSize]="productOffersQuery.limit"
-          [collectionSize]="totalUsers"
+          [collectionSize]="totalProductOffers"
           [boundaryLinks]="true"
           (pageChange)="handlePageChange($event)"
           [maxSize]="5">
@@ -163,8 +167,8 @@
                          alt="Product Offer Image" width="100%"
                          (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"/>
                 </div>
-
-                <div class="image-card mx-3" *ngIf="currentOffer.productOfferImageUrl" [style.max-width]="imageWidth">
+               <!-- Show existing image only if no new image is selected -->
+                <div class="image-card mx-3" *ngIf="currentOffer.productOfferImageUrl && !currentOffer.productOfferImage" [style.max-width]="imageWidth">
                     <span *ngIf="imageWidth === '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
                     <span *ngIf="imageWidth !== '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
     <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->

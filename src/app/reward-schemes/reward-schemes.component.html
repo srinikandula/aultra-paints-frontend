@@ -16,13 +16,17 @@
             <img *ngIf="!rewardScheme.rewardSchemeImageUrl" src="/assets/img/Reward_Schemes_w.png" class="card-img-top" alt="Image">
             <div class="card-body">
                 <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <span class="badge rounded-pill bg-success" [class.bg-danger]="rewardScheme.rewardSchemeStatus === 'Inactive'">{{ rewardScheme.rewardSchemeStatus }}</span>
+                    <span class="badge rounded-pill bg-success me-2"     [class.bg-danger]="rewardScheme.rewardSchemeStatus === 'Inactive'">{{ rewardScheme.rewardSchemeStatus }}</span>
                     <div class="form-check form-switch">
                         <input class="form-check-input" type="checkbox" [checked]="rewardScheme.rewardSchemeStatus === 'Active'" (change)="toggleRewardSchemeStatus(rewardScheme)">
                     </div>
-                    <button (click)="openAddEditModal(rewardSchemeModal, rewardScheme)" class="btn btn-light mx-2">
+                    <button (click)="openAddEditModal(rewardSchemeModal, rewardScheme)" class="btn btn-light mx-2"  title="Edit Reward Scheme">
                         <i class='bx bxs-edit-alt'></i>
                     </button>
+                    <button (click)="deleteRewardScheme(rewardScheme._id)" class="btn btn-danger btn-sm" title="Delete Reward Scheme">
+                        <i class="bx bx-trash"></i> 
+                    </button>
+                    
                 </div>
             </div>
         </div>
@@ -32,16 +36,44 @@
     </div>
 </div>
 
-<div class="container-fluid my-4" *ngIf="rewardSchemes.length > 10">
+<!-- <div class="container-fluid my-4" *ngIf="rewardSchemes.length > 10"> -->
     <!-- Pagination Controls -->
-    <div class="d-flex justify-content-end">
+    <!-- <div class="d-flex justify-content-end">
         <div class="pagination-controls">
             <button (click)="prevPage()" [disabled]="currentPage === 1" class="btn btn-light">Previous</button>
             <span style="margin: 0 10px;">Page {{ currentPage }} of {{ totalPages }}</span>
             <button (click)="nextPage()" [disabled]="currentPage === totalPages" class="btn btn-light">Next</button>
         </div>
     </div>
+</div> -->
+
+
+<div class="container-fluid my-4">
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="d-flex justify-content-end">
+                <!-- Page Size Selector -->
+                <select [(ngModel)]="rewardSchemesQuery.limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
+                    <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
+                </select>
+    
+                <!-- Pagination Component -->
+                <ngb-pagination 
+                    class="mx-2"
+                    [(page)]="rewardSchemesQuery.page"  
+                    [pageSize]="rewardSchemesQuery.limit"
+                    [collectionSize]="totalRewardSchemes" 
+                    [boundaryLinks]="true"
+                    (pageChange)="handlePageChange($event)" 
+                    [maxSize]="5">
+                </ngb-pagination>
+            </div>
+        </div>
+    </div>
 </div>
+
+  
+  
 
 <ng-template #rewardSchemeModal let-modal>
     <div class="modal-header">
@@ -83,13 +115,13 @@
                 <div class="image-card mx-3" *ngIf="currentRewardScheme.rewardSchemeImage" [style.max-width]="uploadImageWidth">
                     <span *ngIf="uploadImageWidth === '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
                     <span *ngIf="uploadImageWidth !== '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
-                    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
+                    <!--   <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
                     <img *ngIf="currentRewardScheme.rewardSchemeImage" [src]="currentRewardScheme.rewardSchemeImage"
                          alt="Product Offer Image" width="100%"
                          (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"/>
                 </div>
 
-                <div class="image-card mx-3" *ngIf="currentRewardScheme.rewardSchemeImageUrl" [style.max-width]="imageWidth">
+                <div class="image-card mx-3" *ngIf="currentRewardScheme.rewardSchemeImageUrl && !currentRewardScheme.rewardSchemeImage"  [style.max-width]="imageWidth">
                     <span *ngIf="imageWidth === '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
                     <span *ngIf="imageWidth !== '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
                     <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->

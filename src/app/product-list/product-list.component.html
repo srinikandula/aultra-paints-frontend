@@ -24,10 +24,10 @@
                 <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
                 <td>{{ product.name }}</td>
                 <td>
-                    <button (click)="editProduct(product, productModal)" class="btn btn-warning mx-2" title="Update">
+                    <button (click)="editProduct(product, productModal)" class="btn btn-warning mx-2" title="Update Product">
                         <i class="bx bx-edit"></i>  <!-- Edit icon -->
                     </button>
-                    <button (click)="deleteProduct(product._id)" class="btn btn-danger mx-2" title="Delete">
+                    <button (click)="deleteProduct(product._id)" class="btn btn-danger mx-2" title="Delete Product">
                         <i class="bx bx-trash"></i>
                     </button>
                 </td>
