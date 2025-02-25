@@ -105,13 +105,15 @@
                         <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
                     </select>
                     <ngb-pagination class="mx-2"
-                                    [(page)]="currentPage"
-                                    [pageSize]="limit"
-                                    [collectionSize]="totalPages"
-                                    [boundaryLinks]="true"
-                                    (pageChange)="handlePageChange($event)"
-                                    [maxSize]="5">
-                    </ngb-pagination>
+                [(page)]="currentPage"
+                [pageSize]="limit"
+                [collectionSize]="total"   
+                [boundaryLinks]="true"
+                (pageChange)="handlePageChange($event)"
+                [maxSize]="5">
+</ngb-pagination>
+
+                    
                 </div>
             </div>
         </div>
