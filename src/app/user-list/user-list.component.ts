@@ -33,6 +33,7 @@ export class UserListComponent implements OnInit {
     limit: number = 10;
     searchQuery: string = '';
     currentPage: number = 1;
+    total: number = 0;
     totalPages: number = 1;
     submitted = false; // To track the form submission
     selectedAccountType: string = 'All';
@@ -61,20 +62,22 @@ export class UserListComponent implements OnInit {
         this.loadUsers();
     }
 
-    // Load users
     loadUsers(): void {
         this.page = this.currentPage;
-        // Call API with selected account type and search query
+    
         this.apiService.getUsers(this.page, this.limit, this.searchQuery, this.selectedAccountType).subscribe(
-          (response) => {
-            this.users = response.data;
-            this.totalPages = response.pages; // Assuming response returns pages
-          },
-          (error) => {
-            console.error('Error fetching users:', error);
-          }
+            (response) => {
+                this.users = response.data;
+                this.total = response.total;
+                this.totalPages = Math.ceil(this.total / this.limit);
+            },
+            
+            (error) => {
+                console.error('Error fetching users:', error);
+            }
         );
     }
+    
     
 
      // Switch between 'users' and 'unverified' tabs
