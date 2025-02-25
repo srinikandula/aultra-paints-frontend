@@ -39,7 +39,9 @@
                     <td>{{ branch.Branch }}</td>
                     <td>{{ branch.ProductNameStr || 'NA' }}</td>
                     <td>{{ branch.BrandName || 'NA' }}</td>
-                    <td>{{ branch.CouponSeries }}</td>
+                    <td style="width: 200px; word-wrap: break-word;">
+                        {{ (branch.startCouponSeries && branch.endCouponSeries) ? branch.startCouponSeries + ' - ' + branch.endCouponSeries : 'NA' }}
+                      </td>                      
                     <td>{{ branch.RedeemablePoints }}</td>
                     <td>{{ branch.value }}</td>
                     <td>{{ branch.Volume }}</td>
