@@ -49,9 +49,9 @@
                     <td>{{ branch.CreationDate | date:'shortDate' }}</td>
                     <td>{{ branch.ExpiryDate | date:'shortDate' }}</td>
                     <td>
-                        <button (click)="onUpdate(branch)" class="btn btn-warning mx-2" title="Update Batch">
-                            <i class="bx bx-edit"></i>  <!-- Edit icon -->
-                        </button>
+                        <!-- <button (click)="onUpdate(branch)" class="btn btn-warning mx-2" title="Update Batch">
+                            <i class="bx bx-edit"></i>  
+                        </button> -->
                         <button (click)="onDelete(branch._id)" class="btn btn-danger mx-2" title="Delete Batch">
                             <i class="bx bx-trash"></i>
                         </button>
@@ -83,7 +83,7 @@
           
   
 <!-- Update Branch Modal -->
-<div class="modal fade" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block;" *ngIf="showUpdateModal">
+<!-- <div class="modal fade" tabindex="-1" [ngClass]="{ 'show': showUpdateModal }" style="display: block;" *ngIf="showUpdateModal">
     <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
         <div class="modal-content">
             <div class="modal-header">
@@ -221,4 +221,4 @@
             </div>
         </div>
     </div>
-</div>
+</div> -->
