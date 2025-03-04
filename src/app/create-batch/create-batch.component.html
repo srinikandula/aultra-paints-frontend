@@ -30,7 +30,7 @@
             <!-- Batch Number -->
             <div class="col-sm-3">
                 <label class="form-label" for="batchNumber">Batch Number <span class="text-danger">*</span></label>
-                <input type="text" id="batchNumber" maxlength="4" placeholder="Enter Batch Number"
+                <input type="text" id="batchNumber" placeholder="Enter Batch Number"
                        [(ngModel)]="BatchNumber" name="BatchNumber" required class="form-control" #batchNumberCtrl="ngModel"/>
                 <div *ngIf="batchNumberCtrl.invalid && (batchNumberCtrl.touched || orderForm.submitted)" class="text-danger">
                     Batch Number is required.
