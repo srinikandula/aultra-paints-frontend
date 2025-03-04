@@ -34,11 +34,8 @@
                     <th>PointsRedeemedBy</th>
                     <th>CashRedeemedBy</th>
                     <th>QR Code</th>
-                    <th>Cash paid to</th>
                     <th>Created At</th>
-<!--                    <th>Updated At</th>-->
                     <th>Created By</th>
-<!--                    <th>Updated By</th>-->
                 </tr>
                 </thead>
                 <tbody>
@@ -57,11 +54,8 @@
                             </i>
                         </button>
                     </td>
-                    <td>{{ item.redeemedByMobile || 'NA'}}</td>
                     <td>{{ item.createdAt | date }}</td>
-<!--                    <td>{{ item.updatedAt | date }}</td>-->
                     <td>{{ item.createdByName }}</td>
-<!--                    <td>{{ item.updatedByNam }}</td>-->
                 </tr>
                 <tr *ngIf="transactions.length === 0">
                     <td class="text-center" colspan="9">No Records found</td>
