@@ -1,24 +1,40 @@
 <!-- Main content -->
 <div class="container-fluid container-mt shadow-sm">
-   <div class="row mb-4">
-    <div class="col-sm-12 d-flex justify-content-end align-items-center">
-        <div class="col-sm-9"><h4>Coupons</h4></div>
-        <div class="search-container">
-            <input [(ngModel)]="searchQuery" (input)="getAllTransactions()" placeholder="Search" class="form-control" style="width: 200px;" />
-        </div>        
-        
-        <div style="margin-left: 15px;">
-            <button (click)="onReset()" class="btn btn-primary">Reset</button>
-        </div>
-        <div style="margin-left: 15px;">
-            <!-- Button with Filter Icon -->
-            <button class="btn btn-light" (click)="openFilterModal()" style="background-color:#c1c1c1;">
-                <i class="bx bx-filter px-2"></i> 
-            </button>
-        </div>
-        
-    </div>
+    <div class="row mb-4">
+     <div class="col-sm-12 d-flex justify-content-end align-items-center">
+         <div class="col-sm-7" ><h4>Coupons</h4></div>
+ 
+        <!-- Show Used Coupons Checkbox -->
+<div class="d-flex align-items-center">
+  <label for="showUsedCoupons" class="custom-label">
+    <input 
+      type="checkbox" 
+      id="showUsedCoupons" 
+      [(ngModel)]="showUsedCoupons" 
+      (change)="getAllTransactions()" 
+      class="custom-checkbox"
+    />
+    Show Used Coupons
+  </label>
 </div>
+
+         
+         <div class="search-container" style="margin-left: 50px;">
+             <input [(ngModel)]="searchQuery" (input)="getAllTransactions()" placeholder="Search" class="form-control" style="width: 200px;" />
+         </div>        
+         
+         <div style="margin-left: 15px;">
+             <button (click)="onReset()" class="btn btn-primary">Reset</button>
+         </div>
+         <div style="margin-left: 15px;">
+             <!-- Button with Filter Icon -->
+             <button class="btn btn-light" (click)="openFilterModal()" style="background-color:#c1c1c1;">
+                 <i class="bx bx-filter px-2"></i> 
+             </button>
+         </div>
+         
+     </div>
+ </div>
 
     <div class="row">
         <!-- Table Wrapper -->

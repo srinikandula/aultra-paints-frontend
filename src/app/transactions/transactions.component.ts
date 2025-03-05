@@ -39,6 +39,7 @@ export class TransactionsComponent implements OnInit {
   filterPointsRedeemedBy: string = '';
   filterCashRedeemedBy: string = '';
   filterCouponCode: string = '';
+  showUsedCoupons: boolean = false;
 
     constructor(private orderService: OrderService,
                 private router: Router,
@@ -63,10 +64,11 @@ export class TransactionsComponent implements OnInit {
           page: page,
           limit: this.limit,
           userId: this.userId,
-          search: this.searchQuery,
+          searchKey: this.searchQuery,
           pointsRedeemedBy: this.filterPointsRedeemedBy,
           cashRedeemedBy: this.filterCashRedeemedBy,
-          couponCode: this.filterCouponCode
+          couponCode: this.filterCouponCode,
+          showUsedCoupons: this.showUsedCoupons,
         }).subscribe(
           (response: any) => {
             this.transactions = response.transactionsData;
