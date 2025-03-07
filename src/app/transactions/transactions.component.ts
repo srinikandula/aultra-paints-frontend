@@ -7,6 +7,8 @@ import { ApiUrlsService } from "../services/api-urls.service";
 import { ApiRequestService } from "../services/api-request.service";
 import {NgbModal, NgbPagination} from "@ng-bootstrap/ng-bootstrap";
 import { ChangeDetectorRef } from '@angular/core';
+import * as XLSX from 'xlsx';  // Import XLSX library
+
 @Component({
     selector: 'app-transactions',
     standalone: true,
@@ -79,6 +81,13 @@ export class TransactionsComponent implements OnInit {
             console.error('Error loading transactions:', error);
           }
         );
+      }
+
+      exportToExcel(): void {
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.transactions);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
+        XLSX.writeFile(wb, 'transactions.xlsx');
       }
 
        // Function to reset the filter form fields

@@ -3,6 +3,7 @@ import { ApiRequestService } from '../services/api-request.service';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import * as XLSX from 'xlsx'; // Import XLSX library
 
 @Component({
   selector: 'app-payouts',
@@ -35,6 +36,16 @@ export class PayoutsComponent {
         console.error('Error fetching transactions:', error);
       }
     );
+  }
+
+  // Method to export transactions to Excel
+  exportToExcel(): void {
+    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cashFreeTransactions); // Convert transactions to sheet
+    const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
+    XLSX.utils.book_append_sheet(wb, ws, 'Payouts'); // Append the sheet to the workbook
+    
+    // Trigger the download of the Excel file
+    XLSX.writeFile(wb, 'payouts.xlsx');
   }
 
   // Handle page change from pagination controls

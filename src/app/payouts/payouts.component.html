@@ -4,6 +4,14 @@
     <div class="col-sm-2">
       <h4>Payouts</h4>
     </div>
+     <!-- Export Button aligned to the right -->
+     <div class="col-sm-10 d-flex justify-content-end">
+      <button class="btn btn-success btn-sm" (click)="exportToExcel()">
+        <img src="\assets\Download_icon.png" alt="Download" 
+        style="width: 20px; margin-right: 5px; filter: invert(1);"/>
+        Export
+      </button>
+    </div>
   </div>
 
 <div class="table-wrapper">

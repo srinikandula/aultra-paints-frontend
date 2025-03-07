@@ -4,10 +4,15 @@
         <div class="col-sm-2"><h4>Batches</h4></div>
         <div class="col-sm-10">
             <div class="d-flex justify-content-end align-items-center">
-                <div class="mx-3">
+                <div class="mx-4">
                     <input type="text" [(ngModel)]="searchQuery" (input)="loadBranches()" placeholder="Search..." class="form-control "/>
                 </div>
-                <button (click)="onCreateBatch()" class="btn btn-primary">Create Batch</button>
+                <button (click)="onCreateBatch()" class="btn btn-primary" style="margin-right: 20px;">Create Batch</button>
+                <button class="btn btn-success btn-sm" (click)="exportToExcel()">
+                    <img src="\assets\Download_icon.png" alt="Download" 
+                         style="width: 20px; height: 20px; margin-right: 5px; filter: invert(1);"/>
+                    Export
+                  </button>
             </div>
         </div>
     </div>

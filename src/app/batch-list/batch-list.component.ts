@@ -8,6 +8,7 @@ import {ApiRequestService} from "../services/api-request.service";
 import { NgSelectComponent } from '@ng-select/ng-select';
 import Swal from "sweetalert2";
 import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
+import * as XLSX from 'xlsx';
 
 
 @Component({
@@ -60,6 +61,15 @@ limitOptions = [10, 20, 50, 100];  // Available page size options
       console.error('Error loading branches:', error);
     });
   }
+
+  exportToExcel(): void {
+    const worksheet: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.branches); // Export the branches (batches) data
+    const workbook: XLSX.WorkBook = { Sheets: { 'Batches': worksheet }, SheetNames: ['Batches'] };
+    
+    // Trigger the download of the Excel file
+    XLSX.writeFile(workbook, 'batches.xlsx');
+  }
+  
 
       onSearch(): void {
         if (this.searchQuery.trim() !== '') {
