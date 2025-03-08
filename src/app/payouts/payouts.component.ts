@@ -40,7 +40,9 @@ export class PayoutsComponent {
 
   // Method to export transactions to Excel
   exportToExcel(): void {
-    const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cashFreeTransactions); // Convert transactions to sheet
+    if (this.cashFreeTransactions && this.cashFreeTransactions.length > 0) {
+        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cashFreeTransactions);
+    }
     const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
     XLSX.utils.book_append_sheet(wb, ws, 'Payouts'); // Append the sheet to the workbook
     
