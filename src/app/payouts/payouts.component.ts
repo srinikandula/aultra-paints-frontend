@@ -44,10 +44,11 @@ export class PayoutsComponent {
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cashFreeTransactions);
         const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
         XLSX.utils.book_append_sheet(wb, ws, 'Payouts'); // Append the sheet to the workbook
+        // Trigger the download of the Excel file
+        XLSX.writeFile(wb, 'payouts.xlsx');
     }
 
-    // Trigger the download of the Excel file
-    XLSX.writeFile(wb, 'payouts.xlsx');
+
   }
 
   // Handle page change from pagination controls
