@@ -84,7 +84,9 @@ export class TransactionsComponent implements OnInit {
       }
 
       exportToExcel(): void {
-        const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.transactions);
+        if (this.transactions && this.transactions.length > 0) {
+            const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.transactions);
+        }
         const wb: XLSX.WorkBook = XLSX.utils.book_new();
         XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
         XLSX.writeFile(wb, 'transactions.xlsx');
