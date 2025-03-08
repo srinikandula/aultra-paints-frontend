@@ -42,10 +42,10 @@ export class PayoutsComponent {
   exportToExcel(): void {
     if (this.cashFreeTransactions && this.cashFreeTransactions.length > 0) {
         const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.cashFreeTransactions);
+        const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
+        XLSX.utils.book_append_sheet(wb, ws, 'Payouts'); // Append the sheet to the workbook
     }
-    const wb: XLSX.WorkBook = XLSX.utils.book_new(); // Create a new workbook
-    XLSX.utils.book_append_sheet(wb, ws, 'Payouts'); // Append the sheet to the workbook
-    
+
     // Trigger the download of the Excel file
     XLSX.writeFile(wb, 'payouts.xlsx');
   }
