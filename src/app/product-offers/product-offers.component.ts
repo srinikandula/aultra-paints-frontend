@@ -39,7 +39,7 @@ export class ProductOffersComponent implements OnInit {
     searchQuery: ''
   };
 
-  limitOptions: number[] = [10, 20, 30, 50];  
+  limitOptions: number[] = [10, 20, 50, 100];  
   limit: number = 10;  
   totalProductOffers: number = 0;  
   currentPage: number = 1;

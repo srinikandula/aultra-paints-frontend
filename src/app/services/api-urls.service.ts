@@ -20,6 +20,9 @@ export class ApiUrlsService {
   toggleUserStatus = 'users/toggle-status';
   resetPassword = 'users/resetPassword';
   userDashboard = 'users/userDashboard';
+ 
+   // Sales Executives endpoint
+   SalesExecutives = 'users/sales-executives';
 
    //api urls for unverifed users
    getUnverifiedUsers = 'users/unverified-users';

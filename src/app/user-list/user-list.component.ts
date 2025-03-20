@@ -18,16 +18,24 @@ import { UnverifiedUsersComponent } from '../unverified-users/unverified-users.c
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.css']
 })
+
+
 export class UserListComponent implements OnInit {
     @ViewChild('userForm', { static: false }) userForm!: NgForm;
 
+    
+
     users: any[] = [];
     loginUser: any = {};
+    salesExecutives: any[] = [];
     currentUser: any = {
         name: '',
         mobile: '',
-        accountType: 'P'
+        accountType: 'P',
+        salesExecutive: '' 
     };
+
+    
     // currentUser.accountType = 'Painter';
     page: number = 1;
     limit: number = 10;
@@ -48,6 +56,7 @@ export class UserListComponent implements OnInit {
         {id: 'Contractor', name: 'Contractor'},
         {id: 'Dealer', name: 'Dealer'},
         {id: 'SuperUser', name: 'Super User'},
+        {id:'SalesExecutive', name:'SalesExecutive'}
     ];
     errorsAddUser: string[] = [];  
     errorsEditUser: string[] = []; 
@@ -60,6 +69,7 @@ export class UserListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadUsers();
+        this.loadSalesExecutives();
     }
 
     loadUsers(): void {
@@ -77,8 +87,6 @@ export class UserListComponent implements OnInit {
             }
         );
     }
-    
-    
 
      // Switch between 'users' and 'unverified' tabs
      switchTab(tab: string): void {
@@ -127,10 +135,25 @@ export class UserListComponent implements OnInit {
         });
     }
     
+    loadSalesExecutives(): void {
+        this.apiService.getAllSalesExecutives().subscribe(
+            (response) => {
+                if (response.status === 'success' && Array.isArray(response.data)) {
+                    this.salesExecutives = response.data;
+                } else {
+                    console.error('Invalid response format', response);
+                }
+            },
+            (error) => {
+                console.error('Error fetching sales executives:', error);
+            }
+        );
+    }
+    
 
     addUser(userModal: any): void {
         // Reset the currentUser object to a fresh, empty form state
-        this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' };
+        this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' , salesExecutive: ''};
     
         // Clear any previous errors and submitted flag
         this.errorsAddUser = [];

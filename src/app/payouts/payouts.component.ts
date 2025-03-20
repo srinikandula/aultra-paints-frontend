@@ -17,7 +17,7 @@ export class PayoutsComponent {
   limit: number = 10; // Default page size
   currentPage: number = 1; // Default current page
   totalTransactions: number = 0; // Total number of transactions
-  limitOptions: number[] = [5, 10, 25, 50]; // Limit options for page size
+  limitOptions: number[] = [5, 20, 50, 100]; // Limit options for page size
 
   constructor( private apiRequestService: ApiRequestService,) {}
 
