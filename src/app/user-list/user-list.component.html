@@ -216,7 +216,7 @@
                   <label for="salesExecutive" class="form-label">Sales Executive <span class="text-danger">*</span></label>
                   <select id="salesExecutive" [(ngModel)]="currentUser.salesExecutive" name="salesExecutive" class="form-select" required>
                     <option value="">Select Sales Executive</option>
-                    <option *ngFor="let exec of salesExecutives" [value]="exec.id">
+                    <option *ngFor="let exec of salesExecutives" [value]="exec.mobile">
                       {{ exec.name }} ({{ exec.mobile }})
                     </option>
                   </select>
