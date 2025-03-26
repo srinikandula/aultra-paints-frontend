@@ -78,4 +78,17 @@ getcashfreetransaction = 'cashFree/getTransactions';
   getRewardSchemeById = 'rewardSchemes/getRewardSchemeById/';
   updateRewardScheme = 'rewardSchemes/update/';
   deleteRewardScheme = 'rewardSchemes/delete/';
+
+
+
+//Api urls for states
+getStates = 'states/all'; 
+
+//api urls for zones
+getZones = 'zones/all';
+
+//api urls for districts
+getDistricts = 'districts/all';
+
+
 }

@@ -246,6 +246,22 @@ export class ApiRequestService {
   }
   
 
+
+   // Method to get state names
+   getStates(): Observable<string[]> {
+    const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getStates}`;
+    return this.http.get<string[]>(url);
+  }
+  
+  getZones(): Observable<any> {
+    const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getZones}`;
+    return this.http.get(url);
+  }
+
+  getDistricts(): Observable<any> {
+    const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getDistricts}`;
+    return this.http.get(url);
+  }
       
 }   
 
