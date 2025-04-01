@@ -2,49 +2,73 @@
 <div class="container-fluid container-mt shadow-sm">
     <div class="row mb-4 d-flex justify-content-between align-items-center">
 
-        <!-- Left side: Coupons label and checkbox -->
-        <div class="col-sm-4 d-flex align-items-center"> 
+        <!-- Left side: Coupons label and Sales Executive dropdown -->
+        <div class="col-md-4 d-flex align-items-center">
+            <!-- Coupons Label -->
             <h4 class="mb-0 me-2">Coupons</h4>
+
+            <!-- Sales Executive dropdown -->
+            <div class="form-group ms-auto">
+                <select 
+                    class="form-select" 
+                    id="salesExecutive" 
+                    [(ngModel)]="selectedSalesExecutive"
+                    (change)="getAllTransactions()">
+                    <option value="">Select Sales Executive</option>
+                    <option *ngFor="let exec of salesExecutives" [value]="exec.mobile">
+                        {{ exec.name }} ({{ exec.mobile }})
+                    </option>
+                </select>
+            </div>
         </div>
 
-        <!-- Right side: Search, Reset, and Filter buttons -->
-        <div class="col-sm-8 d-flex justify-content-end align-items-center">
-            <div class="ms-2" style="margin-right: 100px;"> 
-                <label for="showUsedCoupons">
-                    <input 
-                        type="checkbox" 
-                        id="showUsedCoupons" 
-                        [(ngModel)]="showUsedCoupons" 
-                        (change)="getAllTransactions()" 
-                        class="custom-checkbox"
-                    />
-                    <span class="ms-1">Show Used Coupons</span>
-                </label>
+        <!-- Right side: Search, Reset, Show Used Coupons checkbox, Filter, and Export buttons -->
+        <div class="col-md-8 d-flex justify-content-end align-items-center">
+            <!-- Show Used Coupons checkbox -->
+            <div class="form-check form-check-inline ms-3">
+                <input 
+                    type="checkbox" 
+                    id="showUsedCoupons" 
+                    [(ngModel)]="showUsedCoupons" 
+                    (change)="getAllTransactions()" 
+                    class="form-check-input"
+                />
+                <label for="showUsedCoupons" class="form-check-label">Show Used Coupons</label>
             </div>
 
+            <!-- Search Input -->
             <div class="search-container ms-3">
-                <input [(ngModel)]="searchQuery" (input)="getAllTransactions()" placeholder="Search" class="form-control" style="width: 200px;" />
+                <input 
+                    [(ngModel)]="searchQuery" 
+                    (input)="getAllTransactions()" 
+                    placeholder="Search" 
+                    class="form-control" 
+                    style="width: 200px;" />
             </div>
-            
+
+            <!-- Reset Button -->
             <div class="ms-3">
                 <button (click)="onReset()" class="btn btn-primary">Reset</button>
             </div>
+
+            <!-- Filter Button -->
             <div class="ms-3">
-                <!-- Button with Filter Icon -->
                 <button class="btn btn-light" (click)="openFilterModal()" style="background-color:#c1c1c1;">
                     <i class="bx bx-filter px-2"></i> 
                 </button>
             </div>
-            <!-- Export Button next to the Filter -->
+
+            <!-- Export Button -->
             <div class="ms-3">
                 <button class="btn btn-success btn-sm" (click)="exportToExcel()">
                     <img src="\assets\Download_icon.png" alt="Download" 
-                    style="width: 20px; margin-right: 5px; filter: invert(1);"/>
+                        style="width: 20px; margin-right: 5px; filter: invert(1);"/>
                     Export
                 </button>
             </div>
         </div>
     </div>
+
 
 
 

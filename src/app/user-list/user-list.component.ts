@@ -18,16 +18,24 @@ import { UnverifiedUsersComponent } from '../unverified-users/unverified-users.c
     templateUrl: './user-list.component.html',
     styleUrls: ['./user-list.component.css']
 })
+
+
 export class UserListComponent implements OnInit {
     @ViewChild('userForm', { static: false }) userForm!: NgForm;
 
+    
+
     users: any[] = [];
     loginUser: any = {};
+    salesExecutives: any[] = [];
     currentUser: any = {
         name: '',
         mobile: '',
-        accountType: 'P'
+        accountType: 'P',
+        salesExecutive: '' ,
     };
+
+    
     // currentUser.accountType = 'Painter';
     page: number = 1;
     limit: number = 10;
@@ -48,10 +56,14 @@ export class UserListComponent implements OnInit {
         {id: 'Contractor', name: 'Contractor'},
         {id: 'Dealer', name: 'Dealer'},
         {id: 'SuperUser', name: 'Super User'},
+        {id:'SalesExecutive', name:'SalesExecutive'}
     ];
     errorsAddUser: string[] = [];  
     errorsEditUser: string[] = []; 
     currentTab: string = 'users'; 
+    stateNames: any[] = [];
+    zoneNames: any[] = [];
+    districtNames: any[] = [];
 
     constructor(private apiService: ApiRequestService, private modalService: NgbModal,
                 private router: Router, private apiUrls: ApiUrlsService, private AuthService: AuthService) {
@@ -60,6 +72,10 @@ export class UserListComponent implements OnInit {
 
     ngOnInit(): void {
         this.loadUsers();
+        this.loadSalesExecutives();
+        this.getStateNames();
+        this.getZoneNames();
+        this.getDistrictNames();
     }
 
     loadUsers(): void {
@@ -77,8 +93,6 @@ export class UserListComponent implements OnInit {
             }
         );
     }
-    
-    
 
      // Switch between 'users' and 'unverified' tabs
      switchTab(tab: string): void {
@@ -127,14 +141,71 @@ export class UserListComponent implements OnInit {
         });
     }
     
+    loadSalesExecutives(): void {
+        this.apiService.getAllSalesExecutives().subscribe(
+            (response) => {
+                if (response.status === 'success' && Array.isArray(response.data)) {
+                    this.salesExecutives = response.data;
+                } else {
+                    console.error('Invalid response format', response);
+                }
+            },
+            (error) => {
+                console.error('Error fetching sales executives:', error);
+            }
+        );
+    }
+    // fetch stateNames
+    getStateNames(): void {
+        this.apiService.getStates().subscribe(
+          (response: any) => {
+            if (response && response.data && Array.isArray(response.data)) {
+              this.stateNames = response.data; 
+            } else {
+              this.stateNames = []; 
+            }
+          },
+          (error) => {
+            this.stateNames = []; 
+          }
+        );
+      }
+
+      // Fetch Zone Names 
+getZoneNames(): void {
+    this.apiService.getZones().subscribe(
+        (response) => {
+            if (response && response.data) {
+                this.zoneNames = response.data; 
+            }
+        },
+        (error) => {
+            console.error('Error fetching zone names:', error);
+        }
+    );
+}
+      
+// Fetch District Names 
+getDistrictNames(): void {
+    this.apiService.getDistricts().subscribe(
+        (response) => {
+            if (response && response.data) {
+                this.districtNames = response.data; 
+            }
+        },
+        (error) => {
+            console.error('Error fetching district names:', error);
+        }
+    );
+}
 
     addUser(userModal: any): void {
-        // Reset the currentUser object to a fresh, empty form state
-        this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' };
+        // Reset the currentUser object to a fresh
+        this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' , salesExecutive: '', state: '', zone : '', district: ''};
     
         // Clear any previous errors and submitted flag
         this.errorsAddUser = [];
-        this.submitted = false; // Reset the submitted flag so the form can show validation errors when it's opened
+        this.submitted = false; 
     
         // Open the modal
         this.modalService.open(userModal, { size: 'md' });
@@ -147,110 +218,130 @@ export class UserListComponent implements OnInit {
     }
 
     submitForm(modal: any): void {
-        this.submitted = true; // Mark the form as submitted
-        
-        // Check if the form is valid
+        this.submitted = true;
+    
         if (this.userForm.valid) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to save this user?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, save it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Proceed with the user addition
-                    this.apiService.addUser(this.currentUser).subscribe(
-                        (data) => {
-                            this.loadUsers();
-                            this.showSuccess('User added successfully!');
-                            this.currentUser = {}; 
-                            this.errorsAddUser = [];
-                            modal.close();
-                        },
-                        (error) => {
-                            if (error?.errors && error.errors.length > 0) {
-                                this.errorsAddUser = error.errors;
-                            } else {
-                                this.showError('Error adding user!');
-                            }
-                        }
-                    );
-                }
-            });
-        } 
+            if (
+                this.currentUser.accountType === 'Dealer' &&
+                (!this.currentUser.state || !this.currentUser.zone || !this.currentUser.district)
+            ) {
+                this.confirmSave(modal);
+            } else {
+                this.confirmSave(modal);
+            }
+        }
     }
 
-    updateUser(modal: any, userForm: any): void {
-        this.submitted = true; // Mark the form as submitted
-        
-        // Check if the form is valid
-        if (userForm.valid) {
-            Swal.fire({
-                title: 'Are you sure?',
-                text: 'Do you want to save these changes?',
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonText: 'Yes, save it!',
-                cancelButtonText: 'Cancel'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Proceed with updating the user
-                    this.apiService.updateUser(this.currentUser._id, this.currentUser).subscribe(
-                        (data) => {
-                            this.loadUsers();
-                            this.showSuccess('User updated successfully!');
-                            this.errorsEditUser = [];
-                            modal.close(); 
-    
-                            // Optional: If the logged-in user updates their own account type
-                            if (this.loginUser.id === this.currentUser._id) {
-                                let timerInterval: any;
-                                let countdown = 5;
-                                Swal.fire({
-                                    title: 'Success',
-                                    html: `Your account type has changed. You will be logged out in <b>${countdown}</b> seconds.`,
-                                    icon: 'success',
-                                    timer: countdown * 1000,
-                                    timerProgressBar: true,
-                                    showConfirmButton: false,
-                                    didOpen: () => {
-                                        // Update countdown every second
-                                        timerInterval = setInterval(() => {
-                                            countdown--;
-                                            const bElement = Swal.getHtmlContainer()?.querySelector('b');
-                                            if (bElement) {
-                                                bElement.textContent = countdown.toString();
-                                            }
-                                        }, 1000);
-                                    },
-                                    willClose: () => {
-                                        clearInterval(timerInterval);
-                                    },
-                                }).then(() => {
-                                    // Log the user out after successful update and refresh the page
-                                    this.currentUser = {};
-                                    this.AuthService.logOut();
-                                    window.location.reload();
-                                    this.router.navigate(['/login']);
-                                });
-                            }
-                        },
-                        (error) => {
-                            if (error?.errors && error.errors.length > 0) {
-                                this.errorsEditUser = error.errors;
-                            } else {
-                                this.showError('Error updating user!');
-                            }
+    confirmSave(modal: any): void {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to save this user?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, save it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with the user addition
+                this.apiService.addUser(this.currentUser).subscribe(
+                    (data) => {
+                        this.loadUsers();
+                        this.showSuccess('User added successfully!');
+                        this.currentUser = {};
+                        this.errorsAddUser = [];
+                        modal.close();
+                    },
+                    (error) => {
+                        if (error?.errors && error.errors.length > 0) {
+                            this.errorsAddUser = error.errors;
+                        } else {
+                            this.showError('Error adding user!');
                         }
-                    );
-                }
-            });
-        } 
-    }    
-
-
+                    }
+                );
+            }
+        });
+    }
+    
+    
+    updateUser(modal: any, userForm: any): void {
+        this.submitted = true;
+        
+        if (userForm.valid) {
+            if (
+                this.currentUser.accountType === 'Dealer' &&
+                (!this.currentUser.state || !this.currentUser.zone || !this.currentUser.district)
+            ) {
+                this.confirmUpdate(modal);
+            } else {
+                this.confirmUpdate(modal);
+            }
+        }
+    }
+    
+    confirmUpdate(modal: any): void {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: 'Do you want to save these changes?',
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, save it!',
+            cancelButtonText: 'Cancel'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Proceed with updating the user
+                this.apiService.updateUser(this.currentUser._id, this.currentUser).subscribe(
+                    (data) => {
+                        this.loadUsers();
+                        this.showSuccess('User updated successfully!');
+                        this.errorsEditUser = [];
+                        modal.close();
+    
+                        // If the logged-in user updates their own account type
+                        if (this.loginUser.id === this.currentUser._id) {
+                            let timerInterval: any;
+                            let countdown = 5;
+                            Swal.fire({
+                                title: 'Success',
+                                html: `Your account type has changed. You will be logged out in <b>${countdown}</b> seconds.`,
+                                icon: 'success',
+                                timer: countdown * 1000,
+                                timerProgressBar: true,
+                                showConfirmButton: false,
+                                didOpen: () => {
+                                    timerInterval = setInterval(() => {
+                                        countdown--;
+                                        const bElement = Swal.getHtmlContainer()?.querySelector('b');
+                                        if (bElement) {
+                                            bElement.textContent = countdown.toString();
+                                        }
+                                    }, 1000);
+                                },
+                                willClose: () => {
+                                    clearInterval(timerInterval);
+                                },
+                            }).then(() => {
+                                // Log the user out after successful update
+                                this.currentUser = {};
+                                this.AuthService.logOut();
+                                window.location.reload();
+                                this.router.navigate(['/login']);
+                            });
+                        }
+                    },
+                    (error) => {
+                        if (error?.errors && error.errors.length > 0) {
+                            this.errorsEditUser = error.errors;
+                        } else {
+                            this.showError('Error updating user!');
+                        }
+                    }
+                );
+            }
+        });
+    }
+    
+    
     deleteUser(id: string): void {
         Swal.fire({
             title: 'Are you sure?',

@@ -20,6 +20,9 @@ export class ApiUrlsService {
   toggleUserStatus = 'users/toggle-status';
   resetPassword = 'users/resetPassword';
   userDashboard = 'users/userDashboard';
+ 
+   // Sales Executives endpoint
+   SalesExecutives = 'users/sales-executives';
 
    //api urls for unverifed users
    getUnverifiedUsers = 'users/unverified-users';
@@ -75,4 +78,17 @@ getcashfreetransaction = 'cashFree/getTransactions';
   getRewardSchemeById = 'rewardSchemes/getRewardSchemeById/';
   updateRewardScheme = 'rewardSchemes/update/';
   deleteRewardScheme = 'rewardSchemes/delete/';
+
+
+
+//Api urls for states
+getStates = 'states/all'; 
+
+//api urls for zones
+getZones = 'zones/all';
+
+//api urls for districts
+getDistricts = 'districts/all';
+
+
 }

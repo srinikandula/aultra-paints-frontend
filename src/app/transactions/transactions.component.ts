@@ -42,7 +42,9 @@ export class TransactionsComponent implements OnInit {
   filterCashRedeemedBy: string = '';
   filterCouponCode: string = '';
   showUsedCoupons: boolean = false;
-
+  salesExecutives: any[] = [];  
+  selectedSalesExecutive: string = '';  
+  
     constructor(private orderService: OrderService,
                 private router: Router,
                 private ApiUrls: ApiUrlsService,
@@ -52,6 +54,7 @@ export class TransactionsComponent implements OnInit {
 
     ngOnInit(): void {
         this.filterBasedOnUser();
+        this.loadSalesExecutives();
     }
 
 
@@ -71,6 +74,7 @@ export class TransactionsComponent implements OnInit {
           cashRedeemedBy: this.filterCashRedeemedBy,
           couponCode: this.filterCouponCode,
           showUsedCoupons: this.showUsedCoupons,
+          salesExecutiveMobile: this.selectedSalesExecutive
         }).subscribe(
           (response: any) => {
             this.transactions = response.transactionsData;
@@ -83,6 +87,21 @@ export class TransactionsComponent implements OnInit {
         );
       }
 
+      loadSalesExecutives() {
+        this.apiRequest.getAllSalesExecutives().subscribe({
+          next: (response: any) => {
+            this.salesExecutives = response.data;
+            console.log('Sales Executives loaded:', this.salesExecutives);
+          },
+          error: (error) => {
+            console.error('Error loading sales executives:', error);
+          }
+        });
+      }
+      
+      
+
+      
       exportToExcel(): void {
         if (this.transactions && this.transactions.length > 0) {
             const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.transactions);

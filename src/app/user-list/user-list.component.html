@@ -36,6 +36,7 @@
                             <option value="Contractor">Contractor</option>
                             <option value="Dealer">Dealer</option>
                             <option value="SuperUser">Super User</option>
+                            <option value="SalesExecutive">SalesExecutive</option>
                         </select>
                     </div>
                     
@@ -209,6 +210,54 @@
                 </div>
             </div>
 
+            <!-- Sales Executive Dropdown -->
+            <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
+                <div class="col-sm-6 mb-3 form-group">
+                  <label for="salesExecutive" class="form-label">Sales Executive <span class="text-danger">*</span></label>
+                  <select id="salesExecutive" [(ngModel)]="currentUser.salesExecutive" name="salesExecutive" #salesExecutive="ngModel" class="form-select" required>
+                    <option value="">Select Sales Executive</option>
+                    <option *ngFor="let exec of salesExecutives" [value]="exec.mobile">
+                      {{ exec.name }} ({{ exec.mobile }})
+                    </option>
+                  </select>
+                  <div *ngIf="salesExecutive.invalid && (salesExecutive.touched || submitted)" class="text-danger">
+                    Sales Executive is required.
+                </div>
+                </div>
+                <div class="col-sm-6 mb-3 form-group">
+                    <label class="form-label" for="addState">State</label>
+                    <select id="addState" class="form-select" [(ngModel)]="currentUser.state" name="addState" #state="ngModel">
+                        <option value="">Select State</option>
+                        <option *ngFor="let state of stateNames" [value]="state.stateId">
+                            {{ state.stateName }}
+                        </option>
+                    </select>
+                </div>       
+        </div>
+
+        <!-- Zone and District in One Row (if Dealer) -->
+        <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
+            <div class="col-sm-6 mb-3 form-group">
+                <label class="form-label" for="addZone">Zone</label>
+                <select id="addZone" class="form-select" [(ngModel)]="currentUser.zone" name="addZone" #zone="ngModel">
+                    <option value="">Select Zone</option>
+                    <option *ngFor="let zone of zoneNames" [value]="zone.zoneId">
+                        {{ zone.zoneName }}
+                    </option>
+                </select>
+            </div>         
+            <div class="col-sm-6 mb-3 form-group">
+                <label class="form-label" for="addDistrict">District</label>
+                <select id="addDistrict" class="form-select" [(ngModel)]="currentUser.district" name="addDistrict" #district="ngModel">
+                    <option value="">Select District</option>
+                    <option *ngFor="let district of districtNames" [value]="district.districtId">
+                        {{ district.districtName }}
+                    </option>
+                </select>
+            </div>        
+        </div>
+              
+            
             <!-- Address in One Row (if Dealer) -->
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">
@@ -316,7 +365,73 @@
                     </div>
                 </div>
             </div>
+            
 
+<!-- Sales Executive Dropdown for Dealers -->
+<div class="row" *ngIf="currentUser.accountType === 'Dealer'">
+    <div class="col-sm-6 mb-3 form-group">
+        <label for="editSalesExecutive" class="form-label">Sales Executive <span class="text-danger">*</span></label>
+        <select id="editSalesExecutive" 
+                [(ngModel)]="currentUser.salesExecutive" 
+                name="salesExecutive" 
+                class="form-select" 
+                required 
+                #salesExecutive="ngModel">
+            <option value="">Select Sales Executive</option>
+            <option *ngFor="let exec of salesExecutives" [value]="exec.mobile">
+                {{ exec.name }} ({{ exec.mobile }})
+            </option>
+        </select>
+        <div *ngIf="salesExecutive.invalid && (salesExecutive.touched || submitted)" class="text-danger">
+            Sales Executive is required.
+        </div>
+    </div>
+    <div class="col-sm-6 mb-3 form-group">
+        <label class="form-label" for="addState">State <span class="text-danger">*</span></label>
+        <select id="addState" class="form-select" [(ngModel)]="currentUser.state" name="addState" required #state="ngModel">
+            <option value="">Select State</option>
+            <option *ngFor="let state of stateNames" [value]="state.stateId">
+                {{ state.stateName }}
+            </option>
+        </select>
+        <!-- <div *ngIf="state.invalid && (state.touched || submitted)" class="text-danger">
+            State is required.
+        </div> -->
+    </div>      
+</div>
+    
+ <!-- Zone and District in One Row (if Dealer) -->
+ <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
+    <div class="col-sm-6 mb-3 form-group">
+        <label class="form-label" for="addZone">Zone <span class="text-danger">*</span></label>
+        <select id="addZone" class="form-select" [(ngModel)]="currentUser.zone" name="addZone" required #zone="ngModel">
+            <!-- Default option for placeholder -->
+            <option value=""  selected>Select Zone</option>
+            <option *ngFor="let zone of zoneNames" [value]="zone.zoneId">
+                {{ zone.zoneName }}
+            </option>
+        </select>
+        <!-- <div *ngIf="zone.invalid && (zone.touched || submitted)" class="text-danger">
+            Zone is required.
+        </div> -->
+    </div>            
+
+    <div class="col-sm-6 mb-3 form-group">
+        <label class="form-label" for="addDistrict">District <span class="text-danger">*</span></label>
+        <select id="addDistrict" class="form-select" [(ngModel)]="currentUser.district" name="addDistrict" required #district="ngModel">
+            <!-- Default option for placeholder -->
+            <option value="" selected>Select District</option>
+            <option *ngFor="let district of districtNames" [value]="district.districtId">
+                {{ district.districtName }}
+            </option>
+        </select>
+        <!-- <div *ngIf="district.invalid && (district.touched || submitted)" class="text-danger">
+            District is required.
+        </div> -->
+    </div>            
+</div>
+
+            
             <!-- Address in One Row (if Dealer) -->
             <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
                 <div class="col-sm-12 mb-3 form-group">

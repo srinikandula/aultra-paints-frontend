@@ -233,6 +233,35 @@ export class ApiRequestService {
         map((res: any) => res)
     );
 }
+
+
+
+ // Method to get all sales executives
+ getAllSalesExecutives(): Observable<any> {
+    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.SalesExecutives).pipe(
+      map((res: any) => {
+        return res; // Return the response (or you can modify the response as needed)
+      })
+    );
+  }
+  
+
+
+   // Method to get state names
+   getStates(): Observable<string[]> {
+    const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getStates}`;
+    return this.http.get<string[]>(url);
+  }
+  
+  getZones(): Observable<any> {
+    const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getZones}`;
+    return this.http.get(url);
+  }
+
+  getDistricts(): Observable<any> {
+    const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getDistricts}`;
+    return this.http.get(url);
+  }
       
 }   
 
