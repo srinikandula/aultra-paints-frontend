@@ -387,48 +387,36 @@
         </div>
     </div>
     <div class="col-sm-6 mb-3 form-group">
-        <label class="form-label" for="addState">State <span class="text-danger">*</span></label>
-        <select id="addState" class="form-select" [(ngModel)]="currentUser.state" name="addState" required #state="ngModel">
+        <label class="form-label" for="addState">State</label>
+        <select id="addState" class="form-select" [(ngModel)]="currentUser.state" name="addState" #state="ngModel">
             <option value="">Select State</option>
             <option *ngFor="let state of stateNames" [value]="state.stateId">
                 {{ state.stateName }}
             </option>
         </select>
-        <!-- <div *ngIf="state.invalid && (state.touched || submitted)" class="text-danger">
-            State is required.
-        </div> -->
-    </div>      
+    </div>       
 </div>
-    
+ 
  <!-- Zone and District in One Row (if Dealer) -->
  <div class="row" *ngIf="currentUser.accountType === 'Dealer'">
     <div class="col-sm-6 mb-3 form-group">
-        <label class="form-label" for="addZone">Zone <span class="text-danger">*</span></label>
-        <select id="addZone" class="form-select" [(ngModel)]="currentUser.zone" name="addZone" required #zone="ngModel">
-            <!-- Default option for placeholder -->
-            <option value=""  selected>Select Zone</option>
+        <label class="form-label" for="addZone">Zone</label>
+        <select id="addZone" class="form-select" [(ngModel)]="currentUser.zone" name="addZone" #zone="ngModel">
+            <option value="">Select Zone</option>
             <option *ngFor="let zone of zoneNames" [value]="zone.zoneId">
                 {{ zone.zoneName }}
             </option>
         </select>
-        <!-- <div *ngIf="zone.invalid && (zone.touched || submitted)" class="text-danger">
-            Zone is required.
-        </div> -->
-    </div>            
-
+    </div>         
     <div class="col-sm-6 mb-3 form-group">
-        <label class="form-label" for="addDistrict">District <span class="text-danger">*</span></label>
-        <select id="addDistrict" class="form-select" [(ngModel)]="currentUser.district" name="addDistrict" required #district="ngModel">
-            <!-- Default option for placeholder -->
-            <option value="" selected>Select District</option>
+        <label class="form-label" for="addDistrict">District</label>
+        <select id="addDistrict" class="form-select" [(ngModel)]="currentUser.district" name="addDistrict" #district="ngModel">
+            <option value="">Select District</option>
             <option *ngFor="let district of districtNames" [value]="district.districtId">
                 {{ district.districtName }}
             </option>
         </select>
-        <!-- <div *ngIf="district.invalid && (district.touched || submitted)" class="text-danger">
-            District is required.
-        </div> -->
-    </div>            
+    </div>        
 </div>
 
             

@@ -33,6 +33,9 @@ export class UserListComponent implements OnInit {
         mobile: '',
         accountType: 'P',
         salesExecutive: '' ,
+        state: '',
+        zone: '',
+        district: '',
     };
 
     
