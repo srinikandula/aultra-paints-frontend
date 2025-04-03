@@ -119,61 +119,66 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
   }
   
 
-  
   addOrEditOffer(modal: any, offer: any) {
     this.errorArray = [];
   
-    if (offer._id) {
+    if (offer && offer._id) {
       // Edit Mode: Load existing offer data
       this.currentOffer = { ...offer };
   
-      // Convert validUntil date to NgbDateStruct
-      const defaultDate = new Date(offer.validUntil);
+      // Convert validUntil to NgbDateStruct
+      const validDate = offer.validUntil ? new Date(offer.validUntil) : new Date();
       this.currentOffer.validUntil = {
-        year: defaultDate.getFullYear(),
-        month: defaultDate.getMonth() + 1,
-        day: defaultDate.getDate(),
+        year: validDate.getFullYear(),
+        month: validDate.getMonth() + 1,
+        day: validDate.getDate(),
       };
   
-     this.priceList = offer.price
-  ? offer.price.map((item: any) => ({
-      selectedKey: item.refId, 
-      price: item.price,
-      _id: item._id
-    }))
-  : [{ selectedKey: '', price: 0 }];
-
+      // Populate priceList from offer.price
+      this.priceList = offer.price && offer.price.length > 0
+        ? offer.price.map((item: any) => ({
+            selectedKey: item.refId || '', // Ensure correct mapping
+            price: item.price || 0,
+            _id: item._id || null
+          }))
+        : [{ selectedKey: 'All', price: 100 }];
+  
     } else {
       // Add Mode: Initialize default values
-      this.currentOffer = {};
+      this.currentOffer = {
+        productOfferImageUrl: '',
+        productOfferDescription: '',
+        validUntil: null,
+        productOfferStatus: 'Active',
+        cashback: 0,
+        redeemPoints: 0,
+      };
+  
+      // Set default date
       const defaultDate = new Date();
       this.currentOffer.validUntil = {
         year: defaultDate.getFullYear(),
         month: defaultDate.getMonth() + 1,
         day: defaultDate.getDate(),
       };
-      this.currentOffer.productOfferStatus = 'Active';
   
       // Initialize priceList with one empty row
-      this.priceList = [{ selectedKey: 'All', price: 100}];
+      this.priceList = [{ selectedKey: 'All', price: 100 }];
     }
   
-    // Open Modal with Custom Size
+    // Open Modal
     const modalRef: NgbModalRef = this.modalService.open(modal, {
       size: 'md',
       windowClass: 'custom-modal-size',
     });
   
-    // Reset form after closing the modal
+    // Reset form when modal is closed
     modalRef.result.then(
-      () => {
-        this.currentOffer = {};
-      },
-      () => {
-        this.currentOffer = {};
-      }
+      () => (this.currentOffer = {}),
+      () => (this.currentOffer = {})
     );
   }
+  
   
 
   saveOffer(modalRef: NgbModalRef) {
