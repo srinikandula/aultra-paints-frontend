@@ -262,6 +262,52 @@ export class ApiRequestService {
     const url = `${this.ApiUrls.mainUrl}/${this.ApiUrls.getDistricts}`;
     return this.http.get(url);
   }
+
+  // Create a new product category
+createProductCatlog(data: any) {
+    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.createProductCatlog, data).pipe(
+        map((res: any) => {
+            return res;
+        })
+    );
+}
+
+// Get all product categories with pagination
+getProductCatlogs(data: any): Observable<any> {
+    const params = new HttpParams()
+        .set('page', data.page.toString())
+        .set('limit', data.limit.toString());
+
+    return this.http.get<any>(this.ApiUrls.mainUrl + this.ApiUrls.getProductCatlog, { params });
+}
+
+// Search for a product category by name
+searchProductCatelogByName(name: string, page: number = 1, limit: number = 10) {
+    return this.http.get(`${this.ApiUrls.mainUrl}${this.ApiUrls.searchProductCatlog}/${name}?page=${page}&limit=${limit}`).pipe(
+        map((res: any) => res)
+    );
+}
+
+// Update a product category by its ID
+updateProductCatlog(id: string, data: any) {
+    return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.updateProductCatlog + '/' + id, data).pipe(
+        map((res: any) => {
+            return res;
+        })
+    );
+}
+
+// Delete a product category by its ID
+deleteProductCategory(id: string) {
+    return this.http.delete(this.ApiUrls.mainUrl + this.ApiUrls.deleteProductCatlog + '/' + id).pipe(
+        map((res: any) => {
+            return res;
+        })
+    );
+}
+
+
+
       
 }   
 
