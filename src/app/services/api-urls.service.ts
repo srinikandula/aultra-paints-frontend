@@ -91,4 +91,12 @@ getZones = 'zones/all';
 getDistricts = 'districts/all';
 
 
+// Product Category API URLs
+createProductCatlog = 'productCatlog/create';
+getProductCatlog = 'productCatlog';
+searchProductCatlog = 'productCatlog/search';
+updateProductCatlog = 'productCatlog/update/'; 
+deleteProductCatlog = 'productCatlog/delete/'; 
+
+
 }

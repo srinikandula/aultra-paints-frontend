@@ -23,14 +23,25 @@
     <!-- Sidebar (above the navbar) -->
     <div class="sidebar" [ngClass]="{ 'collapsed': isSidebarCollapsed, 'expanded': !isSidebarCollapsed }">
         <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType !== 'SuperUser'">
-            <!-- Dashboard List -->
-            <li class="nav-item" (click)="navigateTo('dashboard')">
-                <div class="menu">
-                    <i class="bx px-2 bxs-dashboard" style="font-size: 20px;" title="Dashboard"></i>
-                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Dashboard</span>
-                </div>
-            </li>
-        </ul>
+     <!-- Dashboard -->
+     <li class="nav-item" (click)="navigateTo('dashboard')">
+        <div class="menu" style="display: flex; align-items: center; padding: 8px 8px 8px 16px;">
+            <i class="bx bxs-dashboard" style="font-size: 20px; margin-right: 10px;" title="Dashboard"></i>
+            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc;" class="px-2">Dashboard</span>
+        </div>
+    </li>
+
+    <!-- Product Catalog -->
+    <li class="nav-item" *ngIf="currentUser.accountType === 'Dealer'" (click)="navigateTo('product-catalog')">
+        <div class="menu" style="display: flex; align-items: center; padding: 8px 8px 8px 16px;">
+            <img src="/assets/img/product_catalog.png" alt="Logo"
+                style="height: 20px; margin-right: 10px; filter: brightness(0) saturate(100%) invert(1);"
+                title="Product Catalog">
+            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc;" class="px-2">Product Catalog</span>
+        </div>
+    </li>
+</ul>
+        
         <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'SuperUser'">
             <!-- Dashboard List -->
             <li class="nav-item" (click)="navigateTo('dashboard')">
@@ -102,6 +113,14 @@
                             <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Product Offers</span>
                         </div>
                     </li>
+
+                    <li class="nav-item" (click)="navigateTo('product-catalog')">
+                        <div style="display: flex; align-items: center;">
+                            <img class="px-2" src="/assets/img/product_catalog.png" alt="Logo" style="height: 20px; filter: brightness(0) saturate(100%) invert(1);" title="Product Catalog">
+                            <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc;" class="px-2">Product Catalog</span>
+                        </div>
+                    </li>
+                
 
                    <!--reward-schemes-->
                     <li class="nav-item" (click)="navigateTo('reward-schemes')">

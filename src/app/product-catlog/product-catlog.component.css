@@ -1,0 +1,24 @@
+.product-catlogs-card {
+    width: 230px;
+    height: 380px;
+}
+
+.product-catlogs-card .card-body {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    text-align: left;
+    border-top: 1px solid #ddd;
+}
+
+.product-catlogs-card img {
+    max-height: 230px;
+    max-width: 250px;
+    width: 100%;
+    padding: 1.5rem;
+}
+
+.product-catlogs-card .card-body .card-text {
+    font-size: .8rem!important;
+    margin-bottom: 0.5rem!important;
+}

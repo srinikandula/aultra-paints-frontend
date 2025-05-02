@@ -1,0 +1,282 @@
+<div class="container-fluid my-4">
+    <div class="row">
+        <div class="col-sm-2"><h4>Product Catalog</h4></div>
+        <div class="col-sm-10">
+            <div class="d-flex justify-content-end align-items-center">
+                <!-- Cart Icon and Count -->
+                <div class="position-relative mx-3" style="cursor: pointer" (click)="openCartModal(cartModal)">
+                    <i class="bx bx-cart fs-3"></i>
+                    <span class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
+                      {{ cartItemCount }}
+                    </span>
+                </div>
+
+                <!-- Search Input -->
+                <div class="mx-3">
+                    <input type="text" [(ngModel)]="productCatlogsQuery.searchQuery" (input)="loadProductCatlogs()" placeholder="Search..."
+                           class="form-control "/>
+                </div>
+
+                <!-- Add Product Button -->
+                <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="addOrEditCatlog(categoryModal, currentCatlog)" class="btn btn-primary">Add Product </button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="container-fluid my-4">
+    <div class="d-flex flex-wrap" style="height: 76vh; overflow: auto" *ngIf="productCatlogs.length > 0">
+        <div class="card shadow-sm product-catlogs-card mx-2 mb-3" *ngFor="let category of productCatlogs; let i = index, let l = last">
+            <img *ngIf="category.productImageUrl" [src]="category.productImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
+            <img *ngIf="!category.productImageUrl" src="" class="card-img-top" alt="Image">
+            <div class="card-body" style="text-align: left">
+                <h6 class="card-title">{{ category.productDescription }}</h6>
+
+                <!-- Price and Quantity Controls in a row -->
+                <div class="d-flex justify-content-between align-items-center">
+                    <p class="card-text mb-0" style="font-text: bold;">Price: ₹{{category.productPrice}}</p>
+                    <div class="d-flex align-items-center">
+                        <button class="btn btn-outline-danger btn-sm" (click)="updateCart(category, -1)">-</button>
+                        <!-- Display number of items between - and + buttons -->
+                        <span class="mx-2">
+                            {{ cart[category._id]?.count || 0 }}
+                          </span>
+                        <button class="btn btn-outline-success btn-sm" (click)="updateCart(category, 1)">+</button>
+                    </div>
+                </div>
+
+                <p class="card-text" *ngIf="category.productCategoryStatus">Status: {{ category.productCategoryStatus }}</p>
+                
+                <div class="mt-auto d-flex justify-content-between align-items-center">
+                    <span class="badge rounded-pill bg-success me-2" [class.bg-danger]="category.productStatus === 'Inactive'">{{ category.productCategoryStatus }}</span>
+                    <div class="form-check form-switch">
+                        <input class="form-check-input" type="checkbox" [checked]="category.productStatus === 'Active'" (change)=" toggleCatlogStatus(category)">
+                    </div>
+                    <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="addOrEditCatlog(categoryModal, category)" class="btn btn-light mx-2" title="Edit Product">
+                        <i class='bx bxs-edit-alt'></i>
+                    </button>
+                    <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="deleteCatlog(category._id, category.productCategoryDescription)" class="btn btn-danger btn-sm" title="Delete Product">
+                        <i class="bx bx-trash"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid container-mt shadow-sm mb-3" *ngIf="productCatlogs.length === 0">
+        <p>No Product Catalogs Found. Please add some.</p>
+    </div>
+</div>
+
+
+<div class="container-fluid my-4">
+    <!-- Pagination Controls -->
+    <div class="row">
+        <div class="col-sm-12 text-right">
+            <div class="d-flex justify-content-end">
+                <!-- Page Size Selector -->
+                <select [(ngModel)]="limit" (change)="handleLimitChange()" class="form-select mx-2" style="width:100px; margin-bottom: 16px">
+                    <option *ngFor="let limitOption of limitOptions" [value]="limitOption">{{ limitOption }}</option>
+                </select>
+
+                <ngb-pagination class="mx-2"
+                    [(page)]="productCatlogsQuery.page"
+                    [pageSize]="productCatlogsQuery.limit"
+                    [collectionSize]="totalProductCatlogs"
+                    [boundaryLinks]="true"
+                    (pageChange)="handlePageChange($event)"
+                    [maxSize]="5">
+                </ngb-pagination>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<ng-template #categoryModal let-modal>
+    <div class="modal-header">
+        <h4 class="modal-title" id="modal-basic-title">{{ currentCatlog._id ? 'Edit' : 'Add' }} Product </h4>
+    </div>
+    <div class="modal-body">
+        <form #productCatlogForm="ngForm" class="modal-box shadow-sm">
+            <!-- Add/Edit Product Catlog Description -->
+            <div class="row">
+                <div class="col-sm-12 mb-3 form-group">
+                    <label class="form-label" for="addDescription">Product Name<span class="text-danger">*</span></label>
+                    <textarea class="form-control" id="addDescription" [(ngModel)]="currentCatlog.productDescription" name="addDescription"
+                        required placeholder="Enter Product Name" #addDescriptionInput="ngModel"></textarea>
+                    <div *ngIf="addDescriptionInput.invalid && (addDescriptionInput.dirty || addDescriptionInput.touched)" class="text-danger">
+                        <div *ngIf="addDescriptionInput.errors?.['required']">Product Name is required.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Status -->
+            <div class="row">
+                <div class="col-sm-4 mb-3 form-group">
+                    <label class="form-label" for="productCategoryStatus"> Status <span class="text-danger">*</span> </label>
+                    <div class="form-check form-switch form-check-lg form-switch-2x">
+                        <input class="form-check-input" id="productCategoryStatus" type="checkbox" name="productCategoryStatus"
+                            [checked]="currentCatlog.productCategoryStatus === 'Active'"
+                            (change)="statusChanged($event)"/>
+                    </div>
+                </div>
+            </div>
+
+             <!-- Add/Edit Productcatlog Image -->
+             <div class="row">
+                <div class="col-sm-12 mb-3 form-group">
+                    <label class="form-label" for="addImage">Upload Image <span class="text-danger">*</span></label>
+                    <div class="input-group mb-2">
+                        <input
+                        type="file"
+                        class="form-control"
+                        id="addImage"
+                        (change)="handleImageChange($event)"
+                        [required]="!currentCatlog._id" 
+                        accept=".png, .jpg, .jpeg"
+                        name="addImage"
+                        #addImageRef="ngModel"
+                        [(ngModel)]="currentCatlog.productImage"
+                      />
+                    </div>
+                    <div *ngIf="addImageRef.invalid && (addImageRef.dirty || addImageRef.touched)" class="text-danger">
+                        <div>Image is required.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="d-flex flex-row bd-highlight mb-3">
+                <div class="image-card mx-3" *ngIf="currentCatlog.productImage" [style.max-width]="uploadImageWidth">
+                    <span *ngIf="uploadImageWidth === '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
+                    <span *ngIf="uploadImageWidth !== '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
+    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
+                    <img *ngIf="currentCatlog.productImage" [src]="currentCatlog.productImage"
+                        alt="Product catlog Image" width="100%"
+                        (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"/>
+                </div>
+            <!-- Show existing image only if no new image is selected -->
+                <div class="image-card mx-3" *ngIf="currentCatlog.productImageUrl && !currentCatlog.productImage" [style.max-width]="imageWidth">
+                    <span *ngIf="imageWidth === '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
+                    <span *ngIf="imageWidth !== '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
+    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
+                    <img *ngIf="currentCatlog.productImageUrl" [src]="currentCatlog.productImageUrl"
+                        alt="Product catlog Image"  width="100%"
+                        (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"/>
+                </div>
+            </div>
+
+            <div *ngFor="let price of priceList; let i = index" class="d-flex align-items-center mb-2">
+                <!-- ng-select Dropdown for State, Zone, or District Selection -->
+                 <div class="me-2" style="width: 200px">
+                    <ng-select
+                    [items]="groupedDropdownData"
+                    bindLabel="label"
+                    bindValue="id"
+                    groupBy="group"
+                    [(ngModel)]="price.selectedKey"
+                    name="stateOrZone{{ i }}"
+                     placeholder="Select State/Zone/District"
+                     [clearable]="false"
+                     [searchable]="true"
+                     [dropdownPosition]="'auto'"
+                     >
+                    </ng-select>
+                </div>
+             
+                 <!-- Dash Symbol Between Dropdown and Price Input -->
+                 <span class="mx-2">-</span>
+             
+                 <!-- Text Field for Price -->
+                 <div class="input-group me-2" style="width: 150px;">
+                 <input
+                     type="number"
+                     class="form-control"
+                     [(ngModel)]="price.price"
+                     name="price{{ i }}"
+                     required
+                     placeholder="Enter price"
+                 />
+                 </div>
+             
+                 <!-- Add Button Only for Last Row -->
+                  <div class="ms-2">
+                 <button
+                 *ngIf="i === priceList.length - 1"
+                 class="btn btn-outline-primary"
+                 type="button"
+                 (click)="addPrice()"
+                 >
+                 +
+                 </button>
+                 </div>
+             </div>
+             
+ 
+             <div class="row" *ngIf="errorArray.length > 0">
+                 <div class="col-sm-12">
+                     <ul>
+                         <li *ngFor="let err of errorArray; let i = index" class="text-danger">{{err}}</li>
+                     </ul>
+                 </div>
+             </div>
+         </form>
+     </div>
+
+    <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
+        <button type="submit" class="btn btn-primary" (click)="saveCatlog(modal)">Save</button>
+    </div>
+</ng-template>
+
+
+<!-- Cart Modal -->
+<ng-template #cartModal let-modal>
+    <div class="modal-header">
+      <h5 class="modal-title">My Cart</h5>
+      <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+    </div>
+  
+    <div class="modal-body">
+      <div *ngIf="cartItemCount > 0; else emptyCart">
+        <ul class="list-group">
+          <li *ngFor="let id of cartKeys()" class="list-group-item d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center">
+              <img
+                [src]="getProductById(id)?.productImageUrl + '?t=' + timestamp"
+                alt="Product Image"
+                style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px;"
+                *ngIf="getProductById(id)?.productImageUrl"
+              />
+              <div>
+                <strong>{{ getProductById(id)?.productDescription }}</strong><br />
+                <small>Price: ₹{{ cart[id].price }}</small>
+              </div>
+            </div>
+            
+            <span class="mx-2">-</span>
+  
+            <div class="d-flex align-items-center">
+              <span class="mx-2">{{ cart[id]?.count || 0 }}</span>
+              <button class="btn btn-sm btn-outline-success me-2" (click)="updateCart(getProductById(id), 1)">
+                <i class="bx bx-plus"></i>
+              </button>
+              <button class="btn btn-sm btn-outline-danger" (click)="updateCart(getProductById(id), -cart[id].count)">
+                <i class="bx bx-trash"></i>
+              </button>
+            </div>
+          </li>
+        </ul>
+      </div>
+  
+      <ng-template #emptyCart>
+        <p>Your cart is empty</p>
+      </ng-template>
+    </div>
+  
+    <!-- Modal Footer: Total + Proceed to Checkout -->
+    <div class="modal-footer d-flex justify-content-between align-items-center">
+      <strong>Total Price: ₹{{ getCartTotalPrice() }}</strong>
+      <button class="btn btn-primary" (click)="proceedToCheckout()">Proceed to Checkout</button>
+    </div>
+  </ng-template>
+  

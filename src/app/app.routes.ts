@@ -16,6 +16,7 @@ import {RewardSchemesComponent} from "./reward-schemes/reward-schemes.component"
 import {ProductOffersComponent} from "./product-offers/product-offers.component";
 import { UnverifiedUsersComponent } from './unverified-users/unverified-users.component';
 import { PayoutsComponent } from './payouts/payouts.component';
+import { ProductCatlogComponent } from './product-catlog/product-catlog.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
@@ -36,6 +37,7 @@ export const routes: Routes = [
             {path: 'product-offers', component: ProductOffersComponent, canActivate: [AuthGuard]},
             {path: 'reward-schemes', component: RewardSchemesComponent, canActivate: [AuthGuard]},
             {path: 'payouts', component: PayoutsComponent, canActivate: [AuthGuard]},
+            {path: 'product-catalog', component: ProductCatlogComponent, canActivate:[AuthGuard]}
         ]
 
     },

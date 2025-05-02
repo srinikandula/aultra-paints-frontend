@@ -118,12 +118,7 @@ export class CreateBatchComponent {
         if (Object.keys(lastBatch.Brand).length === 0) {
             errorMessage += 'Brand is required. ';
         }
-    
-        // Check if redeemablePoints is valid (non-zero)
-        if (!lastBatch.redeemablePoints || lastBatch.redeemablePoints === 0) {
-            errorMessage += 'Redeemable Points cannot be zero. ';
-        }
-    
+
         // Check if value is valid (non-zero)
         if (!lastBatch.value || lastBatch.value === 0) {
             errorMessage += 'Value cannot be zero. ';
