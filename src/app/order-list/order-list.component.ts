@@ -17,7 +17,8 @@ export class OrderListComponent {
   limit: number = 10;
   totalOrders: number = 0;
   limitOptions: number[] = [5, 10, 20, 50];
-  
+  isLoading: boolean = false;
+
   constructor(private apiRequestService: ApiRequestService) {}
 
   ngOnInit(): void {
@@ -25,13 +26,17 @@ export class OrderListComponent {
   }
 
   loadOrders(): void {
-    this.apiRequestService.getAllOrders().subscribe(
+    this.isLoading = true;
+    this.apiRequestService.getAllOrders(this.currentPage, this.limit).subscribe(
       (response) => {
         this.orders = response.orders;
+        console.log(this.orders , '--------------')
         this.totalOrders = response.total;
+        this.isLoading = false;
       },
       (error) => {
         console.error('Error fetching orders:', error);
+        this.isLoading = false;
       }
     );
   }

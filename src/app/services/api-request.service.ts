@@ -316,17 +316,15 @@ createOrder(data: any): Observable<any> {
   }
 
 
-
-  getAllOrders() {
-    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getAllOrders).pipe(
-      map((res: any) => {
-        return res; 
-      })
+  getAllOrders(page: number, limit: number) {
+    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.getAllOrders, {
+      page,
+      limit
+    }).pipe(
+      map((res: any) => res)
     );
   }
   
-  
-
       
 }   
 
