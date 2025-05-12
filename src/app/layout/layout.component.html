@@ -133,6 +133,25 @@
             </li>
         </ul>
 
+        <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'SuperUser'">
+            <li class="nav-item treeview">
+                <div class="menu" (click)="toggleOrderMenu()">
+                    <img class="px-2" src="/assets/img/Order_menu.png" alt="Logo" style="height: 20px;" title="Orders Menu">
+                    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Order</span>
+                    <span style="position: relative;">
+                        <i class="bx px-2 bxs-chevron-down custom-menu-arrow" *ngIf="orderActive" style="font-size: 20px;"></i>
+                        <i class="bx px-2 bxs-chevron-right custom-menu-arrow" *ngIf="!orderActive" style="font-size: 20px;"></i>
+                    </span>
+                </div>
+                <ul class="submenu" [ngClass]="orderActive ? 'sub-menu-active-height' : '0'">
+                    <li class="nav-item" (click)="navigateTo('order-list')">
+                        <img class="px-2" src="/assets/img/Oder_list.png" alt="Logo" style="height: 20px;" title="Order List">
+                        <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Order List</span>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        
 
         <!-- Sidebar Footer -->
         <div class="sidebar-footer" (click)="logout()">

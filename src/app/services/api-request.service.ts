@@ -306,7 +306,26 @@ deleteProductCategory(id: string) {
     );
 }
 
+// Create a new order
+createOrder(data: any): Observable<any> {
+    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.checkoutUrl, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 
+
+
+  getAllOrders() {
+    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getAllOrders).pipe(
+      map((res: any) => {
+        return res; 
+      })
+    );
+  }
+  
+  
 
       
 }   

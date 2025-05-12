@@ -19,6 +19,7 @@ export class LayoutComponent {
   isSidebarCollapsed: boolean = false;  // Sidebar starts collapsed by default
   active: boolean = false;
   currentUser: any = {};
+   orderActive: boolean = false;
 
   constructor(private router: Router, private AuthService: AuthService) {
     this.currentUser = this.AuthService.currentUserValue;
@@ -68,16 +69,25 @@ export class LayoutComponent {
     this.AuthService.logOut();
   }
 
-  toggle() {
-    if (this.active) {
-      this.active = false;
-    } else {
-      this.active = true;
-    }
+  
     // if (!this.config.multi) {
     //   this.menuGet.filter((menu: { active: any; }, i: number) => i !== index && menu.active).forEach((menu: { active: boolean; }) => menu.active = !menu.active);
     // }
     // this.menuGet[index].active = !this.menuGet[index].active;
 
-  }
+  
+    toggleOrderMenu() {
+      this.orderActive = !this.orderActive;
+      if (this.orderActive) {
+        this.active = false; // Close Masters menu when Order menu is opened
+      }
+    }
+  
+    toggle() {
+      this.active = !this.active;
+      if (this.active) {
+        this.orderActive = false; // Close Order menu when Masters menu is opened
+      }
+    }
+  
 }
