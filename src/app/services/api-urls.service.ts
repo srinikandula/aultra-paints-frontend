@@ -41,6 +41,8 @@ export class ApiUrlsService {
 
   // Transactions
   getTransactions = 'transaction';
+  exportTransaction = 'transaction/export';
+
 
 
 //cashFree

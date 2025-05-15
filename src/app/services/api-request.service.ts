@@ -324,6 +324,15 @@ createOrder(data: any): Observable<any> {
       map((res: any) => res)
     );
   }
+
+  exportTransaction(): Observable<Blob> {
+    return this.http.post(
+      this.ApiUrls.mainUrl + this.ApiUrls.exportTransaction,
+      {}, 
+      { responseType: 'blob' } 
+    );
+  }
+  
   
       
 }   
