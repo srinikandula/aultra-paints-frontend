@@ -306,8 +306,34 @@ deleteProductCategory(id: string) {
     );
 }
 
+// Create a new order
+createOrder(data: any): Observable<any> {
+    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.checkoutUrl, data).pipe(
+      map((res: any) => {
+        return res;
+      })
+    );
+  }
 
 
+  getAllOrders(page: number, limit: number) {
+    return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.getAllOrders, {
+      page,
+      limit
+    }).pipe(
+      map((res: any) => res)
+    );
+  }
+
+  exportTransaction(): Observable<Blob> {
+    return this.http.post(
+      this.ApiUrls.mainUrl + this.ApiUrls.exportTransaction,
+      {}, 
+      { responseType: 'blob' } 
+    );
+  }
+  
+  
       
 }   
 

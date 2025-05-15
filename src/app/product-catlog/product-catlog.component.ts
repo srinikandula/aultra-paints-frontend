@@ -148,7 +148,13 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
       this.errorArray = [];
   
       if (catlog && catlog._id) {
-        this.currentCatlog = { ...catlog };
+        this.currentCatlog = {
+          _id: catlog._id, 
+          productImageUrl: catlog.productOfferImageUrl || '',
+          productDescription: catlog.productOfferDescription || '',
+          productStatus: catlog.productOfferStatus || 'Active',
+          price: catlog.productPrice || ''
+        };
   
         this.priceList = catlog.price && catlog.price.length > 0
           ? catlog.price.map((item: any) => ({
@@ -189,7 +195,6 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
     }
   
     saveCatlog(modalRef: NgbModalRef) {
-      console.log(this.currentCatlog);
       this.submitted = true;
   
       if (this.productCatlogForm.form) {
@@ -336,46 +341,97 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
       }
     }
   
-    toggleCatlogStatus(catlog: any): void {
-      console.log('Toggle catlog status', catlog);
-      catlog.productStatus = catlog.productStatus === 'Active' ? 'Inactive' : 'Active';
+  
+  
+    statusChanged(event: Event): void {
+      const isChecked = (event.target as HTMLInputElement).checked;
+      this.currentCatlog.productStatus = isChecked ? 'Active' : 'Inactive';
+      console.log('Status changed', this.currentCatlog.productStatus);
+    }
+
+   
+    toggleProductCatlogStatus(catlog: any): void {
+      const newStatus = catlog.productOfferStatus === 'Active' ? 'Inactive' : 'Active';
+    
       Swal.fire({
-        title: `Are you sure you want to mark this product catlog as ${catlog.productStatus}?`,
-        text: `You are about to mark this product catalog as ${catlog.productStatus}.`,
+        title: `Are you sure you want to mark this product catalog as ${newStatus}?`,
+        text: `You are about to mark this product catalog as ${newStatus}.`,
         icon: 'warning',
         showCancelButton: true,
-        confirmButtonText: `Yes, mark as ${catlog.productStatus}`,
+        confirmButtonText: `Yes, mark as ${newStatus}`,
         cancelButtonText: 'No, keep it',
       }).then((result) => {
         if (result.isConfirmed) {
-          this.apiRequestService.update(this.apiUrls.updateProductCatlog + catlog._id, catlog).subscribe((response) => {
-            if (response) {
-              this.timestamp = new Date().getTime();
-              this.loadProductCatlogs();
-              Swal.fire('Status updated', 'Product catalog status has been updated successfully', 'success');
+          let priceArray: { [key: string]: number }[] = [];
+          if (Array.isArray(catlog.price)) {
+            priceArray = catlog.price.map((item: { refId?: string; price?: number } | { [key: string]: number }) => {
+              if ('refId' in item && 'price' in item && item.refId && item.price !== undefined) {
+                return { [item.refId]: item.price };
+              }
+              return item as { [key: string]: number };
+            });
+          }
+    
+          const updateData = {
+            productImageUrl: catlog.productOfferImageUrl || catlog.productImageUrl,
+            productDescription: catlog.productOfferDescription || catlog.productDescription,
+            productStatus: newStatus,
+            price: priceArray
+          };
+    
+          this.apiRequestService.update(this.apiUrls.updateProductCatlog + catlog._id, updateData).subscribe({
+            next: (response) => {
+              if (response) {
+                this.timestamp = new Date().getTime();
+                catlog.productOfferStatus = newStatus;
+                this.loadProductCatlogs();
+                Swal.fire('Status updated', 'Product catalog status has been updated successfully', 'success');
+              }
+            },
+            error: () => {
+              Swal.fire('Error', 'Failed to update product catalog status', 'error');
             }
           });
-        } else {
-          catlog.productStatus = catlog.productStatus === 'Inactive' ? 'Active' : 'Inactive';
         }
       });
     }
-  
-    statusChanged(catlogStatus: any): void {
-      console.log('Status changed', catlogStatus);
-      catlogStatus = !catlogStatus;
-      this.currentCatlog.productStatus = !catlogStatus ? 'Active' : 'Inactive';
-    }
-  
-    toggleProductCatlogStatus(event: Event) {
-      const isChecked = (event.target as HTMLInputElement).checked;
-      this.currentCatlog.productStatus = isChecked ? 'Active' : 'Inactive';
-    }
-
+    
 
     proceedToCheckout() {
-      
+      const items = Object.keys(this.cart).map(id => {
+        const product = this.getProductById(id);
+        const count = this.cart[id].count;
+        const price = this.cart[id].price;
+    
+        return {
+          _id: id,
+          productOfferDescription: product?.productOfferDescription || product?.productDescription || '',
+          productPrice: price,
+          quantity: count,
+          subtotal: price * count
+        };
+      });
+    
+      const totalPrice = items.reduce((sum, item) => sum + item.subtotal, 0);
+    
+      const orderPayload = {
+        items,
+        totalPrice
+      };
+    
+      this.apiRequestService.createOrder(orderPayload).subscribe({
+        next: (response) => {
+          Swal.fire('Order Placed', 'Your order was placed successfully!', 'success');
+          this.cart = {};
+          this.modalService.dismissAll();
+        },
+        error: (err) => {
+          const errorMessage = err?.message || err?.error?.message || 'Failed to place order';
+          Swal.fire('Error', errorMessage, 'error');
+        }
+      });
     }
+    
   }
   
 

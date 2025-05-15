@@ -27,10 +27,10 @@
 <div class="container-fluid my-4">
     <div class="d-flex flex-wrap" style="height: 76vh; overflow: auto" *ngIf="productCatlogs.length > 0">
         <div class="card shadow-sm product-catlogs-card mx-2 mb-3" *ngFor="let category of productCatlogs; let i = index, let l = last">
-            <img *ngIf="category.productImageUrl" [src]="category.productImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
-            <img *ngIf="!category.productImageUrl" src="" class="card-img-top" alt="Image">
+            <img *ngIf="category.productOfferImageUrl" [src]="category.productOfferImageUrl + '?t=' + timestamp" class="card-img-top" alt="Image">
+            <img *ngIf="!category.productOfferImageUrl" src="" class="card-img-top" alt="Image">
             <div class="card-body" style="text-align: left">
-                <h6 class="card-title">{{ category.productDescription }}</h6>
+                <h6 class="card-title">{{ category.productOfferDescription }}</h6>
 
                 <!-- Price and Quantity Controls in a row -->
                 <div class="d-flex justify-content-between align-items-center">
@@ -45,12 +45,23 @@
                     </div>
                 </div>
 
-                <p class="card-text" *ngIf="category.productCategoryStatus">Status: {{ category.productCategoryStatus }}</p>
                 
                 <div class="mt-auto d-flex justify-content-between align-items-center">
-                    <span class="badge rounded-pill bg-success me-2" [class.bg-danger]="category.productStatus === 'Inactive'">{{ category.productCategoryStatus }}</span>
-                    <div class="form-check form-switch">
-                        <input class="form-check-input" type="checkbox" [checked]="category.productStatus === 'Active'" (change)=" toggleCatlogStatus(category)">
+                    <div class="d-flex align-items-center">
+                      <!-- Badge for Status -->
+                      <span class="badge rounded-pill me-2"
+                            [class.bg-success]="category.productOfferStatus === 'Active'"
+                            [class.bg-danger]="category.productOfferStatus === 'Inactive'">
+                        {{ category.productOfferStatus }}
+                      </span>
+                  
+                      <!-- Toggle Switch -->
+                      <div class="form-check form-switch">
+                        <input class="form-check-input"
+                               type="checkbox"
+                               [checked]="category.productOfferStatus === 'Active'"
+                               (change)="toggleProductCatlogStatus(category)">
+                      </div>
                     </div>
                     <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="addOrEditCatlog(categoryModal, category)" class="btn btn-light mx-2" title="Edit Product">
                         <i class='bx bxs-edit-alt'></i>
@@ -114,10 +125,10 @@
             <!-- Status -->
             <div class="row">
                 <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="productCategoryStatus"> Status <span class="text-danger">*</span> </label>
+                    <label class="form-label" for="productStatus"> Status <span class="text-danger">*</span> </label>
                     <div class="form-check form-switch form-check-lg form-switch-2x">
-                        <input class="form-check-input" id="productCategoryStatus" type="checkbox" name="productCategoryStatus"
-                            [checked]="currentCatlog.productCategoryStatus === 'Active'"
+                        <input class="form-check-input" id="productStatus" type="checkbox" name="productStatus"
+                            [checked]="currentCatlog.productStatus === 'Active'"
                             (change)="statusChanged($event)"/>
                     </div>
                 </div>
@@ -241,12 +252,12 @@
         <ul class="list-group">
           <li *ngFor="let id of cartKeys()" class="list-group-item d-flex align-items-center justify-content-between">
             <div class="d-flex align-items-center">
-              <img
-                [src]="getProductById(id)?.productImageUrl + '?t=' + timestamp"
+                <img
+                [src]="getProductById(id)?.productOfferImageUrl + '?t=' + timestamp"
                 alt="Product Image"
                 style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px;"
-                *ngIf="getProductById(id)?.productImageUrl"
               />
+  
               <div>
                 <strong>{{ getProductById(id)?.productDescription }}</strong><br />
                 <small>Price: ₹{{ cart[id].price }}</small>

@@ -337,25 +337,56 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
 
   toggleOfferStatus(offer: any): void {
     console.log('Toggle offer status', offer);
-    offer.productOfferStatus = offer.productOfferStatus === 'Active' ? 'Inactive' : 'Active';
+    const newStatus = offer.productOfferStatus === 'Active' ? 'Inactive' : 'Active';
+    
     Swal.fire({
-      title: `Are you sure you want to mark this product offer as ${offer.productOfferStatus}?`,
-      text: `You are about to mark this product offer as ${offer.productOfferStatus}.`,
+      title: `Are you sure you want to mark this product offer as ${newStatus}?`,
+      text: `You are about to mark this product offer as ${newStatus}.`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: `Yes, mark as ${offer.productOfferStatus}`,
+      confirmButtonText: `Yes, mark as ${newStatus}`,
       cancelButtonText: 'No, keep it',
     }).then((result) => {
       if (result.isConfirmed) {
-        this.apiRequestService.update(this.apiUrls.updateProductOffer + offer._id, offer).subscribe((response) => {
-          if (response) {
-            this.timestamp = new Date().getTime();
-            this.loadProductOffers();
-            Swal.fire('Status updated', 'Product offer status has been updated successfully', 'success');
+        let priceArray: { [key: string]: number }[] = [];
+        if (Array.isArray(offer.price)) {
+          priceArray = offer.price.map((item: { refId?: string; price?: number } | { [key: string]: number }) => {
+            if ('refId' in item && 'price' in item && item.refId && item.price !== undefined) {
+              return { [item.refId]: item.price };
+            }
+            return item as { [key: string]: number };
+          });
+        }
+  
+        const updateData = {
+          ...offer,
+          productOfferStatus: newStatus,
+          price: priceArray
+        };
+  
+        console.log('Update data being sent:', updateData);
+  
+        this.apiRequestService.update(this.apiUrls.updateProductOffer + offer._id, updateData).subscribe({
+          next: (response) => {
+            if (response) {
+              this.timestamp = new Date().getTime();
+              this.loadProductOffers();
+              Swal.fire('Status updated', 'Product offer status has been updated successfully', 'success');
+            }
+          },
+          error: (error) => {
+            console.error('Error updating product offer status:', error);
+            console.error('Error response:', error.error);
+            console.error('Error message:', error.message);
+            console.error('Error status:', error.status);
+            Swal.fire('Error', 'Failed to update product offer status', 'error');
+            // Revert the status change in the local object
+            offer.productOfferStatus = offer.productOfferStatus === 'Inactive' ? 'Active' : 'Inactive';
           }
-        })
+        });
       } else {
-        offer.productOfferStatus = offer.productOfferStatus === 'Inactive'? 'Active' : 'Inactive';
+        // If not confirmed, revert the status change in the local object
+        offer.productOfferStatus = offer.productOfferStatus === 'Inactive' ? 'Active' : 'Inactive';
       }
     });
   }

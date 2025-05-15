@@ -43,7 +43,10 @@ export class TransactionsComponent implements OnInit {
   filterCouponCode: string = '';
   showUsedCoupons: boolean = false;
   salesExecutives: any[] = [];  
-  selectedSalesExecutive: string = '';  
+  selectedSalesExecutive: string = ''; 
+  
+  toastMessage: string = '';
+  showToast: boolean = false;
   
     constructor(private orderService: OrderService,
                 private router: Router,
@@ -59,9 +62,9 @@ export class TransactionsComponent implements OnInit {
 
 
     applyFilters() {
-        this.getAllTransactions(); // Apply the filter and get the filtered data
+        this.getAllTransactions(); 
         this.cdr.detectChanges();
-        this.closeFilterModal(); // Close the modal
+        this.closeFilterModal(); 
       }
 
     getAllTransactions(page: number = this.currentPage) {
@@ -83,6 +86,8 @@ export class TransactionsComponent implements OnInit {
           },
           (error: any) => {
             console.error('Error loading transactions:', error);
+            const errorMsg = error?.error?.error || error?.error || 'An unexpected error occurred';
+            this.showErrorToast(errorMsg); 
           }
         );
       }
@@ -98,19 +103,27 @@ export class TransactionsComponent implements OnInit {
           }
         });
       }
-      
-      
 
-      
       exportToExcel(): void {
-        if (this.transactions && this.transactions.length > 0) {
-            const ws: XLSX.WorkSheet = XLSX.utils.json_to_sheet(this.transactions);
-            const wb: XLSX.WorkBook = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, 'Transactions');
-            XLSX.writeFile(wb, 'transactions.xlsx');
-        }
+        this.apiRequest.exportTransaction().subscribe({
+          next: (blob: Blob) => {
+            const objectUrl = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = objectUrl;
+            a.download = 'transactions.csv';  // use .csv extension here
+            a.click();
+      
+            setTimeout(() => URL.revokeObjectURL(objectUrl), 1000);
+          },
+          error: (error) => {
+            console.error('Export failed:', error);
+            const errorMsg = error?.error?.error || error?.message || 'Export failed. Try again.';
+            this.showErrorToast(errorMsg);
+          }
+        });
       }
-
+      
+      
        // Function to reset the filter form fields
   resetFilterForm() {
     this.filterPointsRedeemedBy = '';
@@ -163,5 +176,15 @@ export class TransactionsComponent implements OnInit {
     handleLimitChange() {
         this.currentPage = 1;
         this.getAllTransactions();
+    }
+
+    showErrorToast(message: string) {
+      this.toastMessage = message;
+      this.showToast = true;
+      setTimeout(() => this.hideToast(), 3000);
+    }
+  
+    hideToast() {
+      this.showToast = false;
     }
 }

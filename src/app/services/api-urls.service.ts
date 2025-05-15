@@ -41,6 +41,8 @@ export class ApiUrlsService {
 
   // Transactions
   getTransactions = 'transaction';
+  exportTransaction = 'transaction/export';
+
 
 
 //cashFree
@@ -97,6 +99,12 @@ getProductCatlog = 'productCatlog';
 searchProductCatlog = 'productCatlog/search';
 updateProductCatlog = 'productCatlog/update/'; 
 deleteProductCatlog = 'productCatlog/delete/'; 
+
+//order
+checkoutUrl = 'order/create';
+getAllOrders = '/order/orders';
+
+
 
 
 }
