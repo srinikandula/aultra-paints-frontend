@@ -1,4 +1,4 @@
-<!-- User greeting, separate from charts -->
+<!-- User greeting -->
 <div class="row">
     <div class="col-sm-12 mb-4">
       <h3>Welcome back, {{ currentUser.fullName }}</h3>
@@ -8,11 +8,12 @@
   <!-- Main card container -->
   <div class="card" style="margin-bottom: 24px;">
     <div class="card-body" style="width: 100%;">
+  
       <h4 style="margin-bottom: 16px; text-align: left;">Products</h4>
   
       <div style="overflow-x: auto; width: 100%;">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
-  
+        <div style="display: flex; align-items: flex-start; justify-content: space-between; min-width: 100%;">
+          
           <!-- Main Chart -->
           <div [style.width.px]="chartPixelWidth">
             <highcharts-chart
@@ -38,6 +39,7 @@
   
         </div>
       </div>
+  
     </div>
   </div>
   
@@ -46,14 +48,11 @@
     <div class="card-body" style="width: 100%;">
   
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
-        <!-- Left: Product Title -->
         <div style="margin-left: 8px;">
           <h4 style="margin: 0;">Details for {{ selectedProductName }}</h4>
         </div>
   
-        <!-- Middle + Right: Legend & Info -->
         <div style="display: flex; align-items: center; gap: 24px;">
-          <!-- Middle: Custom Legend -->
           <div
             *ngIf="drilldownChartOptions?.series?.length"
             class="custom-legend"
@@ -67,7 +66,6 @@
             </div>
           </div>
   
-          <!-- Right: Issued Info Box -->
           <div style="
             border: 1px solid #ddd;
             border-radius: 8px;
@@ -86,7 +84,6 @@
         </div>
       </div>
   
-      <!-- Chart aligned left -->
       <div style="overflow-x: auto; width: 100%;">
         <div style="display: flex; align-items: flex-start; justify-content: flex-start;">
           <div [style.width.px]="400">
