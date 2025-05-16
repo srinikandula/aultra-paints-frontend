@@ -43,13 +43,13 @@
 </ul>
         
         <ul class="nav flex-column app-menu" *ngIf="currentUser.accountType === 'SuperUser'">
-            <!-- Dashboard List -->
-            <li class="nav-item" (click)="navigateTo('dashboard')">
-                <div class="menu">
+            <!-- Pie Chart Dashboard for SuperUser -->
+             <li class="nav-item" (click)="navigateTo('piechart-dashboard')">
+                 <div class="menu">
                     <i class="bx px-2 bxs-dashboard" style="font-size: 20px;" title="Dashboard"></i>
                     <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Dashboard</span>
-                </div>
-            </li>
+                 </div>
+                </li>
 
             <!--Batch-list-->
             <li class="nav-item" (click)="navigateTo('batch-list')">

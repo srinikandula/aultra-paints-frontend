@@ -1,0 +1,5 @@
+.card-body > div {
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+  

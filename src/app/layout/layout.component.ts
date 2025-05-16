@@ -16,7 +16,7 @@ declare var jQuery: any;
   styleUrl: './layout.component.css'
 })
 export class LayoutComponent {
-  isSidebarCollapsed: boolean = false;  // Sidebar starts collapsed by default
+  isSidebarCollapsed: boolean = false;  
   active: boolean = false;
   currentUser: any = {};
    orderActive: boolean = false;
@@ -52,7 +52,17 @@ export class LayoutComponent {
 
       });
     })(jQuery);
+
+  //  Custom redirect logic
+  const currentUrl = this.router.url;
+  if (currentUrl === '/' || currentUrl === '') {
+    if (this.currentUser?.accountType === 'SuperUser') {
+      this.router.navigate(['/piechart-dashboard']);
+    } else {
+      this.router.navigate(['/dashboard']);
+    }
   }
+}
 
   // Toggle the sidebar between collapsed and expanded states
   toggleSidebar() {
@@ -90,4 +100,5 @@ export class LayoutComponent {
       }
     }
   
+    
 }

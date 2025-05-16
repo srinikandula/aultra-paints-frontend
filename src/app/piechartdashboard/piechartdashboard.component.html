@@ -1,0 +1,105 @@
+<!-- User greeting, separate from charts -->
+<div class="row">
+    <div class="col-sm-12 mb-4">
+      <h3>Welcome back, {{ currentUser.fullName }}</h3>
+    </div>
+  </div>
+  
+  <!-- Main card container -->
+  <div class="card" style="margin-bottom: 24px;">
+    <div class="card-body" style="width: 100%;">
+      <h4 style="margin-bottom: 16px; text-align: left;">Products</h4>
+  
+      <div style="overflow-x: auto; width: 100%;">
+        <div style="display: flex; align-items: flex-start; justify-content: space-between;">
+  
+          <!-- Main Chart -->
+          <div [style.width.px]="chartPixelWidth">
+            <highcharts-chart
+              *ngIf="chartOptionsColumn && chartOptionsColumn.series?.length"
+              [Highcharts]="Highcharts"
+              [options]="chartOptionsColumn"
+              style="display: block; height: 400px;">
+            </highcharts-chart>
+          </div>
+  
+          <!-- Custom Legend -->
+          <div
+            class="custom-legend"
+            style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin-left: 16px; max-width: 300px;">
+            <div *ngFor="let series of chartOptionsColumn.series" style="display: flex; align-items: center;">
+              <div
+                style="width: 14px; height: 14px; margin-right: 8px; border-radius: 2px;"
+                [style.backgroundColor]="getSeriesColor(series)">
+              </div>
+              <span>{{ series.name }}</span>
+            </div>
+          </div>
+  
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Drilldown Section -->
+  <div *ngIf="selectedProductName" class="card">
+    <div class="card-body" style="width: 100%;">
+  
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+        <!-- Left: Product Title -->
+        <div style="margin-left: 8px;">
+          <h4 style="margin: 0;">Details for {{ selectedProductName }}</h4>
+        </div>
+  
+        <!-- Middle + Right: Legend & Info -->
+        <div style="display: flex; align-items: center; gap: 24px;">
+          <!-- Middle: Custom Legend -->
+          <div
+            *ngIf="drilldownChartOptions?.series?.length"
+            class="custom-legend"
+            style="display: flex; flex-wrap: wrap; align-items: center; gap: 12px;">
+            <div *ngFor="let series of drilldownChartOptions.series" style="display: flex; align-items: center;">
+              <div
+                style="width: 14px; height: 14px; margin-right: 6px; border-radius: 2px;"
+                [style.backgroundColor]="getSeriesColor(series)">
+              </div>
+              <span style="font-size: 13px;">{{ series.name }}</span>
+            </div>
+          </div>
+  
+          <!-- Right: Issued Info Box -->
+          <div style="
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 12px 16px;
+            background-color: #f9f9f9;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 6px;
+            min-width: 180px;
+            max-width: 220px;
+          ">
+            <div style="font-size: 14px;"><strong>Issued Points:</strong> {{ issuedPoints }}</div>
+            <div style="font-size: 14px;"><strong>Issued Value:</strong> {{ issuedValue }}</div>
+          </div>
+        </div>
+      </div>
+  
+      <!-- Chart aligned left -->
+      <div style="overflow-x: auto; width: 100%;">
+        <div style="display: flex; align-items: flex-start; justify-content: flex-start;">
+          <div [style.width.px]="400">
+            <highcharts-chart
+              *ngIf="drilldownChartOptions && drilldownChartOptions.series?.length"
+              [Highcharts]="Highcharts"
+              [options]="drilldownChartOptions"
+              style="display: block; height: 400px;">
+            </highcharts-chart>
+          </div>
+        </div>
+      </div>
+  
+    </div>
+  </div>
+  
