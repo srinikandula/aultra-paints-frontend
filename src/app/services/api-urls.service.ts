@@ -42,8 +42,7 @@ export class ApiUrlsService {
   // Transactions
   getTransactions = 'transaction';
   exportTransaction = 'transaction/export';
-
-
+  batchTimeline = 'chart/batch-timeline';
 
 //cashFree
 getcashfreetransaction = 'cashFree/getTransactions';
@@ -104,6 +103,8 @@ deleteProductCatlog = 'productCatlog/delete/';
 checkoutUrl = 'order/create';
 getAllOrders = '/order/orders';
 
+//piechartsdashboard
+batchStatistics = 'chart/batch-statistics';
 
 
 

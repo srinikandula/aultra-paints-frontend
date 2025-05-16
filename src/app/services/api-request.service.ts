@@ -332,7 +332,20 @@ createOrder(data: any): Observable<any> {
       { responseType: 'blob' } 
     );
   }
+
+
+
+  getBatchStatistics(): Observable<any> {
+    return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.batchStatistics, {})
+      .pipe(map((res: any) => res));
+  }
   
+  getBatchTimeline(batchId: string) {
+    const params = new HttpParams().set('batchId', batchId);
+    return this.http.get<any>(this.ApiUrls.mainUrl + this.ApiUrls.batchTimeline, { params }).pipe(
+      map(res => res)  
+    );
+  }
   
       
 }   
