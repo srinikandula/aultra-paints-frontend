@@ -346,7 +346,46 @@ createOrder(data: any): Observable<any> {
       map(res => res)  
     );
   }
-  
+
+  getBatchStatisticsList(data: any): Observable<any> {
+  return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.batchStatisticsList, data).pipe(
+    map((res: any) => {
+      return res;
+    })
+  );
+}
+
+  exportBatchStatistics(data: any) {
+  return this.http.post(
+    this.ApiUrls.mainUrl + this.ApiUrls.exportBatchStatistics,
+    data,
+    {
+      responseType: 'blob'  
+    }
+  );
+}
+
+exportUsers(data: any): Observable<Blob> {
+  return this.http.post(
+    this.ApiUrls.mainUrl + this.ApiUrls.exportUsers,
+    data,
+    {
+      responseType: 'blob'  
+    }
+  );
+}
+
+exportUnverifiedUsers(): Observable<Blob> {
+  return this.http.get(
+    this.ApiUrls.mainUrl + this.ApiUrls.exportUnverifiedUsers,
+    {
+      responseType: 'blob'
+    }
+  );
+}
+
+
+
       
 }   
 

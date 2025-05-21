@@ -202,6 +202,27 @@ getDistrictNames(): void {
     );
 }
 
+exportUsers(): void {
+  const exportData = {
+    searchQuery: this.searchQuery || '',
+    accountType: this.selectedAccountType || 'All'
+  };
+
+  this.apiService.exportUsers(exportData).subscribe((response: Blob) => {
+    const blob = new Blob([response], { type: 'application/octet-stream' });
+    const downloadUrl = window.URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = downloadUrl;
+    link.download = 'users-export.csv';  
+    link.click();
+    window.URL.revokeObjectURL(downloadUrl);
+  }, error => {
+    console.error('Export failed:', error);
+    Swal.fire('Error', 'Failed to export users', 'error');
+  });
+}
+
+
     addUser(userModal: any): void {
         // Reset the currentUser object to a fresh
         this.currentUser = { name: '', mobile: '', password: '', accountType: 'Painter' , salesExecutive: '', state: '', zone : '', district: ''};
