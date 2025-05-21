@@ -43,7 +43,12 @@
                     <div class="mx-3">
                         <input type="text" [(ngModel)]="searchQuery" (input)="loadUsers()" placeholder="Search..." class="form-control"/>
                     </div>
-                    <button (click)="addUser(userModal)" class="btn btn-primary">Add User</button>
+                    <button (click)="addUser(userModal)" class="btn btn-primary mx-2">Add User</button>
+                      <button class="btn btn-success d-flex align-items-center mx-2" (click)="exportUsers()">
+                        <img src="assets/Download_icon.png" alt="Download"
+                        style="width: 20px; margin-right: 6px; filter: invert(1);" />
+                         Export
+                        </button>
                 </div>
             </div>
         </div>

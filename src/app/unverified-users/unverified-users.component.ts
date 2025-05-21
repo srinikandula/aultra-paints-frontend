@@ -48,6 +48,24 @@ export class UnverifiedUsersComponent {
     });
   }
 
+  exportUsers(): void {
+  this.apiRequestService.exportUnverifiedUsers().subscribe({
+    next: (blob: Blob) => {
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = 'unverified-users.xlsx';
+      link.click();
+      window.URL.revokeObjectURL(url);
+    },
+    error: (error) => {
+      console.error('Error exporting unverified users:', error);
+      Swal.fire('Error', 'Failed to export unverified users.', 'error');
+    }
+  });
+}
+
+
    // Open the modal to edit a user
    openEditModal(user: any, content: any): void {
     this.errorsEditUser = [];

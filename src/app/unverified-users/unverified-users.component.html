@@ -8,6 +8,12 @@
       <div class="mx-3">
         <input [(ngModel)]="searchQuery" (input)="searchUnverifiedUsers()" placeholder="Search by Mobile Number" class="form-control" />
       </div>
+       <button class="btn btn-success d-flex align-items-center" (click)="exportUsers()">
+        <img src="assets/Download_icon.png"
+             alt="Download"
+             style="width: 20px; margin-right: 6px; filter: invert(1);" />
+        Export
+      </button>
     </div>
   </div>
 </div>

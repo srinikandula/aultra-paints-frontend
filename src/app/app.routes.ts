@@ -19,6 +19,7 @@ import { PayoutsComponent } from './payouts/payouts.component';
 import { ProductCatlogComponent } from './product-catlog/product-catlog.component';
 import { OrderListComponent } from './order-list/order-list.component';
 import { PiechartdashboardComponent } from './piechartdashboard/piechartdashboard.component';
+import { ProductDataListComponent } from './product-data-list/product-data-list.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
@@ -42,6 +43,7 @@ export const routes: Routes = [
             {path: 'product-catalog', component: ProductCatlogComponent, canActivate:[AuthGuard]},
             {path: 'order-list', component: OrderListComponent, canActivate:[AuthGuard]},
             {path: 'piechart-dashboard', component:PiechartdashboardComponent, canActivate:[AuthGuard]},
+            {path: 'product-data-list', component:ProductDataListComponent, canActivate:[AuthGuard]},
             
         ]
 
