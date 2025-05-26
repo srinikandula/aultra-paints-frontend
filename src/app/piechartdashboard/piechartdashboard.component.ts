@@ -2,14 +2,28 @@ import { Component, OnInit, ChangeDetectorRef } from '@angular/core';
 import * as Highcharts from 'highcharts';
 import { HighchartsChartModule } from 'highcharts-angular';
 import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { ApiRequestService } from "../services/api-request.service";
 import { ApiUrlsService } from "../services/api-urls.service";
 import { AuthService } from "../services/auth.service";
+import { Router } from '@angular/router';
+import { ProductDataListComponent } from '../product-data-list/product-data-list.component';
+
+interface Metric {
+  name: string;
+  data: number[];
+}
+
+interface Product {
+  id: string;
+  name: string;
+  createdAt: number;
+}
 
 @Component({
   selector: 'app-piechartdashboard',
   standalone: true,
-  imports: [CommonModule, HighchartsChartModule],
+  imports: [CommonModule, HighchartsChartModule, FormsModule, ProductDataListComponent],
   templateUrl: './piechartdashboard.component.html',
   styleUrls: ['./piechartdashboard.component.css']
 })
@@ -24,41 +38,77 @@ export class PiechartdashboardComponent implements OnInit {
   issuedPoints = 0;
   issuedValue = 0;
 
+  selectedSortMetric: string = '';
+  currentTab: string = 'dashboard';
+
   constructor(
     private apiRequestService: ApiRequestService,
     public apiUrls: ApiUrlsService,
     private AuthService: AuthService,
-    private cdr: ChangeDetectorRef
+    private cdr: ChangeDetectorRef,
+    private router: Router
   ) {
     this.currentUser = this.AuthService.currentUserValue;
   }
 
   ngOnInit(): void {
-    this.loadMainChart();
+    this.loadMainChart(this.selectedSortMetric);
   }
 
-  loadMainChart(): void {
+   switchTab(tab: string) {
+  this.currentTab = tab;
+}
+
+  loadMainChart(sortByMetricName: string): void {
     this.apiRequestService.getBatchStatistics().subscribe({
       next: (res: any) => {
-        const products = res.products || [];
-        const metrics = res.metrics || [];
+        const products: Product[] = res.products || [];
+        const metrics: Metric[] = res.metrics || [];
 
-        if (!products.length || !metrics.length) {
-          return;
+        if (!products.length || !metrics.length) return;
+
+        let sortedProducts: Product[] = [];
+        let sortedIndexes: number[] = [];
+
+        if (!sortByMetricName) {
+          sortedProducts = [...products];
+          sortedIndexes = products.map((_, index) => index);
+        } else if (sortByMetricName === 'Created At') {
+          const combined = products
+            .map((p, index) => ({ product: p, index }))
+            .sort((a, b) => b.product.createdAt - a.product.createdAt);
+
+          sortedProducts = combined.map(c => c.product);
+          sortedIndexes = combined.map(c => c.index);
+        } else {
+          const metricToSort = metrics.find(m => m.name === sortByMetricName);
+          if (!metricToSort) {
+            console.warn(`Metric ${sortByMetricName} not found.`);
+            return;
+          }
+
+          const combined = products.map((product: Product, i: number) => ({
+            product,
+            metricValue: metricToSort.data[i],
+            index: i
+          }));
+
+          combined.sort((a, b) => b.metricValue - a.metricValue);
+
+          sortedProducts = combined.map(item => item.product);
+          sortedIndexes = combined.map(item => item.index);
         }
 
-        const categories = products.map((p: any) => p.name);
-
+        const categories = sortedProducts.map((p: Product) => p.name);
         const defaultColors = Highcharts.getOptions().colors || ['#7cb5ec', '#434348', '#90ed7d', '#f7a35c'];
 
-        const seriesData = metrics.map((metric: any, index: number) => ({
+        const seriesData = metrics.map((metric: Metric, index: number) => ({
           name: metric.name,
           type: 'column',
-          data: metric.data.slice(0, categories.length),
+          data: sortedIndexes.map(idx => metric.data[idx]),
           color: defaultColors[index % defaultColors.length]
         }));
 
-        // Increase width per category to add spacing and enable scrollbar
         const estimatedWidth = categories.length * 120;
         this.chartPixelWidth = Math.max(estimatedWidth, 800);
 
@@ -87,13 +137,14 @@ export class PiechartdashboardComponent implements OnInit {
               cursor: 'pointer',
               point: {
                 events: {
-                  click: (event) => this.onProductClick(event.point.index, products[event.point.index].id, products[event.point.index].name)
+                  click: (event: any) =>
+                    this.onProductClick(event.point.index, sortedProducts[event.point.index].id, sortedProducts[event.point.index].name)
                 }
               },
-              pointPadding: 0.25,    
-              groupPadding: 0.15,    
+              pointPadding: 0.25,
+              groupPadding: 0.15,
               borderWidth: 0,
-              pointWidth: 20    
+              pointWidth: 20
             }
           },
           series: seriesData as Highcharts.SeriesColumnOptions[]
@@ -117,8 +168,8 @@ export class PiechartdashboardComponent implements OnInit {
 
     this.apiRequestService.getBatchTimeline(productId).subscribe({
       next: (res: any) => {
-        const months = res.months || [];
-        const metrics = res.metrics || [];
+        const months: string[] = res.months || [];
+        const metrics: Metric[] = res.metrics || [];
 
         this.issuedPoints = res.issuedPoints || 0;
         this.issuedValue = res.issuedValue || 0;
@@ -131,7 +182,7 @@ export class PiechartdashboardComponent implements OnInit {
 
         const drilldownColors = ['#00e272', '#fe6a35'];
 
-        const seriesData = metrics.map((metric: any, idx: number) => ({
+        const seriesData = metrics.map((metric: Metric, idx: number) => ({
           name: metric.name,
           type: 'column',
           data: metric.data,
@@ -165,9 +216,10 @@ export class PiechartdashboardComponent implements OnInit {
 
   getSeriesColor(series: Highcharts.SeriesOptionsType): string {
     const color = (series as Highcharts.SeriesColumnOptions).color;
-    if (typeof color === 'string') {
-      return color;
-    }
-    return '#000000';
+    return typeof color === 'string' ? color : '#000000';
+  }
+
+  onSortMetricChange(): void {
+    this.loadMainChart(this.selectedSortMetric);
   }
 }

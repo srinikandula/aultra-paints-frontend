@@ -20,6 +20,9 @@ export class ApiUrlsService {
   toggleUserStatus = 'users/toggle-status';
   resetPassword = 'users/resetPassword';
   userDashboard = 'users/userDashboard';
+  exportUsers = 'users/export';
+  exportUnverifiedUsers = 'users/export-unverified';
+
  
    // Sales Executives endpoint
    SalesExecutives = 'users/sales-executives';
@@ -43,6 +46,9 @@ export class ApiUrlsService {
   getTransactions = 'transaction';
   exportTransaction = 'transaction/export';
   batchTimeline = 'chart/batch-timeline';
+  batchStatisticsList = 'chart/batch-statistics-list';
+  exportBatchStatistics = 'chart/export-batch-statistics';
+
 
 //cashFree
 getcashfreetransaction = 'cashFree/getTransactions';
