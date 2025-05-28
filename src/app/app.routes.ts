@@ -20,6 +20,8 @@ import { ProductCatlogComponent } from './product-catlog/product-catlog.componen
 import { OrderListComponent } from './order-list/order-list.component';
 import { PiechartdashboardComponent } from './piechartdashboard/piechartdashboard.component';
 import { ProductDataListComponent } from './product-data-list/product-data-list.component';
+import { CreateProductComponent } from './create-product/create-product.component';
+import { EditProductComponent } from './edit-product/edit-product.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
@@ -44,6 +46,8 @@ export const routes: Routes = [
             {path: 'order-list', component: OrderListComponent, canActivate:[AuthGuard]},
             {path: 'piechart-dashboard', component:PiechartdashboardComponent, canActivate:[AuthGuard]},
             {path: 'product-data-list', component:ProductDataListComponent, canActivate:[AuthGuard]},
+            {path: 'create-product', component:CreateProductComponent, canActivate:[AuthGuard]},
+            {path: 'edit-product', component:EditProductComponent, canActivate:[AuthGuard]},
             
         ]
 

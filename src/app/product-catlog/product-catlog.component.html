@@ -18,7 +18,7 @@
                 </div>
 
                 <!-- Add Product Button -->
-                <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="addOrEditCatlog(categoryModal, currentCatlog)" class="btn btn-primary">Add Product </button>
+                 <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="onCreateProduct()" class="btn btn-primary">Add Product</button>
             </div>
         </div>
     </div>
@@ -35,14 +35,9 @@
                 <!-- Price and Quantity Controls in a row -->
                 <div class="d-flex justify-content-between align-items-center">
                     <p class="card-text mb-0" style="font-text: bold;">Price: ₹{{category.productPrice}}</p>
-                    <div class="d-flex align-items-center">
-                        <button class="btn btn-outline-danger btn-sm" (click)="updateCart(category, -1)">-</button>
-                        <!-- Display number of items between - and + buttons -->
-                        <span class="mx-2">
-                            {{ cart[category._id]?.count || 0 }}
-                          </span>
-                        <button class="btn btn-outline-success btn-sm" (click)="updateCart(category, 1)">+</button>
-                    </div>
+                    <button class="btn btn-warning btn-sm" (click)="openAddToCartModal(category)">
+                       Add to Cart
+                      </button>
                 </div>
 
                 
@@ -55,20 +50,26 @@
                         {{ category.productOfferStatus }}
                       </span>
                   
-                      <!-- Toggle Switch -->
-                      <div class="form-check form-switch">
-                        <input class="form-check-input"
-                               type="checkbox"
-                               [checked]="category.productOfferStatus === 'Active'"
-                               (change)="toggleProductCatlogStatus(category)">
-                      </div>
+
                     </div>
-                    <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="addOrEditCatlog(categoryModal, category)" class="btn btn-light mx-2" title="Edit Product">
-                        <i class='bx bxs-edit-alt'></i>
-                    </button>
-                    <button *ngIf="currentUser.accountType !== 'Dealer'" (click)="deleteCatlog(category._id, category.productCategoryDescription)" class="btn btn-danger btn-sm" title="Delete Product">
-                        <i class="bx bx-trash"></i>
-                    </button>
+                    <div class="d-flex align-items-center">
+  <button *ngIf="currentUser.accountType !== 'Dealer'"
+          (click)="addOrEditCatlog(null, category)"
+          class="btn btn-light"
+          title="Edit Product"
+          style="margin-right: 9px;">
+    <i class='bx bxs-edit-alt'></i>
+  </button>
+
+  <button *ngIf="currentUser.accountType !== 'Dealer'"
+          (click)="deleteCatlog(category._id, category.productCategoryDescription)"
+          class="btn btn-danger btn-sm"
+          title="Delete Product">
+    <i class="bx bx-trash"></i>
+  </button>
+</div>
+
+
                 </div>
             </div>
         </div>
@@ -104,143 +105,72 @@
 </div>
 
 
-<ng-template #categoryModal let-modal>
-    <div class="modal-header">
-        <h4 class="modal-title" id="modal-basic-title">{{ currentCatlog._id ? 'Edit' : 'Add' }} Product </h4>
+
+<!-- Add to Cart Modal -->
+<ng-template #addToCartModal let-modal>
+  <div class="modal-header  border-0">
+    <h5 class="modal-title  fw-bold">🛒 Add Product to Cart</h5>
+    <button type="button" class="btn-close" aria-label="Close" (click)="modal.dismiss()"></button>
+  </div>
+
+  <div class="modal-body">
+    <div class="d-flex align-items-start mb-4 p-3 shadow-sm rounded" style="background-color: #f8f9fa;">
+      <img [src]="selectedProduct?.productOfferImageUrl"
+           alt="Product Image"
+           class="img-thumbnail"
+           style="width: 100px; height: auto; margin-right: 20px; border-radius: 0.5rem;">
+            <div class="flex-grow-1 d-flex align-items-center" style="min-height: 100px;">
+      <h6
+        class="fw-semibold text-dark mb-0"
+        style="font-size: 1.1rem; line-height: 1.4;"
+      >
+        {{ selectedProduct?.productOfferDescription }}
+      </h6>
     </div>
-    <div class="modal-body">
-        <form #productCatlogForm="ngForm" class="modal-box shadow-sm">
-            <!-- Add/Edit Product Catlog Description -->
-            <div class="row">
-                <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addDescription">Product Name<span class="text-danger">*</span></label>
-                    <textarea class="form-control" id="addDescription" [(ngModel)]="currentCatlog.productDescription" name="addDescription"
-                        required placeholder="Enter Product Name" #addDescriptionInput="ngModel"></textarea>
-                    <div *ngIf="addDescriptionInput.invalid && (addDescriptionInput.dirty || addDescriptionInput.touched)" class="text-danger">
-                        <div *ngIf="addDescriptionInput.errors?.['required']">Product Name is required.</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Status -->
-            <div class="row">
-                <div class="col-sm-4 mb-3 form-group">
-                    <label class="form-label" for="productStatus"> Status <span class="text-danger">*</span> </label>
-                    <div class="form-check form-switch form-check-lg form-switch-2x">
-                        <input class="form-check-input" id="productStatus" type="checkbox" name="productStatus"
-                            [checked]="currentCatlog.productStatus === 'Active'"
-                            (change)="statusChanged($event)"/>
-                    </div>
-                </div>
-            </div>
-
-             <!-- Add/Edit Productcatlog Image -->
-             <div class="row">
-                <div class="col-sm-12 mb-3 form-group">
-                    <label class="form-label" for="addImage">Upload Image <span class="text-danger">*</span></label>
-                    <div class="input-group mb-2">
-                        <input
-                        type="file"
-                        class="form-control"
-                        id="addImage"
-                        (change)="handleImageChange($event)"
-                        [required]="!currentCatlog._id" 
-                        accept=".png, .jpg, .jpeg"
-                        name="addImage"
-                        #addImageRef="ngModel"
-                        [(ngModel)]="currentCatlog.productImage"
-                      />
-                    </div>
-                    <div *ngIf="addImageRef.invalid && (addImageRef.dirty || addImageRef.touched)" class="text-danger">
-                        <div>Image is required.</div>
-                    </div>
-                </div>
-            </div>
-            <div class="d-flex flex-row bd-highlight mb-3">
-                <div class="image-card mx-3" *ngIf="currentCatlog.productImage" [style.max-width]="uploadImageWidth">
-                    <span *ngIf="uploadImageWidth === '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
-                    <span *ngIf="uploadImageWidth !== '20%'" (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
-    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
-                    <img *ngIf="currentCatlog.productImage" [src]="currentCatlog.productImage"
-                        alt="Product catlog Image" width="100%"
-                        (click)="uploadImageWidth = uploadImageWidth === '20%' ? '100%' : '20%'"/>
-                </div>
-            <!-- Show existing image only if no new image is selected -->
-                <div class="image-card mx-3" *ngIf="currentCatlog.productImageUrl && !currentCatlog.productImage" [style.max-width]="imageWidth">
-                    <span *ngIf="imageWidth === '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class="bx bx-expand"></i></span>
-                    <span *ngIf="imageWidth !== '20%'" (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"><i class='bx bx-collapse' ></i></span>
-    <!--                    <i class="bx bx-x bx-sm" style="position: absolute; right: 0;"></i>-->
-                    <img *ngIf="currentCatlog.productImageUrl" [src]="currentCatlog.productImageUrl"
-                        alt="Product catlog Image"  width="100%"
-                        (click)="imageWidth = imageWidth === '20%' ? '100%' : '20%'"/>
-                </div>
-            </div>
-
-            <div *ngFor="let price of priceList; let i = index" class="d-flex align-items-center mb-2">
-                <!-- ng-select Dropdown for State, Zone, or District Selection -->
-                 <div class="me-2" style="width: 200px">
-                    <ng-select
-                    [items]="groupedDropdownData"
-                    bindLabel="label"
-                    bindValue="id"
-                    groupBy="group"
-                    [(ngModel)]="price.selectedKey"
-                    name="stateOrZone{{ i }}"
-                     placeholder="Select State/Zone/District"
-                     [clearable]="false"
-                     [searchable]="true"
-                     [dropdownPosition]="'auto'"
-                     >
-                    </ng-select>
-                </div>
-             
-                 <!-- Dash Symbol Between Dropdown and Price Input -->
-                 <span class="mx-2">-</span>
-             
-                 <!-- Text Field for Price -->
-                 <div class="input-group me-2" style="width: 150px;">
-                 <input
-                     type="number"
-                     class="form-control"
-                     [(ngModel)]="price.price"
-                     name="price{{ i }}"
-                     required
-                     placeholder="Enter price"
-                 />
-                 </div>
-             
-                 <!-- Add Button Only for Last Row -->
-                  <div class="ms-2">
-                 <button
-                 *ngIf="i === priceList.length - 1"
-                 class="btn btn-outline-primary"
-                 type="button"
-                 (click)="addPrice()"
-                 >
-                 +
-                 </button>
-                 </div>
-             </div>
-             
- 
-             <div class="row" *ngIf="errorArray.length > 0">
-                 <div class="col-sm-12">
-                     <ul>
-                         <li *ngFor="let err of errorArray; let i = index" class="text-danger">{{err}}</li>
-                     </ul>
-                 </div>
-             </div>
-         </form>
-     </div>
-
-    <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" (click)="modal.close()">Close</button>
-        <button type="submit" class="btn btn-primary" (click)="saveCatlog(modal)">Save</button>
     </div>
+
+    <div class="mb-3">
+  <label class="form-label fw-semibold">Select Volume</label>
+  <div class="d-flex gap-2 flex-wrap">
+    <button
+      type="button"
+      *ngFor="let option of sortedVolumeOptions"
+      class="btn"
+      [ngClass]="{
+        'btn-warning': selectedVolume?.value === option.value,
+        'btn-outline-secondary': selectedVolume?.value !== option.value
+      }"
+      (click)="onVolumeChange(option)"
+      style="min-width: 80px; border-radius: 0.5rem; text-align: center;"
+    >
+      {{ option.label }}
+    </button>
+  </div>
+</div>
+
+
+    <!-- Price Display -->
+   <div class="border-top pt-3">
+  <p class="fs-5 mb-0">
+    <span class="me-2">🪙 Price:</span>
+    <span class="fw-bold">₹{{ selectedPrice }}</span>
+  </p>
+</div>
+
+  </div>
+
+  <div class="modal-footer bg-light border-0">
+    <button type="button" class="btn btn-outline-secondary" (click)="modal.dismiss()">Cancel</button>
+    <button type="button" class="btn btn-warning" (click)="confirmAddToCart()" [disabled]="!selectedVolume">
+      Add to Cart
+    </button>
+  </div>
 </ng-template>
 
 
-<!-- Cart Modal -->
+
+
+<!-- FinalCart Modal -->
 <ng-template #cartModal let-modal>
     <div class="modal-header">
       <h5 class="modal-title">My Cart</h5>
@@ -250,32 +180,58 @@
     <div class="modal-body">
       <div *ngIf="cartItemCount > 0; else emptyCart">
         <ul class="list-group">
-          <li *ngFor="let id of cartKeys()" class="list-group-item d-flex align-items-center justify-content-between">
-            <div class="d-flex align-items-center">
-                <img
-                [src]="getProductById(id)?.productOfferImageUrl + '?t=' + timestamp"
-                alt="Product Image"
-                style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px; margin-right: 12px;"
-              />
-  
-              <div>
-                <strong>{{ getProductById(id)?.productDescription }}</strong><br />
-                <small>Price: ₹{{ cart[id].price }}</small>
-              </div>
-            </div>
-            
-            <span class="mx-2">-</span>
-  
-            <div class="d-flex align-items-center">
-              <span class="mx-2">{{ cart[id]?.count || 0 }}</span>
-              <button class="btn btn-sm btn-outline-success me-2" (click)="updateCart(getProductById(id), 1)">
-                <i class="bx bx-plus"></i>
-              </button>
-              <button class="btn btn-sm btn-outline-danger" (click)="updateCart(getProductById(id), -cart[id].count)">
-                <i class="bx bx-trash"></i>
-              </button>
-            </div>
-          </li>
+          <li *ngFor="let id of cartKeys()" class="list-group-item">
+  <div class="row align-items-center">
+
+    <!-- Product Image -->
+    <div class="col-auto">
+      <img
+        [src]="getProductById(id)?.productOfferImageUrl + '?t=' + timestamp"
+        alt="Product Image"
+        style="width: 60px; height: 60px; object-fit: cover; border-radius: 6px;"
+      />
+    </div>
+
+    <!-- Product Details -->
+    <div class="col">
+      <div>
+        <strong>{{ getProductById(id)?.productOfferDescription }}</strong>
+        <div class="text-muted small">Price: ₹{{ cart[id].price }}</div>
+      </div>
+    </div>
+
+    <!-- Volume -->
+    <div class="col text-center">
+      <div class="text-muted small"><strong>{{ cart[id]?.volume || 'N/A' }}</strong></div>
+    </div>
+
+   <!-- Quantity + Buttons -->
+<div class="col-auto d-flex align-items-center">
+  <button
+    class="btn btn-sm btn-outline-secondary me-2"
+    (click)="updateCart(getProductById(id), -1)"
+  >
+    <i class="bx bx-minus"></i>
+  </button>
+  <span class="mx-2">{{ cart[id]?.count || 0 }}</span>
+  <button
+    class="btn btn-sm btn-outline-success me-2"
+    (click)="updateCart(getProductById(id), 1)"
+  >
+    <i class="bx bx-plus"></i>
+  </button>
+  <button
+    class="btn btn-sm btn-outline-danger"
+    (click)="updateCart(getProductById(id), -cart[id].count)"
+  >
+    <i class="bx bx-trash"></i>
+  </button>
+</div>
+
+
+  </div>
+</li>
+
         </ul>
       </div>
   
@@ -286,7 +242,7 @@
   
     <!-- Modal Footer: Total + Proceed to Checkout -->
     <div class="modal-footer d-flex justify-content-between align-items-center">
-      <strong>Total Price: ₹{{ getCartTotalPrice() }}</strong>
+      <strong>🪙 Total Price: ₹{{ getCartTotalPrice() }}</strong>
       <button class="btn btn-primary" (click)="proceedToCheckout()">Proceed to Checkout</button>
     </div>
   </ng-template>
