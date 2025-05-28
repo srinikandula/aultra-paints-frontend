@@ -22,3 +22,39 @@
     font-size: .8rem!important;
     margin-bottom: 0.5rem!important;
 }
+
+::ng-deep .custom-modal-size .modal-dialog {
+  max-width: 650px;
+  width: 90%;
+}
+
+::ng-deep .custom-modal-size .modal-dialog {
+  max-width: 650px;
+  width: 90%;
+}
+
+.scrollable-modal-body {
+  max-height: 70vh; /* Adjust this value as needed */
+  overflow-y: auto;
+  padding: 15px;
+}
+
+/* Optional: Style the scrollbar for webkit browsers */
+.scrollable-modal-body::-webkit-scrollbar {
+  width: 8px;
+}
+
+.scrollable-modal-body::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.scrollable-modal-body::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 4px;
+}
+
+.scrollable-modal-body::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+

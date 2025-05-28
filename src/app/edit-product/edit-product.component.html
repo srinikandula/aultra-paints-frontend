@@ -1,0 +1,160 @@
+<!-- Container -->
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-lg-7 shadow-sm p-5 bg-white rounded" style="max-width: 700px;">
+      <h3 class="mb-4 fw-bold">Edit Product</h3>
+
+      <form #productCatlogForm="ngForm" (ngSubmit)="saveCatlog()">
+
+        <!-- Product Name and Status Toggle -->
+        <div class="row mb-4">
+          <div class="col-md-8">
+            <label for="productOfferDescription" class="form-label fw-semibold">Product Name <span class="text-danger">*</span></label>
+            <input
+              id="productOfferDescription"
+              name="productOfferDescription"
+              class="form-control form-control-lg shadow-sm"
+              placeholder="Enter Product Name"
+              [(ngModel)]="currentCatlog.productOfferDescription"
+              required
+            />
+            <div *ngIf="submitted && !currentCatlog.productOfferDescription" class="text-danger mt-1 small fst-italic">
+              Product Name is required.
+            </div>
+          </div>
+
+          <div class="col-md-4 d-flex flex-column align-items-start mt-3 mt-md-0">
+            <label class="fw-semibold mb-2" for="productOfferStatus">Status <span class="text-danger">*</span></label>
+            <div class="form-check form-switch form-switch-lg">
+              <input
+                class="form-check-input"
+                type="checkbox"
+                id="productOfferStatus"
+                [checked]="currentCatlog.productOfferStatus === 'Active'"
+                (change)="toggleStatus($event)"
+              />
+              <label class="form-check-label" for="productOfferStatus"></label>
+            </div>
+          </div>
+        </div>
+
+        <!-- Product Image -->
+        <div class="mb-4">
+          <label for="productOfferImage" class="form-label fw-semibold">Product Image <span class="text-danger">*</span></label>
+          <input
+            type="file"
+            id="productOfferImage"
+            class="form-control form-control-lg shadow-sm"
+            (change)="handleImageChange($event)"
+            accept="image/*"
+          />
+          <div *ngIf="currentCatlog.productOfferImage || currentCatlog.productOfferImageUrl" class="mt-3">
+            <img
+              [src]="currentCatlog.productOfferImage || currentCatlog.productOfferImageUrl"
+              alt="Product Image"
+              class="img-thumbnail shadow-sm"
+              style="max-width: 150px; max-height: 150px; border-radius: 8px;"
+            />
+          </div>
+          <div *ngIf="submitted && !currentCatlog.productOfferImage && !currentCatlog.productOfferImageUrl" class="text-danger mt-1 small fst-italic">
+            Product image is required.
+          </div>
+        </div>
+
+        <!-- Price Groups -->
+        <div *ngFor="let priceGroup of priceList; let i = index" class="mb-4 p-4 border rounded shadow-sm bg-light">
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <!-- Volume as Dropdown -->
+            <div class="mb-3" style="width: 200px;">
+              <label class="form-label fw-semibold">Volume</label>
+              <select
+                class="form-select"
+                [(ngModel)]="priceList[i].volume"
+                name="volume_{{i}}"
+                required
+              >
+                <option value="" disabled>Select Volume</option>
+                <option value="10L">10L</option>
+                <option value="15L">15L</option>
+                <option value="20L">20L</option>
+                <option value="25L">25L</option>
+                <option value="30L">30L</option>
+                <option value="35L">35L</option>
+                <option value="40L">40L</option>
+              </select>
+            </div>
+            <button class="btn btn-sm btn-outline-danger" type="button" (click)="priceList.splice(i, 1)">−</button>
+          </div>
+
+          <!-- Entries -->
+          <div *ngFor="let entry of priceGroup.entries; let j = index" class="row align-items-end g-3 mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Place</label>
+              <ng-select
+                [items]="groupedDropdownData"
+                bindLabel="label"
+                bindValue="id"
+                groupBy="group"
+                [(ngModel)]="entry.selectedKey"
+                name="entry_selectedKey_{{ i }}_{{ j }}"
+                placeholder="Select State/Zone/District"
+                [clearable]="false"
+                [searchable]="true"
+                [dropdownPosition]="'auto'"
+              >
+              </ng-select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label">Price</label>
+              <input
+                type="number"
+                class="form-control"
+                [(ngModel)]="priceList[i].entries[j].price"
+                name="price{{i}}{{j}}"
+                placeholder="Enter price"
+                required
+                min="0"
+              />
+            </div>
+            <div class="col-md-2 d-flex gap-2">
+              <!-- Add entry only on last row -->
+              <button
+                *ngIf="j === priceGroup.entries.length - 1"
+                type="button"
+                class="btn btn-outline-primary w-50"
+                (click)="addEntryToVolume(i)"
+              >+</button>
+
+              <!-- Remove entry if more than 1 -->
+              <button
+                type="button"
+                class="btn btn-outline-danger w-50"
+                (click)="removeEntryFromVolume(i, j)"
+                [disabled]="priceGroup.entries.length === 1"
+              >−</button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Add Volume -->
+        <div class="mb-4 d-flex justify-content-end">
+          <button type="button" class="btn btn-outline-success" (click)="addPrice()">+ Add Volume</button>
+        </div>
+
+        <!-- Error Messages -->
+        <div *ngIf="errorArray.length" class="alert alert-danger shadow-sm">
+          <ul class="mb-0">
+            <li *ngFor="let error of errorArray">{{ error }}</li>
+          </ul>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="d-flex justify-content-end gap-3">
+          <button type="button" class="btn btn-outline-secondary px-4" (click)="cancel()">Cancel</button>
+          <button type="submit" class="btn btn-primary px-4">Update Product</button>
+        </div>
+
+      </form>
+    </div>
+  </div>
+</div>

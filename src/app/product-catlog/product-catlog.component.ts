@@ -14,6 +14,7 @@ import { ApiUrlsService } from "../services/api-urls.service";
 import { FormsModule, NgForm } from "@angular/forms";
 import { CommonModule, DatePipe } from "@angular/common";
 import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-product-catlog',
@@ -25,6 +26,7 @@ import { AuthService } from '../services/auth.service';
 })
 export class ProductCatlogComponent {
      @ViewChild('productCatlogForm') productCatlogForm!: NgForm;
+     @ViewChild('addToCartModal') addToCartModal!:NgForm;
     productCatlogs: any[] = [];
     currentUser: any = {};
     currentCatlog: any = {
@@ -51,15 +53,24 @@ export class ProductCatlogComponent {
     timestamp: number = new Date().getTime();
     submitted = false;
     groupedDropdownData: any[] = [];
-    cart: { [id: string]: { count: number, price: number } } = {};
+   cart: { [id: string]: { count: number, price: number, volume: string } } = {};
     stateList: Array<{ stateName: string; stateId: string }> = [];
     zoneList: Array<{ zoneName: string; zoneId: string }> = [];
     districtList: Array<{ districtName: string; districtId: string }> = [];
+     selectedProduct: any = null;
+     volumeOptions: { label: string; value: string; price: number }[] = [];
+selectedVolume: { label: string; value: string; price: number } | null = null;
+selectedPrice: number = 0;
+
 
 priceValue: number | null = null;
-priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All', price: 0 }];
+priceList: Array<{ volume: string, entries: Array<{ selectedKey: string, price: number }> }> = [
+  { volume: '10 L', entries: [{ selectedKey: 'All', price: 0 }] }
+];
+ 
+
   
-    constructor(private apiRequestService: ApiRequestService, private modalService: NgbModal, public apiUrls: ApiUrlsService, private datePipe: DatePipe,private AuthService:AuthService ) {    this.currentUser = this.AuthService.currentUserValue;
+    constructor(private apiRequestService: ApiRequestService, private modalService: NgbModal, public apiUrls: ApiUrlsService, private datePipe: DatePipe,private AuthService:AuthService, private router: Router ) {    this.currentUser = this.AuthService.currentUserValue;
     }
   
     ngOnInit(): void {
@@ -107,30 +118,119 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
           console.error('Error fetching dropdown data:', error);
         });
     }
+
+    onCreateProduct(): void {
+  this.router.navigate(['/create-product']);
+}
   
-    addPrice() {
-      this.priceList.push({ selectedKey: 'All', price: 0 });
-    }
+ addPrice() {
+  this.priceList.push({ volume: '', entries: [{ selectedKey: 'All', price: 0 }] });
+}
+
     getProductById(id: string) {
       return this.productCatlogs.find(p => p._id === id);
     }
     
-    
+    // Add a new entry to an existing volume
+addEntryToVolume(index: number) {
+  this.priceList[index].entries.push({ selectedKey: 'All', price: 1000});
+}
 
-    updateCart(product: any, change: number) {
-      const id = product._id;
-      const price = product.productPrice;
-  
-      if (!this.cart[id]) {
-        this.cart[id] = { count: 0, price };
-      }
-  
-      this.cart[id].count += change;
-  
-      if (this.cart[id].count <= 0) {
-        delete this.cart[id];
-      }
-    }
+onVolumeChange(selected: any) {
+  this.selectedVolume = selected;
+  this.selectedPrice = selected?.price || 0;
+}
+
+
+openAddToCartModal(product: any) {
+  this.selectedProduct = product;
+
+  this.volumeOptions = product.productPrices.map((item: any) => ({
+    label: item.volume,
+    value: item.volume,
+    price: item.price
+  }));
+
+  if (this.volumeOptions.length > 0) {
+    this.selectedVolume = this.volumeOptions[0];
+    this.selectedPrice = this.selectedVolume.price;
+  } else {
+    this.selectedVolume = null;
+    this.selectedPrice = 0;
+  }
+
+  this.modalService.open(this.addToCartModal, { ariaLabelledBy: 'modal-basic-title' });
+}
+
+
+ updatePrice() {
+  if (this.selectedVolume !== null) {
+    this.selectedPrice = this.selectedVolume.price;
+  } else {
+    this.selectedPrice = 0;
+  }
+}
+
+get sortedVolumeOptions() {
+  return this.volumeOptions.slice().sort((a, b) => {
+    const getNumber = (label: string) => {
+      const match = label.match(/\d+/);
+      return match ? parseInt(match[0], 10) : 0;
+    };
+    return getNumber(a.label) - getNumber(b.label);
+  });
+}
+
+
+
+confirmAddToCart() {
+  const id = this.selectedProduct._id;
+
+  if (!this.cart[id]) {
+    this.cart[id] = {
+      count: 1,
+      price: this.selectedPrice,
+      volume: this.selectedVolume?.label || ''
+    };
+  } else {
+    this.cart[id].count += 1;
+  }
+
+  this.modalService.dismissAll();
+
+  // Show alert for 2 seconds and auto-close
+  Swal.fire({
+    title: 'Added',
+    text: 'Product added to cart',
+    icon: 'success',
+    timer: 2000,           
+    showConfirmButton: false, 
+    timerProgressBar: true    
+  });
+}
+
+
+
+updateCart(product: any, change: number) {
+  const id = product._id;
+
+  if (!this.cart[id]) {
+    this.cart[id] = {
+      count: 0,
+      price: this.selectedPrice,
+      volume: this.selectedVolume?.label || ''
+    };
+  }
+
+  this.cart[id].count += change;
+
+  if (this.cart[id].count <= 0) {
+    delete this.cart[id];
+  }
+}
+
+
+    
   
     cartKeys(): string[] {
       return Object.keys(this.cart);
@@ -143,46 +243,28 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
     openCartModal(modal: any) {
       this.modalService.open(modal, { size: 'md' });
     }
-  
-    addOrEditCatlog(modal: any, catlog: any) {
-      this.errorArray = [];
-  
-      if (catlog && catlog._id) {
-        this.currentCatlog = {
-          _id: catlog._id, 
-          productImageUrl: catlog.productOfferImageUrl || '',
-          productDescription: catlog.productOfferDescription || '',
-          productStatus: catlog.productOfferStatus || 'Active',
-          price: catlog.productPrice || ''
-        };
-  
-        this.priceList = catlog.price && catlog.price.length > 0
-          ? catlog.price.map((item: any) => ({
-              selectedKey: item.refId || '',
-              price: item.price || 0,
-              _id: item._id || null
-            }))
-          : [{ selectedKey: 'All', price: 100 }];
-      } else {
-        this.currentCatlog = {
-          productImageUrl: '',
-          productDescription: '',
-          productStatus: 'Active',
-        };
-  
-        this.priceList = [{ selectedKey: 'All', price: 100 }];
-      }
-  
-      const modalRef: NgbModalRef = this.modalService.open(modal, {
-        size: 'md',
-        windowClass: 'custom-modal-size',
-      });
 
-      modalRef.result.then(
-        () => (this.currentCatlog = {}),
-        () => (this.currentCatlog = {})
-      );
+
+   addOrEditCatlog(modal: any, catlog: any) {
+  if (catlog && catlog._id) {
+    this.router.navigate(['/edit-product'], {
+      state: { catlog }
+    });
+  } else {
+    this.router.navigate(['/create-product']);
+  }
+}
+
+ generatePricePayload() {
+    const result: { [volume: string]: Array<{ [refId: string]: number }> } = {};
+    for (const item of this.priceList) {
+      if (!item.volume || !item.entries) continue;
+      result[item.volume] = item.entries
+        .filter(entry => entry.selectedKey && entry.price !== null && !isNaN(entry.price))
+        .map(entry => ({ [entry.selectedKey]: entry.price }));
     }
+    return result;
+  }
 
 
     getCartTotalPrice(): number {
@@ -194,105 +276,77 @@ priceList: Array<{ selectedKey: string; price: number }> = [{ selectedKey: 'All'
       return total;
     }
   
-    saveCatlog(modalRef: NgbModalRef) {
-      this.submitted = true;
+    // saveCatlog(modalRef: NgbModalRef) {
+    //   this.submitted = true;
   
-      if (this.productCatlogForm.form) {
-        Object.keys(this.productCatlogForm.form.controls).forEach(field => {
-          const control = this.productCatlogForm.form.get(field);
-          if (control) {
-            control.markAsTouched({ onlySelf: true });
-          }
-        });
-      }
+    //   if (this.productCatlogForm.form) {
+    //     Object.keys(this.productCatlogForm.form.controls).forEach(field => {
+    //       const control = this.productCatlogForm.form.get(field);
+    //       if (control) {
+    //         control.markAsTouched({ onlySelf: true });
+    //       }
+    //     });
+    //   }
   
-      const addImageControl = this.productCatlogForm.form.get('addImage');
-      if (addImageControl) {
-        if (
-          (this.currentCatlog.productImageUrl && !this.currentCatlog.productImage) ||
-          (this.currentCatlog.productImageUrl && this.currentCatlog.productImage) ||
-          (!this.currentCatlog.productImageUrl && this.currentCatlog.productImage)
-        ) {
-          addImageControl.setErrors(null); 
-        } else {
-          addImageControl.setErrors({ invalid: true }); 
-        }
-      }
+    //   const addImageControl = this.productCatlogForm.form.get('addImage');
+    //   if (addImageControl) {
+    //     if (
+    //       (this.currentCatlog.productImageUrl && !this.currentCatlog.productImage) ||
+    //       (this.currentCatlog.productImageUrl && this.currentCatlog.productImage) ||
+    //       (!this.currentCatlog.productImageUrl && this.currentCatlog.productImage)
+    //     ) {
+    //       addImageControl.setErrors(null); 
+    //     } else {
+    //       addImageControl.setErrors({ invalid: true }); 
+    //     }
+    //   }
+
+    //     this.currentCatlog.price = this.generatePricePayload();
+
+
+    //   if (this.productCatlogForm.valid) {
+    //     let oldDate = this.currentCatlog.productDescription;
+    //     this.currentCatlog.productDescription = `${this.currentCatlog.productDescription}`;
   
-      // price payload dynamically based on state or zone
-      this.currentCatlog.price = this.priceList
-        .filter((item) => item.selectedKey && item.price)
-        .map((item) => ({
-          [item.selectedKey]: item.price,
-        }));
+    //     const formData = new FormData();
+    //     if (this.currentCatlog.productImage) {
+    //       formData.append('productImage', this.currentCatlog.productImage);
+    //     }
+    //     if (this.currentCatlog.productImageUrl) {
+    //       formData.append('productImageUrl', this.currentCatlog.productImageUrl);
+    //     }
+    //     formData.append('productDescription', this.currentCatlog.productDescription);
+    //     formData.append('productStatus', this.currentCatlog.productStatus);
+    //     formData.append('price', JSON.stringify(this.currentCatlog.price));
   
-      if (this.productCatlogForm.valid) {
-        let oldDate = this.currentCatlog.productDescription;
-        this.currentCatlog.productDescription = `${this.currentCatlog.productDescription}`;
-  
-        const formData = new FormData();
-        if (this.currentCatlog.productImage) {
-          formData.append('productImage', this.currentCatlog.productImage);
-        }
-        if (this.currentCatlog.productImageUrl) {
-          formData.append('productImageUrl', this.currentCatlog.productImageUrl);
-        }
-        formData.append('productDescription', this.currentCatlog.productDescription);
-        formData.append('productStatus', this.currentCatlog.productStatus);
-        formData.append('price', JSON.stringify(this.currentCatlog.price));
-  
-        // Update or Create Catlog
-        if (this.currentCatlog._id) {
-          this.apiRequestService
-            .updateWithImage(this.apiUrls.updateProductCatlog + this.currentCatlog._id, formData)
-            .subscribe(
-              (response) => {
-                if (response) {
-                  modalRef.close();
-                  Swal.fire('Success', 'Product catalog updated successfully', 'success');
-                  this.timestamp = new Date().getTime();
-                  this.currentCatlog = {};
-                  this.errorArray = [];
-                  this.loadProductCatlogs();
-                }
-              },
-              (error) => {
-                console.error('Error updating product catalog:', error);
-                this.errorArray = [];
-                this.currentCatlog.productDescription = oldDate;
-                if (error && error.message) {
-                  this.errorArray.push(error.message);
-                } else {
-                  this.errorArray.push(error);
-                }
-              });
-        } else {
-          this.apiRequestService
-            .createWithImage(this.apiUrls.createProductCatlog, formData)
-            .subscribe(
-              (response) => {
-                if (response) {
-                  modalRef.close();
-                  Swal.fire('Success', 'Product catalog added successfully', 'success');
-                  this.currentCatlog = {};
-                  this.loadProductCatlogs();
-                  this.errorArray = [];
-                  this.timestamp = new Date().getTime();
-                }
-              },
-              (error) => {
-                console.error('Error creating product catalog:', error);
-                this.currentCatlog.productDescription = oldDate;
-                this.errorArray = [];
-                if (error && error.message) {
-                  this.errorArray.push(error.message);
-                } else {
-                  this.errorArray.push(error);
-                }
-              });
-        }
-      }
-    }
+    //     // Update or Create Catlog
+    //     if (this.currentCatlog._id) {
+    //       this.apiRequestService
+    //         .updateWithImage(this.apiUrls.updateProductCatlog + this.currentCatlog._id, formData)
+    //         .subscribe(
+    //           (response) => {
+    //             if (response) {
+    //               modalRef.close();
+    //               Swal.fire('Success', 'Product catalog updated successfully', 'success');
+    //               this.timestamp = new Date().getTime();
+    //               this.currentCatlog = {};
+    //               this.errorArray = [];
+    //               this.loadProductCatlogs();
+    //             }
+    //           },
+    //           (error) => {
+    //             console.error('Error updating product catalog:', error);
+    //             this.errorArray = [];
+    //             this.currentCatlog.productDescription = oldDate;
+    //             if (error && error.message) {
+    //               this.errorArray.push(error.message);
+    //             } else {
+    //               this.errorArray.push(error);
+    //             }
+    //           });
+    //     } 
+    //   }
+    // }
   
     deleteCatlog(catlogId: string, productDescription: string) {
       Swal.fire({
