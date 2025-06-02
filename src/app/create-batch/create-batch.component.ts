@@ -17,15 +17,16 @@ import Swal from "sweetalert2";
 })
 export class CreateBatchComponent {
     branchName: string = '';
-        ProductName: object = {};
+     ProductName: any = null;  
+  Brand: any = null; 
     BatchNumber: string = '';
-    couponSeriesList: string[] = ['Series A', 'Series B', 'Series C']; // Example data
-    creationDate: NgbDateStruct = this.getTodayDate();  // Default value set to today's date
+    couponSeriesList: string[] = ['Series A', 'Series B', 'Series C']; 
+    creationDate: NgbDateStruct = this.getTodayDate();  
     expiryDate: NgbDateStruct = this.getExpiryDate();   
 
     BatchNumbers: any[] = [
         // { BatchNumber: '', Brand: {, ProductName: '', Volume: 0, Quantity: 0 }
-        {CouponSeries :'', Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
+        {CouponSeries :'', ProductName: null, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0},
         // {BatchNumber: '2', Brand: 'SONY', ProductName: 'TV', Volume: 0, Quantity: 0}
     ];
 
@@ -40,20 +41,50 @@ export class CreateBatchComponent {
     }
 
     ngOnInit() {
-        this.ApiRequest.getCouponSeries(this.ApiUrls.couponSeries).subscribe(
-            (data: any[]) => {
-                this.couponSeriesList = data.map(series => series.name); // Assuming API returns an array of objects with a 'name' field
-            },
-            (error: any) => {
-                console.error('Error fetching coupon series:', error);
-                this.couponSeriesList = [];
-            }
-        );
+    // Fetch all brands initially
+    this.ApiRequest.getAll(this.ApiUrls.getAllBrands).subscribe(
+      (brands: any[]) => {
+        this.brandData = brands;
+      },
+      (error) => {
+        console.error('Error fetching brands:', error);
+        this.brandData = [];
+      }
+    );
 
-        this.ApiRequest.getAll(this.ApiUrls.getAllProducts).subscribe((response: any) => {
-            this.products = response;
-        })
-    }
+    // Fetch coupon series as before
+    this.ApiRequest.getCouponSeries(this.ApiUrls.couponSeries).subscribe(
+      (data: any[]) => {
+        this.couponSeriesList = data.map(series => series.name);
+      },
+      (error: any) => {
+        console.error('Error fetching coupon series:', error);
+        this.couponSeriesList = [];
+      }
+    );
+  }
+
+
+ onBrandChange() {
+  console.log('Selected Brand ID:', this.Brand);
+  if (this.Brand) {
+   this.ApiRequest.getAll(this.ApiUrls.getAllProductsForSelect + this.Brand).subscribe(
+  (response: any[]) => {
+    this.products = response;
+  },
+  error => {
+    console.error('Failed to load products:', error);
+    this.products = [];
+  }
+);
+
+  } else {
+    this.products = [];
+  }
+}
+
+
+
     getTodayDate(): NgbDateStruct {
         const today = new Date();
         return {
@@ -74,7 +105,7 @@ export class CreateBatchComponent {
       submitForm() {
         const newBranch = {
             Branch: this.branchName,
-            ProductName: this.ProductName,
+            Brand: this.Brand,
             CreationDate: this.convertToISODate(this.creationDate),
             ExpiryDate: this.convertToISODate(this.expiryDate),
             BatchNumbers: this.BatchNumbers,
@@ -84,13 +115,13 @@ export class CreateBatchComponent {
         // Initialize the error message variable
         let errorMessage = '';
     
-        // Check if ProductName is an object and has a name property that is a non-empty string
-        if (typeof newBranch.ProductName === 'object' && newBranch.ProductName !== null) {
-            const productNameValue = (newBranch.ProductName as any).name;
-            if (!productNameValue || productNameValue.trim() === '') {
-                errorMessage += 'Product Name is required. ';
-            }
+       // ✅ BrandName validation (formerly ProductName)
+    if (typeof newBranch.Brand === 'object' && newBranch.Brand !== null) {
+        const brandValue = (newBranch.Brand as any).name;
+        if (!brandValue || brandValue.trim() === '') {
+            errorMessage += 'Brand is required. ';
         }
+    }
     
         // Check if Branch is provided
         if (!newBranch.Branch || newBranch.Branch.trim() === '') {
@@ -113,11 +144,11 @@ export class CreateBatchComponent {
         }
     
         const lastBatch = newBranch.BatchNumbers[this.BatchNumbers.length - 1];
+        
     
-        // Check if Batch's Brand is missing
-        if (Object.keys(lastBatch.Brand).length === 0) {
-            errorMessage += 'Brand is required. ';
-        }
+     if (!lastBatch.ProductName || typeof lastBatch.ProductName !== 'string') {
+  errorMessage += 'Product is required. ';
+}
 
         // Check if value is valid (non-zero)
         if (!lastBatch.value || lastBatch.value === 0) {
@@ -202,7 +233,7 @@ export class CreateBatchComponent {
             this.errorEmptyStr = 'Please fill all fields for the current batch before adding a new one.';
             return;
         }
-        this.BatchNumbers.push({ CouponSeries: 0, Brand: {}, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0 });
+        this.BatchNumbers.push({ CouponSeries: 0, ProductName: null, redeemablePoints: 0, value: 0, Volume: '', Quantity: 0 });
     }
 
     // Delete a product from the products array
@@ -218,11 +249,7 @@ export class CreateBatchComponent {
         this.router.navigate(['/batch-list']);
     }
 
-    getBrandes() {
-        this.ApiRequest.getAll(this.ApiUrls.getAllBrandsForSelect + this.ProductName).subscribe((response: any) => {
-            this.brandData = response;
-        })
-    }
+ 
 }
 
 

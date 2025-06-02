@@ -25,8 +25,8 @@
                     <th>S.NO</th>
                     <th>Batch Number</th>
                     <th>Branch</th>
-                    <th>Product Name</th>
-                    <th>Brand</th>
+                    <th>Brand Name</th>
+                    <th>Product</th>
                     <th>CouponSeries</th>
                     <th>Reward Points</th>
                     <th>Value</th>
@@ -42,8 +42,8 @@
                     <td>{{ (currentPage - 1) * limit + (i + 1) }}</td> <!-- Serial Number Calculation -->
                     <td>{{ branch.BatchNumber }}</td>
                     <td>{{ branch.Branch }}</td>
-                    <td>{{ branch.ProductNameStr || 'NA' }}</td>
-                    <td>{{ branch.BrandName || 'NA' }}</td>
+                    <td>{{ branch.BrandStr|| 'NA' }}</td>
+                    <td>{{ branch.ProductStr|| 'NA' }}</td>
                     <td style="width: 200px; word-wrap: break-word;">
                         {{ (branch.startCouponSeries && branch.endCouponSeries) ? branch.startCouponSeries + ' - ' + branch.endCouponSeries : 'NA' }}
                       </td>                      

@@ -14,8 +14,12 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./product-list.component.css']
 })
 export class ProductListComponent implements OnInit {
-  products: any[] = [];
-  currentProduct: any = { name: '' };
+   products: any[] = [];
+  brands: any[] = [];  // <-- Added for brands
+  totalBrands: number = 0;
+  totalBrandPages: number = 1;
+
+  currentProduct: any = { products: '', brandId: '' };
   searchQuery: string = '';  
   isSearching: boolean = false;  
   submitted = false; 
@@ -29,7 +33,7 @@ export class ProductListComponent implements OnInit {
   limitOptions: number[] = [10, 20, 50, 100]; 
 
   constructor(private apiService: ApiRequestService, private modalService: NgbModal) {}
-  @ViewChild('productForm', { static: false }) productForm!: NgForm;  // Reference to the form
+  @ViewChild('productForm', { static: false }) productForm!: NgForm;
 
   ngOnInit(): void {
     this.loadProducts();
@@ -40,7 +44,6 @@ export class ProductListComponent implements OnInit {
       (data) => {
         this.products = data.products;  
         this.totalProducts = data.pagination.totalProducts; 
-        // Calculate totalPages based on the totalProducts and limit
         this.totalPages = Math.ceil(this.totalProducts / this.limit);  
       },
       (error) => {
@@ -48,8 +51,21 @@ export class ProductListComponent implements OnInit {
       }
     );
   }
-  
-    // Search products by name
+
+  loadBrands(): void {
+    const data = { page: 1, limit: 1000 }; 
+    this.apiService.getAllBrands(data).subscribe({
+      next: (response: any) => {
+        this.brands = response.brands;
+        this.totalBrands = response.pagination.totalBrands;
+        this.totalBrandPages = response.pagination.totalPages;
+      },
+      error: () => {
+        this.showError('Error fetching brands!');
+      }
+    });
+  }
+
   searchProducts(): void {
     if (this.searchQuery.trim() === '') {
       this.loadProducts();  
@@ -65,7 +81,6 @@ export class ProductListComponent implements OnInit {
           this.totalProducts = data.total;
         } else {
           this.products = [];
-          
         }
         this.isSearching = false;
       },
@@ -76,28 +91,24 @@ export class ProductListComponent implements OnInit {
     );
   }
 
-
-  // Method to open the modal for adding a new product
-  addProduct(content: any): void {
-    this.currentProduct = { name: '' };  
-    this.submitted = false; 
-    this.errors = [];  
-    this.modalService.open(content, { size: 'md' });  
-  }
+ addProduct(content: any): void {
+  this.currentProduct = { products: '', brandId: '' };
+  this.submitted = false;
+  this.errors = [];
+  this.loadBrands();
+  this.modalService.open(content, { size: 'md' });
+}
 
   saveProduct(modal: any): void {
     this.submitted = true; 
-  
-    // Clear previous errors before validating
     this.errors = [];
-  
-    // If the form is invalid, stop here
-    if (this.productForm.invalid) {
-      this.errors.push('Please fill in all required fields.');
-      return;  
-    }
-  
-    // Show confirmation dialog before proceeding with save
+
+    if (this.productForm.invalid || !this.currentProduct.brandId) {
+  this.errors.push('Please fill in all required fields, including brand.');
+  return;
+}
+
+
     Swal.fire({
       title: 'Are you sure?',
       text: 'Do you want to save this product?',
@@ -107,16 +118,14 @@ export class ProductListComponent implements OnInit {
       cancelButtonText: 'Cancel'
     }).then((result) => {
       if (result.isConfirmed) {
-        // Check if we are editing an existing product or adding a new one
         const saveRequest = this.currentProduct._id
           ? this.apiService.updateProduct(this.currentProduct._id, this.currentProduct)
           : this.apiService.createProduct(this.currentProduct);
-  
-        // Call the API to save the product
+
         saveRequest.subscribe({
           next: () => {
             this.loadProducts();  
-            this.showSuccess(this.currentProduct._id ? 'Product updated successfully!' : 'Product added successfully!');  // Show success message
+            this.showSuccess(this.currentProduct._id ? 'Product updated successfully!' : 'Product added successfully!');
             this.modalService.dismissAll();  
           },
           error: (error) => {
@@ -128,16 +137,17 @@ export class ProductListComponent implements OnInit {
       }
     });
   }
-  
-  // Method to open modal for editing a product
-  editProduct(product: any, content: any): void {
-    this.currentProduct = { ...product };  
-    this.submitted = false;  
-    this.errors = [];  
-    this.modalService.open(content, { size: 'md' });  
-  }
 
-  // Delete a product by ID
+ editProduct(product: any, content: any): void {
+  this.currentProduct = { ...product };
+  if (!this.currentProduct.brandId) this.currentProduct.brandId = '';
+  this.submitted = false;
+  this.errors = [];
+  this.loadBrands();
+  this.modalService.open(content, { size: 'md' });
+}
+
+
   deleteProduct(id: string): void {
     Swal.fire({
       title: 'Are you sure?',
@@ -149,11 +159,11 @@ export class ProductListComponent implements OnInit {
     }).then((result) => {
       if (result.isConfirmed) {
         this.apiService.deleteProduct(id).subscribe(
-          (data) => {
+          () => {
             this.loadProducts();
             Swal.fire('Deleted!', 'The product has been deleted.', 'success');
           },
-          (error) => {
+          () => {
             this.showError('Error deleting product!');
           }
         );
@@ -167,7 +177,7 @@ export class ProductListComponent implements OnInit {
   }
 
   handleLimitChange(): void {
-    this.currentPage = 1; // Reset to the first page when the page size changes
+    this.currentPage = 1;
     this.loadProducts();
   }
 

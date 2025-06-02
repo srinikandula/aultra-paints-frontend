@@ -127,9 +127,11 @@ priceList: Array<{ volume: string, entries: Array<{ selectedKey: string, price: 
   this.priceList.push({ volume: '', entries: [{ selectedKey: 'All', price: 0 }] });
 }
 
-    getProductById(id: string) {
-      return this.productCatlogs.find(p => p._id === id);
-    }
+  getProductById(id: string) {
+  const baseId = id.split('_')[0]; // Extract product ID before the underscore
+  return this.productCatlogs.find(p => p._id === baseId);
+}
+
     
     // Add a new entry to an existing volume
 addEntryToVolume(index: number) {
@@ -184,13 +186,15 @@ get sortedVolumeOptions() {
 
 
 confirmAddToCart() {
-  const id = this.selectedProduct._id;
+  const baseId = this.selectedProduct._id;
+  const volume = this.selectedVolume?.label || '';
+  const id = `${baseId}_${volume}`; // Make the ID unique by combining product ID and volume
 
   if (!this.cart[id]) {
     this.cart[id] = {
       count: 1,
       price: this.selectedPrice,
-      volume: this.selectedVolume?.label || ''
+      volume
     };
   } else {
     this.cart[id].count += 1;
@@ -198,27 +202,29 @@ confirmAddToCart() {
 
   this.modalService.dismissAll();
 
-  // Show alert for 2 seconds and auto-close
   Swal.fire({
     title: 'Added',
     text: 'Product added to cart',
     icon: 'success',
-    timer: 2000,           
-    showConfirmButton: false, 
-    timerProgressBar: true    
+    timer: 2000,
+    showConfirmButton: false,
+    timerProgressBar: true
   });
 }
 
+getPriceByVolume(product: any, volume: string): number {
+  const match = product.productPrices.find((p: any) => p.volume === volume);
+  return match ? match.price : 0;
+}
 
-
-updateCart(product: any, change: number) {
-  const id = product._id;
+updateCart(product: any, volume: string, change: number) {
+  const id = `${product._id}_${volume}`;
 
   if (!this.cart[id]) {
     this.cart[id] = {
       count: 0,
-      price: this.selectedPrice,
-      volume: this.selectedVolume?.label || ''
+      price: product.productPrices?.find((p: any) => p.volume === volume)?.price || 0,
+      volume
     };
   }
 
@@ -228,6 +234,7 @@ updateCart(product: any, change: number) {
     delete this.cart[id];
   }
 }
+
 
 
     
@@ -275,78 +282,7 @@ updateCart(product: any, change: number) {
       }
       return total;
     }
-  
-    // saveCatlog(modalRef: NgbModalRef) {
-    //   this.submitted = true;
-  
-    //   if (this.productCatlogForm.form) {
-    //     Object.keys(this.productCatlogForm.form.controls).forEach(field => {
-    //       const control = this.productCatlogForm.form.get(field);
-    //       if (control) {
-    //         control.markAsTouched({ onlySelf: true });
-    //       }
-    //     });
-    //   }
-  
-    //   const addImageControl = this.productCatlogForm.form.get('addImage');
-    //   if (addImageControl) {
-    //     if (
-    //       (this.currentCatlog.productImageUrl && !this.currentCatlog.productImage) ||
-    //       (this.currentCatlog.productImageUrl && this.currentCatlog.productImage) ||
-    //       (!this.currentCatlog.productImageUrl && this.currentCatlog.productImage)
-    //     ) {
-    //       addImageControl.setErrors(null); 
-    //     } else {
-    //       addImageControl.setErrors({ invalid: true }); 
-    //     }
-    //   }
 
-    //     this.currentCatlog.price = this.generatePricePayload();
-
-
-    //   if (this.productCatlogForm.valid) {
-    //     let oldDate = this.currentCatlog.productDescription;
-    //     this.currentCatlog.productDescription = `${this.currentCatlog.productDescription}`;
-  
-    //     const formData = new FormData();
-    //     if (this.currentCatlog.productImage) {
-    //       formData.append('productImage', this.currentCatlog.productImage);
-    //     }
-    //     if (this.currentCatlog.productImageUrl) {
-    //       formData.append('productImageUrl', this.currentCatlog.productImageUrl);
-    //     }
-    //     formData.append('productDescription', this.currentCatlog.productDescription);
-    //     formData.append('productStatus', this.currentCatlog.productStatus);
-    //     formData.append('price', JSON.stringify(this.currentCatlog.price));
-  
-    //     // Update or Create Catlog
-    //     if (this.currentCatlog._id) {
-    //       this.apiRequestService
-    //         .updateWithImage(this.apiUrls.updateProductCatlog + this.currentCatlog._id, formData)
-    //         .subscribe(
-    //           (response) => {
-    //             if (response) {
-    //               modalRef.close();
-    //               Swal.fire('Success', 'Product catalog updated successfully', 'success');
-    //               this.timestamp = new Date().getTime();
-    //               this.currentCatlog = {};
-    //               this.errorArray = [];
-    //               this.loadProductCatlogs();
-    //             }
-    //           },
-    //           (error) => {
-    //             console.error('Error updating product catalog:', error);
-    //             this.errorArray = [];
-    //             this.currentCatlog.productDescription = oldDate;
-    //             if (error && error.message) {
-    //               this.errorArray.push(error.message);
-    //             } else {
-    //               this.errorArray.push(error);
-    //             }
-    //           });
-    //     } 
-    //   }
-    // }
   
     deleteCatlog(catlogId: string, productDescription: string) {
       Swal.fire({
