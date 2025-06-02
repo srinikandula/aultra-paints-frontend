@@ -14,32 +14,30 @@ import { NgbPagination } from '@ng-bootstrap/ng-bootstrap';
   styleUrls: ['./brand-list.component.css']
 })
 export class BrandListComponent {
-  brands: any[] = [];
-  products: any[] = [];
+ brands: any[] = [];
   searchQuery: string = '';
-  currentBrand: any = { proId: '', brands: '' };
+  currentBrand: any = { name: '' };
   errorMessage: string = '';
   isSearching: boolean = false;
-  submitted = false;  // To track form submission
-  errors: string[] = [];  // Array to hold error messages
+  submitted = false;
+  errors: string[] = [];
 
   // Pagination variables
   currentPage: number = 1;
   totalPages: number = 1;
-  totalProducts: number = 0;
+  totalBrands: number = 0;
   limit: number = 10;
-  totalBrands:number = 0;
   limitOptions: number[] = [10, 20, 50, 100]; 
 
   constructor(
     private apiRequestService: ApiRequestService,
     private modalService: NgbModal
   ) { }
-  @ViewChild('brandForm', { static: false }) brandForm!: NgForm;  // Reference to the form
+
+  @ViewChild('brandForm', { static: false }) brandForm!: NgForm;
 
   ngOnInit(): void {
     this.loadBrands();
-    this.loadProducts();
   }
 
   loadBrands(): void {
@@ -50,43 +48,27 @@ export class BrandListComponent {
         this.totalBrands = response.pagination.totalBrands;
         this.totalPages = response.pagination.totalPages;
       },
-      error: (error) => {
+      error: () => {
         this.showError('Error fetching brands!');
       }
     });
   }
 
-
-  loadProducts(): void {
-    this.apiRequestService.getProducts({ page: this.currentPage, limit: this.limit }).subscribe(
-      (data) => {
-        this.products = data.products;  
-        this.totalPages = data.pagination.totalPages;  
-        this.totalProducts = data.pagination.totalProducts; 
-      },
-      (error) => {
-        this.showError('Error fetching products!');
-      }
-    );
-  }
-
-  // Search brands based on query
   searchBrands(): void {
     if (this.searchQuery.trim() === '') {
-      this.loadBrands();  // Load all brands if the search query is empty
+      this.loadBrands();
       return;
     }
 
-    // Start searching for brands
     this.isSearching = true;
     this.apiRequestService.searchBrandsByName(this.searchQuery, this.currentPage, this.limit).subscribe({
       next: (response: any) => {
         if (response && response.data && response.data.length > 0) {
-          this.brands = response.data; 
+          this.brands = response.data;
           this.totalBrands = response.total;
           this.totalPages = response.pages;
         } else {
-          this.brands = []; 
+          this.brands = [];
         }
       },
       error: (error) => {
@@ -95,77 +77,63 @@ export class BrandListComponent {
       }
     });
   }
-  
 
-  // Add brand: Open the modal
   addBrand(content: any): void {
-    this.currentBrand = { proId: '', brands: '' };  // Reset the brand form
-    this.submitted = false;  // Reset submission flag
-    this.errors = [];  // Clear any previous errors
-    this.modalService.open(content, { size: 'md' });  
+    this.currentBrand = { name: '' };
+    this.submitted = false;
+    this.errors = [];
+    this.modalService.open(content, { size: 'md' });
   }
 
-  // Edit brand: Open the modal with the current brand data
   editBrand(brand: any, content: any): void {
-    this.currentBrand = { ...brand };  // Copy the selected brand's data
-    this.submitted = false;  // Reset submission flag
-    this.errors = [];  // Clear any previous errors
-    this.modalService.open(content, { size: 'md' });  
+    this.currentBrand = { ...brand };
+    this.submitted = false;
+    this.errors = [];
+    this.modalService.open(content, { size: 'md' });
   }
 
-  // Check if the brand already exists for the selected product
-  brandExists(productId: string, brandName: string): boolean {
-    return this.brands.some(brand => brand.proId === productId && brand.brands.toLowerCase() === brandName.toLowerCase());
+  brandExists(brandName: string): boolean {
+    return this.brands.some(brand => brand.name.toLowerCase() === brandName.toLowerCase());
   }
 
- saveBrand(Modal: any): void {
-  this.submitted = true;  
+  saveBrand(Modal: any): void {
+    this.submitted = true;
+    this.errors = [];
 
-  // Clear previous errors before validating
-  this.errors = [];
-
-  // If the form is invalid, stop here
-  if (this.brandForm.invalid) {
-    this.errors.push('Please fill in all required fields.');
-    return; 
-  }
-
-  // Show confirmation dialog before proceeding with save
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'Do you want to save this brand?',
-    icon: 'question',
-    showCancelButton: true,
-    confirmButtonText: 'Yes, save it!',
-    cancelButtonText: 'No, cancel'
-  }).then((result) => {
-    if (result.isConfirmed) {
-      // API request to either create or update the brand
-      const saveRequest = this.currentBrand._id
-        ? this.apiRequestService.updateBrand(this.currentBrand._id, this.currentBrand)
-        : this.apiRequestService.createBrand(this.currentBrand);
-
-      // Call the API to save the brand
-      saveRequest.subscribe({
-        next: () => {
-          this.loadBrands();  
-          this.showSuccess(this.currentBrand._id ? 'Brand updated successfully!' : 'Brand added successfully!');  // Show success message
-          this.modalService.dismissAll();  
-        },
-        error: (error) => {
-          console.error('Error:', error); 
-          const errorMessage = error?.error || error?.message || 'Something error occurred while saving the brand';
-
-          this.errors.push(errorMessage); 
-        }
-      });
+    if (this.brandForm.invalid) {
+      this.errors.push('Please fill in all required fields.');
+      return;
     }
-  });
-}
 
+    Swal.fire({
+      title: 'Are you sure?',
+      text: 'Do you want to save this brand?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, save it!',
+      cancelButtonText: 'No, cancel'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const saveRequest = this.currentBrand._id
+          ? this.apiRequestService.updateBrand(this.currentBrand._id, this.currentBrand)
+          : this.apiRequestService.createBrand(this.currentBrand);
 
+        saveRequest.subscribe({
+          next: () => {
+            this.loadBrands();
+            this.showSuccess(this.currentBrand._id ? 'Brand updated successfully!' : 'Brand added successfully!');
+            this.modalService.dismissAll();
+          },
+          error: (error) => {
+            console.error('Error:', error);
+            const errorMessage = error?.error || error?.message || 'Something error occurred while saving the brand';
+            this.errors.push(errorMessage);
+          }
+        });
+      }
+    });
+  }
 
-  // Delete brand
   deleteBrand(id: string): void {
     Swal.fire({
       title: 'Are you sure?',
@@ -179,7 +147,7 @@ export class BrandListComponent {
         this.apiRequestService.deleteBrand(id).subscribe(() => {
           this.loadBrands();
           Swal.fire('Deleted!', 'Your brand has been deleted.', 'success');
-        }, (error) => {
+        }, () => {
           this.showError('Error deleting brand!');
         });
       }
@@ -192,11 +160,10 @@ export class BrandListComponent {
   }
 
   handleLimitChange(): void {
-    this.currentPage = 1; 
+    this.currentPage = 1;
     this.loadBrands();
   }
 
-  // Show success alert
   showSuccess(message: string): Promise<any> {
     return Swal.fire({
       icon: 'success',
@@ -205,7 +172,6 @@ export class BrandListComponent {
     });
   }
 
- 
   showError(message: string): Promise<any> {
     return Swal.fire({
       icon: 'error',

@@ -209,20 +209,21 @@
 <div class="col-auto d-flex align-items-center">
   <button
     class="btn btn-sm btn-outline-secondary me-2"
-    (click)="updateCart(getProductById(id), -1)"
+    (click)="updateCart(getProductById(id), cart[id].volume, -1)"
+
   >
     <i class="bx bx-minus"></i>
   </button>
   <span class="mx-2">{{ cart[id]?.count || 0 }}</span>
   <button
     class="btn btn-sm btn-outline-success me-2"
-    (click)="updateCart(getProductById(id), 1)"
+    (click)="updateCart(getProductById(id), cart[id].volume, 1)"
   >
     <i class="bx bx-plus"></i>
   </button>
   <button
     class="btn btn-sm btn-outline-danger"
-    (click)="updateCart(getProductById(id), -cart[id].count)"
+    (click)="updateCart(getProductById(id), cart[id].volume, -cart[id].count)"
   >
     <i class="bx bx-trash"></i>
   </button>

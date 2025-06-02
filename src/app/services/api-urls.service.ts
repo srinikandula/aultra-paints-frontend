@@ -58,16 +58,17 @@ getcashfreetransaction = 'cashFree/getTransactions';
   getProducts = 'products';
   getAllProducts = 'products/getAllProducts';
   getProductByName = 'products/search'; 
+  getAllProductsForSelect = 'products/getAllProductsForSelect/';
   updateProduct = 'products';
   deleteProduct = 'products';
 
   // API Urls for Brands
   createBrand = 'brands';
   getBrands = 'brands';
+  getAllBrands = 'brands/getAllBrands';
   getBrandsByProductId = 'brands';
   updateBrand = 'brands';
   deleteBrand = 'brands';
-  getAllBrandsForSelect = 'brands/getAllBrandsForSelect/';
   searchBrandsByName = 'brands/search';
 
   // API Urls for Product Offers

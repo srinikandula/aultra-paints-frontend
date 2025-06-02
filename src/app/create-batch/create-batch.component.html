@@ -15,17 +15,28 @@
                 </div>
             </div>
 
-            <!-- Product Name -->
-            <div class="col-sm-3 mb-3">
-                <label class="form-label" for="ProductName">Product Name <span class="text-danger">*</span></label>
-                <ng-select name="ProductName" [items]="products" [(ngModel)]="ProductName" [multiple]="false"
-                           bindLabel="name" bindValue="_id" placeholder="Select options" (ngModelChange)="getBrandes()"
-                           [searchable]="true" #productNameCtrl="ngModel" required>
-                </ng-select>
-                <div *ngIf="productNameCtrl.invalid && (productNameCtrl.touched || orderForm.submitted)" class="text-danger">
-                    Product Name is required.
-                </div>
-            </div>
+            <!-- Brand Name  -->
+      <div class="col-sm-3 mb-3">
+        <label class="form-label" for="BrandName">Brand Name <span class="text-danger">*</span></label>
+    <ng-select
+  name="BrandName"
+  [items]="brandData"
+  [(ngModel)]="Brand"
+  [multiple]="false"
+  bindLabel="name"
+  bindValue="_id"
+  placeholder="Select Brand"
+  (ngModelChange)="onBrandChange()"
+  [searchable]="true"
+  #brandNameCtrl="ngModel"
+  required
+>
+</ng-select>
+        
+        <div *ngIf="brandNameCtrl.invalid && (brandNameCtrl.touched || orderForm.submitted)" class="text-danger">
+          Brand Name is required.
+        </div>
+      </div>
             
             <!-- Batch Number -->
             <div class="col-sm-3">
@@ -95,17 +106,27 @@
         <!-- Product Details Section -->
         <h4>Batch Number Details</h4>
         <div *ngFor="let BatchNumber of BatchNumbers; let i = index, let l = last" class="row mb-3">
-            <!-- Brand -->
-            <div class="col-sm-2">
-                <label class="form-label" for="brand{{i}}">Brand <span class="text-danger">*</span></label>
-                <ng-select name="Brand{{i}}" [items]="brandData" [(ngModel)]="BatchNumber.Brand" [multiple]="false"
-                           bindLabel="brands" bindValue="_id" placeholder="Select options"  #brandCtrl="ngModel">
-                </ng-select>
-                <div *ngIf="brandCtrl.invalid && (brandCtrl.touched || orderForm.submitted)" class="text-danger">
-                    Brand is required.
-                </div>
-            </div>
+    
+            <!-- Product Name -->
+      <div class="col-sm-2">
+        <label class="form-label" for="product{{ i }}">Product <span class="text-danger">*</span></label>
+        <ng-select
+  name="Product{{ i }}"
+  [items]="products"
+  [(ngModel)]="BatchNumbers[i].ProductName"
+  [multiple]="false"
+  bindLabel="products"
+  bindValue="_id"
+  placeholder="Select Product"
+  #productCtrl="ngModel"
+  required
+>
+</ng-select>
 
+        <div *ngIf="productCtrl.invalid && (productCtrl.touched || orderForm.submitted)" class="text-danger">
+          Product is required.
+        </div>
+      </div>
             <!-- Reward Points -->
             <div class="col-sm-2">
                 <label class="form-label" for="redeemablePoints{{i}}">Reward Points <span class="text-danger">*</span></label>

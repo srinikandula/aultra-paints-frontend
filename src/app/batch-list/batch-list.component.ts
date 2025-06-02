@@ -35,8 +35,8 @@ limitOptions = [10, 20, 50, 100];  // Available page size options
         products: {},
         brands: {}
     };
-    products: any = [];
-    brandData: any = [];
+   brands: any = []; 
+    productData: any = [];
     volumes: string[] = ['10 LT', '20 LT', '30 LT', '50 LT', '100 LT'];
 
     constructor(private orderService: OrderService,
@@ -45,12 +45,14 @@ limitOptions = [10, 20, 50, 100];  // Available page size options
                 private apiRequest: ApiRequestService) {
     }
 
-    ngOnInit(): void {
-        this.loadBranches();
-        this.apiRequest.getAll(this.ApiUrls.getAllProducts).subscribe((response: any) => {
-            this.products = response;
-        })
-    }
+  ngOnInit(): void {
+    this.loadBranches();
+    this.apiRequest.getAll(this.ApiUrls.getAllBrands).subscribe((response: any) => {
+        this.brands = response; 
+    });
+}
+
+
 
     // Method to load branches with pagination
   loadBranches(page: number = this.currentPage, limit: number = this.limit): void {
@@ -111,7 +113,7 @@ limitOptions = [10, 20, 50, 100];  // Available page size options
         this.selectedBranch = {...branch};
         this.selectedBranch.CreationDate = new Date(branch.CreationDate)
         this.selectedBranch.ExpiryDate = new Date(branch.ExpiryDate)
-        this.getBrandes()
+       this.getProducts();
         this.showUpdateModal = true;
     }
 
@@ -184,10 +186,14 @@ limitOptions = [10, 20, 50, 100];  // Available page size options
     closeUpdateModal(): void {
         this.showUpdateModal = false; // Hide the modal
     }
-    getBrandes() {
-        this.apiRequest.getAll(this.ApiUrls.getAllBrandsForSelect + this.selectedBranch.ProductName).subscribe((response: any) => {
-            this.brandData = response;
-        })
-    }
+   
+   getProducts(): void {
+    this.apiRequest.getAll(this.ApiUrls.getAllProducts).subscribe((response: any) => {
+        this.productData = response;
+    });
+}
+
+
+   
 }
 
