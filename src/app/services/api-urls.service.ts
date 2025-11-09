@@ -50,6 +50,9 @@ export class ApiUrlsService {
   exportBatchStatistics = 'chart/export-batch-statistics';
 
 
+  //transaction ledger
+  getTransactionLedger = 'transactionLedger/getTransactions';
+
 //cashFree
 getcashfreetransaction = 'cashFree/getTransactions';
 

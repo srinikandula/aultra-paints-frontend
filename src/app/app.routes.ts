@@ -22,6 +22,7 @@ import { PiechartdashboardComponent } from './piechartdashboard/piechartdashboar
 import { ProductDataListComponent } from './product-data-list/product-data-list.component';
 import { CreateProductComponent } from './create-product/create-product.component';
 import { EditProductComponent } from './edit-product/edit-product.component';
+import { TransactionLedgerComponent } from './transaction-ledger/transaction-ledger.component';
 
 export const routes: Routes = [
     {path: 'login', component: LoginComponent, canActivate: [NoAuthGuard]},
@@ -48,6 +49,8 @@ export const routes: Routes = [
             {path: 'product-data-list', component:ProductDataListComponent, canActivate:[AuthGuard]},
             {path: 'create-product', component:CreateProductComponent, canActivate:[AuthGuard]},
             {path: 'edit-product', component:EditProductComponent, canActivate:[AuthGuard]},
+            {path: 'transaction-ledger', component:TransactionLedgerComponent, canActivate:[AuthGuard]},
+            
             
         ]
 
