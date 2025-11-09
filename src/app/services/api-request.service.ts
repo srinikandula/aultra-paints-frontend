@@ -385,6 +385,9 @@ exportUnverifiedUsers(): Observable<Blob> {
 }
 
 
+getTransactionLedger(data: any): Observable<any> {{
+  return this.http.post<any>(this.ApiUrls.mainUrl + this.ApiUrls.getTransactionLedger, data);
+}
 
       
 }   

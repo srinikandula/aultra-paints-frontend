@@ -66,7 +66,16 @@
                     <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Coupons</span>
                 </div>
             </li>
-            <!-- CashFree Transactions -->
+
+            <!-- Transaction Ledger -->
+<li class="nav-item" (click)="navigateTo('transaction-ledger')">
+  <div class="menu">
+    <i class="bx px-2 bx-transfer" style="font-size: 20px;" title="Transaction Ledger"></i>
+    <span *ngIf="!isSidebarCollapsed" style="border-left: 1px solid #ccc" class="px-2">Transaction Ledger</span>
+  </div>
+</li>
+
+      <!-- CashFree Transactions -->
              <li class="nav-item" (click)="navigateTo('payouts')">
                 <div class="menu">
                     <i class= "bx px-2 bx-money" style="font-size: 20px;" title="Payouts"></i>  <!-- Icon for Cash Free -->

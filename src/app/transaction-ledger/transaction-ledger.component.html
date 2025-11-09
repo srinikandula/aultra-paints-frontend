@@ -1,0 +1,67 @@
+<div class="container-fluid container-mt shadow-sm">
+  <div class="row mb-4">
+    <div class="col-sm-2">
+      <h4>Transaction Ledger</h4>
+    </div>
+    <div class="col-sm-10 d-flex justify-content-end"></div>
+  </div>
+
+  <div class="table-wrapper">
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">S.NO</th>
+          <th scope="col">Narration</th>
+          <th scope="col">UniqueCode</th>
+          <th scope="col">Amount</th>
+          <th scope="col">Balance</th>
+          <th scope="col">Date</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let transaction of transactions; let i = index">
+          <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
+          <td>{{ transaction.narration }}</td>
+          <td>{{ transaction.uniqueCode }}</td>
+          <td>{{ transaction.amount }}</td>
+          <td>{{ transaction.balance }}</td>
+          <td>{{ transaction.createdAt | date:'short' }}</td>
+        </tr>
+
+        <tr *ngIf="transactions.length === 0">
+          <td class="text-center" colspan="5">No Records found</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- Pagination Controls -->
+  <div class="row">
+    <div class="col-sm-12 text-right">
+      <div class="d-flex justify-content-end align-items-center">
+
+        <!-- Page Size Selector -->
+        <select [(ngModel)]="limit" (change)="handleLimitChange()" 
+                class="form-select mx-2" 
+                style="width:100px; margin-bottom: 16px;">
+          <option *ngFor="let limitOption of limitOptions" [value]="limitOption">
+            {{ limitOption }}
+          </option>
+        </select>  
+
+        <!-- Pagination -->
+        <ngb-pagination
+          class="mx-2"
+          [(page)]="currentPage"
+          [pageSize]="limit"
+          [collectionSize]="totalTransactions"
+          [boundaryLinks]="true"
+          (pageChange)="handlePageChange($event)"
+          [maxSize]="5">
+        </ngb-pagination>
+
+      </div>
+    </div>
+  </div>
+</div>
