@@ -390,7 +390,7 @@ getTransactionLedger(data: any): Observable<any> {{
 }
 
       
-}   
+}}
 
 
 
