@@ -9,7 +9,7 @@ import { ApiRequestService } from '../services/api-request.service';
   standalone: true,
   imports: [CommonModule, FormsModule, NgbPaginationModule],
   templateUrl: './transaction-ledger.component.html',
-  styleUrl: './transaction-ledger.component.css'
+  styleUrls: ['./transaction-ledger.component.css']
 })
 export class TransactionLedgerComponent {
   transactions: any[] = [];
