@@ -81,6 +81,7 @@ export class TransactionLedgerComponent {
       }
 
       // Simple Preview Page with one download button
+      // Use JSON.stringify to safely embed values into the generated HTML/JS
       previewTab.document.write(`
         <html>
           <head>
@@ -122,12 +123,15 @@ export class TransactionLedgerComponent {
             <div class="header">
               <button id="downloadBtn">⬇ Download PDF</button>
             </div>
-            <iframe src="${blobUrl}"></iframe>
+            <iframe src=${JSON.stringify(blobUrl)}></iframe>
             <script>
+              // embed safe string literals for blobUrl and fileName
+              const _blobUrl = ${JSON.stringify(blobUrl)};
+              const _fileName = ${JSON.stringify(fileName)};
               document.getElementById('downloadBtn').addEventListener('click', function() {
                 const a = document.createElement('a');
-                a.href = '${blobUrl}';
-                a.download = '${fileName}';
+                a.href = _blobUrl;
+                a.download = _fileName;
                 a.click();
               });
             </script>
