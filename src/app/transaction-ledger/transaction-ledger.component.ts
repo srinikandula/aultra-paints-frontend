@@ -54,4 +54,100 @@ export class TransactionLedgerComponent {
     this.currentPage = 1;
     this.loadTransactions();
   }
+
+
+ downloadCreditNote(transactionId: string) {
+  if (!transactionId) return;
+
+  // 🔹 Find the selected transaction in the list
+  const transaction = this.transactions.find(t => t._id === transactionId);
+
+  // 🔹 Safely handle missing unique code
+  const uniqueCode = transaction?.uniqueCode?.trim();
+  const fileName = uniqueCode
+    ? `CreditNote-${uniqueCode}.pdf`
+    : `CreditNote.pdf`;
+
+  this.apiRequestService.downloadTransactionLedgerPDF(transactionId).subscribe({
+    next: (pdfBlob) => {
+      const blob = new Blob([pdfBlob], { type: 'application/pdf' });
+      const blobUrl = window.URL.createObjectURL(blob);
+
+      //Open Preview Tab
+      const previewTab = window.open('', '_blank');
+      if (!previewTab) {
+        alert('Please allow popups for this site to preview PDF.');
+        return;
+      }
+
+      // Simple Preview Page with one download button
+      // Use JSON.stringify to safely embed values into the generated HTML/JS
+      previewTab.document.write(`
+        <html>
+          <head>
+            <title>Credit Note Preview</title>
+            <style>
+              body {
+                margin: 0;
+                font-family: Arial, sans-serif;
+                background: #f4f4f4;
+              }
+              .header {
+                display: flex;
+                justify-content: flex-end;
+                background-color: #28a745;
+                padding: 10px 20px;
+              }
+              .header button {
+                background-color: #fff;
+                color: #28a745;
+                border: none;
+                border-radius: 4px;
+                font-size: 14px;
+                font-weight: 600;
+                padding: 8px 14px;
+                cursor: pointer;
+                transition: all 0.2s ease-in-out;
+              }
+              .header button:hover {
+                background-color: #d4edda;
+              }
+              iframe {
+                width: 100%;
+                height: 94vh;
+                border: none;
+              }
+            </style>
+          </head>
+          <body>
+            <div class="header">
+              <button id="downloadBtn">⬇ Download PDF</button>
+            </div>
+            <iframe src=${JSON.stringify(blobUrl)}></iframe>
+            <script>
+              // embed safe string literals for blobUrl and fileName
+              const _blobUrl = ${JSON.stringify(blobUrl)};
+              const _fileName = ${JSON.stringify(fileName)};
+              document.getElementById('downloadBtn').addEventListener('click', function() {
+                const a = document.createElement('a');
+                a.href = _blobUrl;
+                a.download = _fileName;
+                a.click();
+              });
+            </script>
+          </body>
+        </html>
+      `);
+
+      previewTab.document.close();
+    },
+    error: (err) => {
+      console.error('Failed to preview or download PDF:', err);
+      alert('Error generating Credit Note PDF');
+    }
+  });
+}
+
+
+
 }
