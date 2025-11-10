@@ -385,12 +385,32 @@ exportUnverifiedUsers(): Observable<Blob> {
 }
 
 
-getTransactionLedger(data: any): Observable<any> {{
-  return this.http.post<any>(this.ApiUrls.mainUrl + this.ApiUrls.getTransactionLedger, data);
+getTransactionLedger(data: any) {
+  return this.http.post(this.ApiUrls.mainUrl + this.ApiUrls.getTransactionLedger, data)
+    .pipe(map((res: any) => res));
 }
 
+
+//  Update Transaction Ledger record
+updateTransactionLedger(id: string, data: any) {
+  return this.http.put(this.ApiUrls.mainUrl + this.ApiUrls.updateTransactionLedger + id, data).pipe(
+    map((res: any) => {
+      return res;
+    })
+  );
+}
+
+
+downloadTransactionLedgerPDF(transactionId: string): Observable<Blob> {
+  const url = this.ApiUrls.mainUrl + this.ApiUrls.downloadTransactionLedgerPDF + transactionId;
+  return this.http.get(url, {
+    responseType: 'blob', 
+  });
+}
+
+
       
-}}
+}   
 
 
 

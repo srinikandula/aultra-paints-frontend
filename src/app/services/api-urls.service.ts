@@ -52,6 +52,8 @@ export class ApiUrlsService {
 
   //transaction ledger
   getTransactionLedger = 'transactionLedger/getTransactions';
+  updateTransactionLedger = 'transactionLedger/updateTransaction/'; 
+  downloadTransactionLedgerPDF = 'transactionLedger/credit-note/';
 
 //cashFree
 getcashfreetransaction = 'cashFree/getTransactions';

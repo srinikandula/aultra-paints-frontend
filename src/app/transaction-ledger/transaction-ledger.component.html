@@ -16,6 +16,7 @@
           <th scope="col">Amount</th>
           <th scope="col">Balance</th>
           <th scope="col">Date</th>
+          <th scope="col">Action</th> 
         </tr>
       </thead>
 
@@ -27,6 +28,14 @@
           <td>{{ transaction.amount }}</td>
           <td>{{ transaction.balance }}</td>
           <td>{{ transaction.createdAt | date:'short' }}</td>
+          <td>
+  <button 
+    class="btn btn-sm btn-success mx-2"
+    (click)="downloadCreditNote(transaction._id)" title="Download CreditNote">
+    <i class="bx bx-download"></i> 
+  </button>
+</td>
+
         </tr>
 
         <tr *ngIf="transactions.length === 0">
