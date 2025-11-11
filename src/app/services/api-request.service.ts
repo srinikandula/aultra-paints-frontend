@@ -409,6 +409,12 @@ downloadTransactionLedgerPDF(transactionId: string): Observable<Blob> {
 }
 
 
+getCashFreeBalance() {
+  return this.http.get(this.ApiUrls.mainUrl + this.ApiUrls.getCashFreeBalance).pipe(
+    map((res: any) => res)
+  );
+}
+
       
 }   
 
