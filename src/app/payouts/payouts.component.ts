@@ -19,9 +19,17 @@ export class PayoutsComponent {
   totalTransactions: number = 0; // Total number of transactions
   limitOptions: number[] = [5, 20, 50, 100]; // Limit options for page size
 
+
+   availableBalance: number = 0;
+
+   toastMessage: string = '';
+  showToast: boolean = false;
+
+
   constructor( private apiRequestService: ApiRequestService,) {}
 
   ngOnInit(): void {
+      this.loadBalance();
     this.loadTransactions(); // Load transactions on component init
   }
 
@@ -51,14 +59,46 @@ export class PayoutsComponent {
 
   }
 
+
+
+   //  Load available balance
+  loadBalance(): void {
+    this.apiRequestService.getCashFreeBalance().subscribe(
+      (response) => {
+        if (response.success) {
+          this.availableBalance = response.availableBalance;
+        } else {
+          this.availableBalance = 0;
+          this.showErrorToast(response.message || 'Error fetching available balance from BulkPe');
+        }
+      },
+      (error) => {
+        console.error('Error fetching available balance:', error);
+        this.availableBalance = 0;
+        this.showErrorToast('Unable to fetch available balance');
+      }
+    );
+  }
+
   // Handle page change from pagination controls
   handlePageChange(page: number): void {
     this.currentPage = page;
-    this.loadTransactions(page, this.limit); // Load transactions for the new page
+    this.loadTransactions(page, this.limit); 
   }
 
   // Handle page size change from the selector
   handleLimitChange(): void {
-    this.loadTransactions(this.currentPage, this.limit); // Reload transactions with the new limit
+    this.loadTransactions(this.currentPage, this.limit); 
+  }
+
+   //  Toast functions (
+  showErrorToast(message: string) {
+    this.toastMessage = message;
+    this.showToast = true;
+    setTimeout(() => this.hideToast(), 3000);
+  }
+
+  hideToast() {
+    this.showToast = false;
   }
 }

@@ -1,18 +1,35 @@
+<!--  Error Toast (floating) -->
+<div *ngIf="showToast" class="custom-toast">
+  {{ toastMessage }}
+</div>
+
 <div class="container-fluid container-mt shadow-sm">
   <!-- Payouts Header Section -->
-  <div class="row mb-4">
-    <div class="col-sm-2">
-      <h4>Payouts</h4>
+  <div class="row mb-4 align-items-center justify-content-between">
+    <!-- Left: Page Title -->
+    <div class="col-md-6">
+      <h4 class="mb-0 fw-semibold">Payouts</h4>
     </div>
-     <!-- Export Button aligned to the right -->
-     <div class="col-sm-10 d-flex justify-content-end">
-      <button class="btn btn-success btn-sm" (click)="exportToExcel()">
-        <img src="\assets\Download_icon.png" alt="Download" 
-        style="width: 20px; margin-right: 5px; filter: invert(1);"/>
+
+    <!-- Right: Available Balance + Export Button -->
+    <div class="col-md-6 d-flex justify-content-end align-items-center flex-wrap gap-3">
+      
+      <!--  Available Balance box (before Export button) -->
+      <div class="balance-box px-4 py-2 rounded shadow-sm">
+        <strong class="balance-label">Available Balance:</strong>
+        <span class="balance-amount">₹{{ availableBalance | number:'1.2-2' }}</span>
+      </div>
+
+      <!--  Export Button -->
+      <button class="btn btn-success btn-sm d-flex align-items-center" (click)="exportToExcel()">
+        <img src="\assets\Download_icon.png" alt="Download"
+             style="width: 20px; margin-right: 5px; filter: invert(1);" />
         Export
       </button>
     </div>
   </div>
+</div>
+
 
 <div class="table-wrapper">
   <table class="table table-hover">
