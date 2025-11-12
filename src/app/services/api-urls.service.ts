@@ -57,7 +57,7 @@ export class ApiUrlsService {
 
 //cashFree
 getcashfreetransaction = 'cashFree/getTransactions';
-getCashFreeBalance = 'cashFree/fetch-balance';
+getCashFreeBalance = 'cashFree/fetchBulkPeBalance';
 
 
   // Product URLs
