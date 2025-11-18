@@ -13,6 +13,7 @@
           <th scope="col">S.NO</th>
           <th scope="col">Narration</th>
           <th scope="col">UniqueCode</th>
+           <th scope="col">Dealer Name</th> 
           <th scope="col">Amount</th>
           <th scope="col">Balance</th>
           <th scope="col">Date</th>
@@ -25,6 +26,7 @@
           <td>{{ (currentPage - 1) * limit + i + 1 }}</td>
           <td>{{ transaction.narration }}</td>
           <td>{{ transaction.uniqueCode }}</td>
+          <td>{{ transaction.dealerName || '-' }}</td>
           <td>{{ transaction.amount }}</td>
           <td>{{ transaction.balance }}</td>
           <td>{{ transaction.createdAt | date:'short' }}</td>
